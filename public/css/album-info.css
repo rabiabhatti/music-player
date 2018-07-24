@@ -1,0 +1,122 @@
+#album-info {
+  width: 100%;
+}
+.section-album-info {
+  width: 100%;
+  min-width: 100%;
+  padding: 2rem 1.3rem;
+  align-items: flex-start;
+  background-color: #f8f8f6;
+  border-top: 1px solid rgba(0, 0, 0, 0.13);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+}
+.section-album-info-header {
+  position: relative;
+  align-items: flex-start;
+}
+.album-title {
+  width: 35%;
+}
+.album-info-content {
+  width: 60%;
+}
+.album-info-content h2 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+.album-info-artist {
+  color: #2f75ff;
+  font-size: 1.5rem;
+}
+.album-play-btn {
+  font-size: 4.5rem !important;
+}
+.album-cover-filter {
+  transition: all 0.4s ease-in-out;
+}
+.album-cover:hover .album-cover-filter {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  border-radius: 5px;
+  background-color: rgb(0, 0, 0, 0.5);
+}
+.album-cover {
+  width: 100%;
+  height: 74.7%;
+  position: relative;
+  margin-bottom: 0.5rem;
+}
+.album-cover-icon {
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+  position: absolute;
+  justify-content: center;
+  transition: opacity 0.4s ease-in-out;
+}
+.album-cover-icon .material-icons {
+  font-size: 3rem;
+}
+.album-cover:hover .album-cover-icon {
+  opacity: 1;
+}
+.album-cover-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 5px;
+  backface-visibility: hidden;
+}
+.section-album-songs-table {
+  padding-top: 1.5rem;
+}
+.song-info {
+  cursor: pointer;
+  position: relative;
+  border-top: 1px solid rgba(0, 0, 0, 0.13);
+}
+.song-info:last-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+}
+.song-info p:nth-child(2) {
+  width: 87%;
+}
+.song-info p {
+  transition: opacity 0.1s ease-in-out;
+}
+
+.song-btns {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  transition: opacity 0.1s ease-in-out;
+}
+.song-info:hover p:nth-child(odd) {
+  opacity: 0;
+}
+.song-play-btn {
+  margin-left: -0.5rem;
+}
+.song-info:hover .song-btns {
+  opacity: 1;
+}
+.song-dropdown {
+  color: #2f75ff;
+  margin-top: 0.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .album-cover {
+    height: 67%;
+  }
+  .album-title {
+    width: 50%;
+  }
+  .album-info-content {
+    width: 100%;
+  }
+}

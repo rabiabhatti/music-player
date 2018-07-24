@@ -1,0 +1,6 @@
+.section-songs {
+  height: 75vh;
+  display: block;
+  overflow-y: hidden;
+  padding: 1.2rem 2rem;
+}

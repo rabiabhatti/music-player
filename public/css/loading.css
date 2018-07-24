@@ -1,0 +1,7 @@
+.section-loading {
+  min-height: 50vh;
+}
+svg#loading-icon {
+  height: 9rem;
+  min-width: 100%;
+}

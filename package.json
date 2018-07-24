@@ -1,0 +1,61 @@
+{
+  "name": "music-player",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "id3-meta": "^1.1.0",
+    "immutable": "^3.8.2",
+    "lodash": "^4.17.10",
+    "normalize.css": "^8.0.0",
+    "p-map": "^1.2.0",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-redux": "^5.0.7",
+    "recompose": "^0.27.1",
+    "redux": "^4.0.0",
+    "redux-actions": "^2.3.2"
+  },
+  "scripts": {
+    "start": "pundle --dev.singlepage --dev.static ./public::/",
+    "build": "NODE_ENV=production pundle"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "eslint-config-steelbrain": "^5.0.2",
+    "eslint-import-resolver-babel-module": "^4.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "flow-bin": "^0.69.0",
+    "pundle-cli": "^3.0.0-beta2",
+    "pundle-preset-default": "^3.0.0-beta2"
+  },
+  "babel": {
+    "plugins": [
+      "syntax-dynamic-import",
+      [
+        "module-resolver",
+        {
+          "alias": {
+            "~": "./src"
+          }
+        }
+      ]
+    ],
+    "presets": [
+      [
+        "env",
+        {
+          "exclude": [
+            "transform-regenerator"
+          ]
+        }
+      ],
+      "react",
+      "stage-0"
+    ]
+  }
+}

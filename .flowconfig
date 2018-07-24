@@ -1,0 +1,12 @@
+[ignore]
+
+[include]
+
+[libs]
+flow-typed
+
+[options]
+module.system=node
+module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
+suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore

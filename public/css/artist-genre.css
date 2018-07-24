@@ -1,0 +1,25 @@
+.section-artists-info .section-album-info {
+  background-color: #ffffff !important;
+}
+.section-artists-info .section-artist {
+  display: none;
+}
+.section-artists-info .section-artist:target {
+  display: block;
+}
+.section-artist-header {
+  position: relative;
+  padding-left: 1.3rem;
+  padding-right: 1.3rem;
+  align-items: baseline;
+}
+.section-artist-header .song-dropdown {
+  color: #ffffff;
+  padding: 0.2rem;
+  border-radius: 50%;
+  background-color: #2f75ff;
+}
+.section-artist-header .dropdown-content {
+  top: 0.9rem;
+  right: 1.3rem;
+}

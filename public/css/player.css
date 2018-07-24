@@ -1,0 +1,63 @@
+.section-player-cover {
+  background: center center no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: auto;
+  z-index: 50;
+  position: fixed;
+  padding-top: 1rem;
+  max-height: 12.5rem;
+  color: #ffffff !important;
+}
+.section-player-controls {
+  padding: 0.3rem 0;
+  background-color: #ffffff7a;
+}
+i,
+progress {
+  cursor: pointer;
+}
+.section-song-description {
+  position: relative;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+  margin-left: 19.58%;
+}
+.section-song-description .song-dropdown {
+  color: #2f75ff;
+  padding: 0.2rem;
+  border-radius: 50%;
+  background-color: #ffffff;
+}
+.song-title {
+  font-weight: 100;
+  margin-bottom: 0;
+  font-size: 2.5rem;
+}
+.song-artist {
+  color: #ffffff;
+  margin-top: 0.4rem;
+}
+.section-player-btns,
+.section-volume {
+  min-width: 19.68%;
+  justify-content: space-evenly;
+}
+.play-btn {
+  font-size: 2.5rem !important;
+}
+.section-progress {
+  min-width: 60.64%;
+}
+.section-progress span {
+  font-size: 0.8rem;
+}
+.section-progressbar {
+  max-width: 41rem !important;
+}
+.volume-bar {
+  max-width: 6rem;
+}
+.material-icons {
+  font-size: 1.5rem;
+}
