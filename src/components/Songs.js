@@ -2,7 +2,21 @@
 
 import * as React from 'react'
 
-export default class Songs extends React.Component<$FlowFixMe, $FlowFixMe> {
+import db from '~/db'
+
+type Props = {||}
+type State = {|
+  songs: Array<Object>,
+|}
+
+export default class Songs extends React.Component<Props, State> {
+  state = { songs: [] }
+  async componentDidMount() {
+    const dbSongs = await db.songs.toArray()
+
+    this.setState({ songs: dbSongs })
+  }
+
   render() {
     return (
       <div className="section-songs bound">
@@ -21,132 +35,15 @@ export default class Songs extends React.Component<$FlowFixMe, $FlowFixMe> {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
+            {this.state.songs.map(song => (
+              <tr key={song.sourceId}>
+                <td>{song.filename}</td>
+                <td>{song.duration}</td>
+                <td>{song.artwork.artist ? song.artwork.artist : 'Unknown'}</td>
+                <td>{song.artwork.album ? song.artwork.album : 'Unknown'}</td>
+                <td>{song.meta.genre ? song.meta.genre : 'Unknown'}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
