@@ -13,7 +13,6 @@ export default class Songs extends React.Component<Props, State> {
   state = { songs: [] }
   async componentDidMount() {
     const dbSongs = await db.songs.toArray()
-
     this.setState({ songs: dbSongs })
   }
 
