@@ -26,10 +26,8 @@ type File = {
     disc: number,
     genre: string,
   |},
-  artwork: ?{
-    artist: ?ArtWork,
-    album: ?ArtWork,
-  },
+  artist: ?string,
+  album: ?string,
 }
 
 interface Service {

@@ -36,11 +36,11 @@ export default class Songs extends React.Component<Props, State> {
           <tbody>
             {this.state.songs.map(song => (
               <tr key={song.sourceId}>
-                <td>{song.filename}</td>
+                <td>{song.filename.trim()}</td>
                 <td>{song.duration}</td>
-                <td>{song.artwork.artist ? song.artwork.artist : 'Unknown'}</td>
-                <td>{song.artwork.album ? song.artwork.album : 'Unknown'}</td>
-                <td>{song.meta.genre ? song.meta.genre : 'Unknown'}</td>
+                <td>{song.artist ? song.artist.trim() : 'Unknown'}</td>
+                <td>{song.album ? song.album.trim() : 'Unknown'}</td>
+                <td>{song.meta.genre ? song.meta.genre.trim() : 'Unknown'}</td>
               </tr>
             ))}
           </tbody>

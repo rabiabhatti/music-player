@@ -107,7 +107,8 @@ const googleDriveService: Service = {
       filename: file.name.replace('.mp3', ''),
       duration: null,
       meta: null,
-      artwork: null,
+      artist: null,
+      album: null,
       state: 'pending',
     }))
   },

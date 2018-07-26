@@ -54,10 +54,8 @@ class Downloader extends React.Component<Props, State> {
           disc: parserdata.metadata.Comment,
           genre: parserdata.metadata.Genre,
         },
-        artwork: {
-          artist: parserdata.metadata.Artist,
-          album: parserdata.metadata.Album,
-        },
+        artist: parserdata.metadata.Artist,
+        album: parserdata.metadata.Album,
         state: 'downloaded',
       })
       this.props.incrementNonce()
