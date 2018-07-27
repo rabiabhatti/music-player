@@ -83,7 +83,7 @@ export default class Albums extends React.Component<Props, State> {
               <p className="album-artist">Zayn Malik</p>
             </div>
           </div>
-          <AlbumInfo cover={cover} name="Everyday Is Christmas" artist="Sia Furler" genre="Holiday" />
+          <AlbumInfo cover={cover} name="Everyday Is Christmas" artist="Sia Furler" genre="Holiday" year={1234} />
           <div className="album-content">
             <div className="album-cover">
               <div className="album-cover-filter" />

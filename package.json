@@ -6,6 +6,7 @@
     "id3-meta": "^1.1.0",
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",
+    "music-metadata": "^2.4.2",
     "normalize.css": "^8.0.0",
     "p-map": "^1.2.0",
     "react": "^16.3.1",
@@ -13,7 +14,8 @@
     "react-redux": "^5.0.7",
     "recompose": "^0.27.1",
     "redux": "^4.0.0",
-    "redux-actions": "^2.3.2"
+    "redux-actions": "^2.3.2",
+    "web-streams-node": "JCCR/web-streams-node#8a5910a911"
   },
   "scripts": {
     "start": "pundle --dev.singlepage --dev.static ./public::/",
@@ -49,9 +51,7 @@
       [
         "env",
         {
-          "exclude": [
-            "transform-regenerator"
-          ]
+          "exclude": ["transform-regenerator"]
         }
       ],
       "react",

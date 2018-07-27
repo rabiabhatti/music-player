@@ -1750,6 +1750,10 @@ es-to-primitive@^1.1.1:
     is-date-object "^1.0.1"
     is-symbol "^1.0.1"
 
+es6-promise@^4.2.4:
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.4.tgz#dc4221c2b16518760bd8c39a52d8f356fc00ed29"
+
 escape-html@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
@@ -2117,6 +2121,10 @@ file-entry-cache@^2.0.0:
   dependencies:
     flat-cache "^1.2.1"
     object-assign "^4.0.1"
+
+file-type@^8.1.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/file-type/-/file-type-8.1.0.tgz#244f3b7ef641bbe0cca196c7276e4b332399f68c"
 
 fill-range@^4.0.0:
   version "4.0.0"
@@ -2670,7 +2678,7 @@ is-resolvable@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-resolvable/-/is-resolvable-1.1.0.tgz#fb18f87ce1feb925169c9a407c19318a3206ed88"
 
-is-stream@^1.0.1:
+is-stream@^1.0.1, is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
 
@@ -2890,7 +2898,7 @@ md5.js@^1.3.4:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-media-typer@0.3.0:
+media-typer@0.3.0, media-typer@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/media-typer/-/media-typer-0.3.0.tgz#8710d7af0aa626f8fffa1ce00168545263255748"
 
@@ -3006,6 +3014,18 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
+
+music-metadata@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/music-metadata/-/music-metadata-2.4.2.tgz#b41c1067103f9912bd47e055a52dfe8bf5bebe6d"
+  dependencies:
+    debug "^3.1.0"
+    es6-promise "^4.2.4"
+    file-type "^8.1.0"
+    media-typer "^0.3.0"
+    strtok3 "^1.5.3"
+    then-read-stream "^1.2.1"
+    token-types "^0.9.4"
 
 mute-stream@0.0.7:
   version "0.0.7"
@@ -3858,6 +3878,10 @@ read-pkg@^2.0.0:
     normalize-package-data "^2.3.2"
     path-type "^2.0.0"
 
+readable-stream-node-to-web@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/readable-stream-node-to-web/-/readable-stream-node-to-web-1.0.1.tgz#8b7614faa1465ebfa0da9b9ca6303fa27073b7cf"
+
 readable-stream@^2.0.2, readable-stream@^2.0.6, readable-stream@^2.2.2, readable-stream@^2.3.6:
   version "2.3.6"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-2.3.6.tgz#b11c27d88b8ff1fbe070643cf94b0c79ae1b0aaf"
@@ -4400,6 +4424,15 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
+strtok3@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/strtok3/-/strtok3-1.5.3.tgz#a788ce5b43cd5365d61ae9c7620113b2c94c068f"
+  dependencies:
+    debug "^3.1.0"
+    es6-promise "^4.2.4"
+    then-read-stream "^1.2.1"
+    token-types "^0.9.4"
+
 supports-color@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-2.0.0.tgz#535d045ce6b6363fa40117084629995e9df324c7"
@@ -4469,6 +4502,12 @@ text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
 
+then-read-stream@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/then-read-stream/-/then-read-stream-1.2.1.tgz#9baddcb8a4ebc8a6fb36436985d24c36f7908829"
+  dependencies:
+    es6-promise "^4.2.4"
+
 through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
@@ -4516,6 +4555,10 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     extend-shallow "^3.0.2"
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
+
+token-types@^0.9.4:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/token-types/-/token-types-0.9.4.tgz#ea24c5c3fc577292a1d362a252e348a0016361ad"
 
 toposort@^2.0.2:
   version "2.0.2"
@@ -4645,6 +4688,18 @@ vary@~1.1.2:
 vm-browserify@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
+
+web-streams-node@JCCR/web-streams-node#8a5910a911:
+  version "0.3.1"
+  resolved "https://codeload.github.com/JCCR/web-streams-node/tar.gz/8a5910a9119a649498ef872962c80ed5f6803ee6"
+  dependencies:
+    is-stream "^1.1.0"
+    readable-stream-node-to-web "^1.0.1"
+    web-streams-ponyfill "^1.4.1"
+
+web-streams-ponyfill@^1.4.1:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/web-streams-ponyfill/-/web-streams-ponyfill-1.4.2.tgz#0ae863cc5f7493903679f16b08cbf14d432b62f4"
 
 whatwg-fetch@>=0.10.0:
   version "2.0.4"

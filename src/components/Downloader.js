@@ -9,7 +9,7 @@ import { incrementNonce } from '~/redux/songs'
 import type { UserAuthorization } from '~/redux/user'
 
 import services from '~/services'
-import metaParser from '~/services/metaParser'
+import parseMeta from '~/services/parseMeta'
 import connect from '../common/connect'
 
 // import services from '../services'
@@ -38,24 +38,26 @@ class Downloader extends React.Component<Props, State> {
         console.warn('Service not found for authorization', authorization)
         return
       }
-
       const response = await service.getFile(authorization, await song.sourceId)
-      const parserdata = await metaParser(response)
+      const parserdata = await parseMeta(song, response)
+
+      console.log('parse', parserdata)
 
       await db.songs.update(song.id, {
-        duration: parserdata.time,
+        duration: parserdata.format.duration,
         meta: {
-          name: parserdata.metadata.Title,
-          artist: parserdata.metadata.Artist,
-          album: parserdata.metadata.Album,
-          album_artist: parserdata.metadata.Artist,
-          year: parserdata.metadata.Year,
-          track: parserdata.metadata.Track,
-          disc: parserdata.metadata.Comment,
-          genre: parserdata.metadata.Genre,
+          name: parserdata.common.title,
+          artist: parserdata.common.artists,
+          album: parserdata.common.album,
+          album_artist: parserdata.common.artist,
+          year: parserdata.common.year,
+          track: parserdata.common.track,
+          disc: parserdata.common.comment,
+          genre: parserdata.common.genre,
+          picture: parserdata.common.picture,
         },
-        artist: parserdata.metadata.Artist,
-        album: parserdata.metadata.Album,
+        artist: parserdata.common.artists,
+        album: parserdata.common.album,
         state: 'downloaded',
       })
       this.props.incrementNonce()

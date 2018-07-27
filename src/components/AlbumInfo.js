@@ -11,6 +11,7 @@ type Props = {|
   name: string,
   artist: string,
   genre: string,
+  year: number,
 |}
 type State = {|
   showPlaylistPopup: number | null,
@@ -27,7 +28,7 @@ export default class AlbumInfo extends React.Component<Props, State> {
   }
 
   render() {
-    const { cover, name, artist, genre } = this.props
+    const { cover, name, artist, genre, year } = this.props
     const { showPlaylistPopup } = this.state
 
     return (
@@ -58,10 +59,12 @@ export default class AlbumInfo extends React.Component<Props, State> {
             <div className="space-between section-album-info-header">
               <div>
                 <h2>{name}</h2>
-                <a href="#artist1" className="album-info-artist btn">
+                <a href={`#${artist}`} className="album-info-artist btn">
                   {artist}
                 </a>
-                <p>{genre} &bull; 2017</p>
+                <p>
+                  {genre} &bull; {year}
+                </p>
               </div>
               <Dropdown>
                 <div className="align-center space-between sub-dropdown-trigger">
