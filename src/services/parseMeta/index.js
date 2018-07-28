@@ -5,7 +5,6 @@ import parser from 'id3-meta'
 import { toNodeReadable } from 'web-streams-node'
 import { parseStream } from 'music-metadata'
 
-import id3TagIDs from './id3TagIDs'
 import type { File } from '../types'
 
 const parsers = {
