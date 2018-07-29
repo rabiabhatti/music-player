@@ -1,5 +1,5 @@
 #album-info {
-  width: 100%;
+  min-width: 100%;
 }
 .section-album-info {
   width: 100%;
@@ -8,7 +8,6 @@
   align-items: flex-start;
   background-color: #f8f8f6;
   border-top: 1px solid rgba(0, 0, 0, 0.13);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
 }
 .section-album-info-header {
   position: relative;

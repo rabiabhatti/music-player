@@ -1,6 +1,14 @@
 .section-artists-info .section-album-info {
   background-color: #ffffff !important;
 }
+.section-artist {
+  left: 23.5rem;
+  position: relative;
+  width: 75.5%;
+  height: 100vh;
+  background-color: #f8f8f6;
+  max-height: calc(100vh - 12.5rem);
+}
 .section-artists-info .section-artist {
   display: none;
 }
@@ -12,6 +20,7 @@
   padding-left: 1.3rem;
   padding-right: 1.3rem;
   align-items: baseline;
+  background-color: #ffffff;
 }
 .section-artist-header .song-dropdown {
   color: #ffffff;
