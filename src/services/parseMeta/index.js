@@ -34,7 +34,28 @@ const parsers = {
   },
 }
 
-export default async function parseMeta(song: File, response: Object): Promise<Object> {
+// TODO: Maybe , ?
+const NAME_DELIMITERS = /&/
+function normalizeArtist(name: string | Array<string>): Array<string> {
+  if (!name) {
+    return []
+  }
+
+  const nameArray = [].concat(name)
+  let nameNormalized = []
+
+  nameArray.forEach(function(chunk) {
+    const chunks = chunk.split(NAME_DELIMITERS)
+    nameNormalized = nameNormalized.concat(chunks.map(i => i.trim()).filter(Boolean))
+  })
+
+  return nameNormalized
+}
+
+export default async function parseMeta(
+  song: File,
+  response: Object,
+): Promise<{ duration: number, meta: ?Object, artwork: ?Object }> {
   let metadata = {}
   const nodeStream = toNodeReadable(response.body)
   try {
@@ -46,6 +67,22 @@ export default async function parseMeta(song: File, response: Object): Promise<O
     })
   } catch (error) {
     console.error(error)
+    throw error
   }
-  return metadata
+
+  return {
+    duration: metadata.format.duration,
+    meta: {
+      name: metadata.common.title,
+      artists: normalizeArtist(metadata.common.artists),
+      album: metadata.common.album,
+      album_artists: normalizeArtist(metadata.common.artist),
+      year: metadata.common.year,
+      track: metadata.common.track,
+      disc: metadata.common.comment,
+      genre: metadata.common.genre,
+      picture: metadata.common.picture,
+    },
+    artwork: null,
+  }
 }

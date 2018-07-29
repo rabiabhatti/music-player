@@ -1,23 +1,25 @@
 // @flow
 
 import React from 'react'
+import groupBy from 'lodash/groupBy'
+
+import type { File } from '~/services/types'
+import type { SongsStateSelected } from '~/redux/songs'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
+import AlbumInfo from './AlbumInfo'
 import SubDropdown from './SubDropdown'
 
 type Props = {|
-  children?: React$Node,
-  id: string,
-  name: string,
-  albumsCount: number,
-  songsCount: number,
+  songs: Array<File>,
+  selected: ?SongsStateSelected,
 |}
 type State = {|
   showPlaylistPopup: number | null,
 |}
 
-export default class ArtistGenre extends React.Component<Props, State> {
+export default class ContentCard extends React.Component<Props, State> {
   state = {
     showPlaylistPopup: null,
   }
@@ -27,10 +29,20 @@ export default class ArtistGenre extends React.Component<Props, State> {
     this.setState({ showPlaylistPopup: Date.now() })
   }
   render() {
-    const { children, id, name, albumsCount, songsCount } = this.props
+    const { songs, selected } = this.props
     const { showPlaylistPopup } = this.state
+
+    let songsToShow = songs
+    if (selected) {
+      if (selected.type === 'artist') {
+        songsToShow = songs.filter(item => item.meta && item.meta.artists.includes(selected.identifier))
+      }
+    }
+    const songsByAlbums = groupBy(songsToShow, 'meta.album')
+    // console.log('songsByAlbums', songsByAlbums)
+
     return (
-      <div className="section-artist" id={id}>
+      <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
         {showPlaylistPopup ? (
           <Popup hash={showPlaylistPopup.toString()}>
             <input type="text" placeholder="Choose name" />
@@ -41,9 +53,9 @@ export default class ArtistGenre extends React.Component<Props, State> {
         )}
         <div className="space-between section-artist-header">
           <div>
-            <h2>{name}</h2>
+            <h2>{selected ? selected.identifier : 'All songs'}</h2>
             <p>
-              {albumsCount} albums, {songsCount} songs
+              {Object.keys(songsByAlbums).length} albums, {songsToShow.length} songs
             </p>
           </div>
           <Dropdown>
@@ -64,7 +76,9 @@ export default class ArtistGenre extends React.Component<Props, State> {
             <a className="dropdown-option">Delete from Library</a>
           </Dropdown>
         </div>
-        <div className="artist-info">{children}</div>
+        {Object.keys(songsByAlbums).map(albumName => (
+          <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
+        ))}
       </div>
     )
   }

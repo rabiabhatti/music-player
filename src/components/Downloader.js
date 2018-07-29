@@ -39,25 +39,12 @@ class Downloader extends React.Component<Props, State> {
         return
       }
       const response = await service.getFile(authorization, await song.sourceId)
-      const parserdata = await parseMeta(song, response)
-
-      console.log('parse', parserdata)
+      const { duration, meta, artwork } = await parseMeta(song, response)
 
       await db.songs.update(song.id, {
-        duration: parserdata.format.duration,
-        meta: {
-          name: parserdata.common.title,
-          artist: parserdata.common.artists,
-          album: parserdata.common.album,
-          album_artist: parserdata.common.artist,
-          year: parserdata.common.year,
-          track: parserdata.common.track,
-          disc: parserdata.common.comment,
-          genre: parserdata.common.genre,
-          picture: parserdata.common.picture,
-        },
-        artist: parserdata.common.artists,
-        album: parserdata.common.album,
+        duration,
+        meta,
+        artwork,
         state: 'downloaded',
       })
       this.props.incrementNonce()

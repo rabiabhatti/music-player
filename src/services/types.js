@@ -14,21 +14,23 @@ type File = {
   sourceId: string,
   sourceUid: string,
   filename: string,
-  duration: ?string,
+  duration: number,
   state: 'downloaded' | 'downloading' | 'pending',
   meta: ?{|
     name: string,
-    artist: Array<string>,
+    artists: Array<string>,
     album: string,
-    album_artist: Array<string>,
+    album_artists: Array<string>,
     year: string,
     track: number,
     disc: number,
     genre: Array<string>,
     picture: Object,
   |},
-  artist: ?string,
-  album: ?string,
+  artwork: ?{
+    album: ?ArtWork,
+    artwork: ?ArtWork,
+  },
 }
 
 interface Service {
