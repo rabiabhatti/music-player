@@ -1,47 +1,67 @@
 // @flow
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 
-import ArtistGenre from './ArtistGenre'
+import db from '~/db'
+import { setSelected, type SongsStateSelected } from '~/redux/songs'
+import { getGenresFromSongs } from '~/common/songs'
+import type { File } from '~/services/types'
+
+import ContentCard from './ContentCard'
 import AlbumInfo from './AlbumInfo'
 
 import cover from '../static/img/album-cover.jpg'
 import cover3 from '../static/img/album-cover-3.png'
 import cover4 from '../static/img/album-cover-4.jpg'
 
-type Props = {||}
-type State = {||}
+type Props = {|
+  selected: SongsStateSelected,
+  setSelected: typeof setSelected,
+|}
+type State = {|
+  songs: Array<File>,
+|}
 
-export default class Genres extends React.Component<Props, State> {
+class Genres extends React.Component<Props, State> {
+  state = {
+    songs: [],
+  }
+
+  async componentDidMount() {
+    const dbSongs = await db.songs.toArray()
+    this.setState({ songs: dbSongs })
+  }
+
   render() {
+    const { songs } = this.state
+    const { selected } = this.props
+    const genres = getGenresFromSongs(songs)
+
     return (
       <div className="section-artists bound">
         <div className="artists-bar">
-          <a className="align-center artists-bar-row active" href="#artist1">
-            <i className="material-icons artists-bar-row-icon">queue_music</i>
-            <span>Holiday</span>
-          </a>
-          <a className="align-center artists-bar-row" href="#artist2">
-            <i className="material-icons artists-bar-row-icon">queue_music</i>
-            <span>Country</span>
-          </a>
-          <a className="align-center artists-bar-row" href="#artist3">
-            <i className="material-icons artists-bar-row-icon">queue_music</i>
-            <span>Rock</span>
-          </a>
+          {genres.map(genre => (
+            <a
+              className={`align-center artists-bar-row ${
+                selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
+              }`}
+              href={`#${genre}`}
+              key={genre}
+              style={{ cursor: 'pointer' }}
+              onClick={() => this.props.setSelected({ type: 'genre', identifier: genre })}
+            >
+              <i className="material-icons artists-bar-row-icon">queue_music</i>
+              <span>{genre}</span>
+            </a>
+          ))}
         </div>
         <div className="section-artists-info">
-          <ArtistGenre id="artist1" name="Holiday" albumsCount={1} songsCount={7}>
-            <AlbumInfo cover={cover} name="Everyday Is Christmas" artist="Sia Furler" genre="Holiday" year={1234} />
-          </ArtistGenre>
-          <ArtistGenre id="artist2" name="Country" albumsCount={1} songsCount={7}>
-            <AlbumInfo cover={cover3} name="Mind of Mine" artist="Zain Malik" genre="Holiday" year={1234} />
-          </ArtistGenre>
-          <ArtistGenre id="artist3" name="Rock" albumsCount={1} songsCount={7}>
-            <AlbumInfo cover={cover4} name="1989" artist="Taylor Swift" genre="Holiday" year={1234} />
-          </ArtistGenre>
+          <ContentCard songs={songs} selected={selected && selected.type === 'genre' ? selected : null} />
         </div>
       </div>
     )
   }
 }
+
+export default connect(({ songs }) => ({ selected: songs.selected }), { setSelected })(Genres)

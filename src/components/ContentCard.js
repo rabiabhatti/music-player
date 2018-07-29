@@ -36,11 +36,11 @@ export default class ContentCard extends React.Component<Props, State> {
     if (selected) {
       if (selected.type === 'artist') {
         songsToShow = songs.filter(item => item.meta && item.meta.artists.includes(selected.identifier))
+      } else if (selected.type === 'genre') {
+        songsToShow = songs.filter(item => item.meta && item.meta.genre && item.meta.genre.includes(selected.identifier))
       }
     }
     const songsByAlbums = groupBy(songsToShow, 'meta.album')
-    // console.log('songsByAlbums', songsByAlbums)
-
     return (
       <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
         {showPlaylistPopup ? (
