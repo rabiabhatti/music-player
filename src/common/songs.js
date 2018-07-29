@@ -24,7 +24,9 @@ export function getGenresFromSongs(songs: Array<File>): Array<string> {
   songs.forEach(function(song) {
     const { meta } = song
     if (meta) {
-      typeof meta.genre === 'undefined' ? genres.add('Unknown') : meta.genre.forEach(item => genres.add(item))
+      typeof meta.genre === 'undefined' || meta.genre[0] === ''
+        ? genres.add('Unknown')
+        : meta.genre.forEach(item => genres.add(item))
     }
   })
 

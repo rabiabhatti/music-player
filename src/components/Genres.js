@@ -41,20 +41,25 @@ class Genres extends React.Component<Props, State> {
     return (
       <div className="section-artists bound">
         <div className="artists-bar">
-          {genres.map(genre => (
-            <a
-              className={`align-center artists-bar-row ${
-                selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
-              }`}
-              href={`#${genre}`}
-              key={genre}
-              style={{ cursor: 'pointer' }}
-              onClick={() => this.props.setSelected({ type: 'genre', identifier: genre })}
-            >
-              <i className="material-icons artists-bar-row-icon">queue_music</i>
-              <span>{genre}</span>
-            </a>
-          ))}
+          {genres.map(
+            genre =>
+              genre !== 'Unknown' ? (
+                <a
+                  className={`align-center artists-bar-row ${
+                    selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
+                  }`}
+                  href={`#${genre}`}
+                  key={genre}
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => this.props.setSelected({ type: 'genre', identifier: genre })}
+                >
+                  <i className="material-icons artists-bar-row-icon">queue_music</i>
+                  <span>{genre}</span>
+                </a>
+              ) : (
+                <div key="Unknown" />
+              ),
+          )}
         </div>
         <div className="section-artists-info">
           <ContentCard songs={songs} selected={selected && selected.type === 'genre' ? selected : null} />

@@ -1,10 +1,10 @@
-.section-artists-info .section-album-info {
+/* .section-artists-info .section-album-info {
   background-color: #ffffff !important;
-}
+} */
 .section-artist {
-  left: 23.5rem;
+  /* left: 23.5rem;
   position: relative;
-  width: 75.5%;
+  width: 75.5%; */
   height: 100vh;
   background-color: #f8f8f6;
   max-height: calc(100vh - 12.5rem);

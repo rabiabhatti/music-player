@@ -71,7 +71,7 @@ export default class AlbumInfo extends React.Component<Props, State> {
                   {songs[0].meta && songs[0].meta.genre ? songs[0].meta.genre : 'Unkown'} &bull;{' '}
                   {songs[0].meta && songs[0].meta.year ? songs[0].meta.year : 'Unkown'}
                 </p>
-              </div>,
+              </div>
               <Dropdown>
                 <div className="align-center space-between sub-dropdown-trigger">
                   <a>Add to Playlist</a>
