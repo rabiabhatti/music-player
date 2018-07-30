@@ -3,6 +3,7 @@
 import * as React from 'react'
 
 import db from '~/db'
+import { humanizeDuration } from '~/common/songs'
 
 type Props = {||}
 type State = {|
@@ -36,11 +37,13 @@ export default class Songs extends React.Component<Props, State> {
           <tbody>
             {this.state.songs.map(song => (
               <tr key={song.sourceId}>
-                <td>{song.filename.trim()}</td>
-                <td>{song.duration}</td>
-                <td>{song.artist ? song.artist.trim() : 'Unknown'}</td>
-                <td>{song.album ? song.album.trim() : 'Unknown'}</td>
-                <td>{song.meta.genre ? song.meta.genre.trim() : 'Unknown'}</td>
+                <td>
+                  {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
+                </td>
+                <td>{humanizeDuration(song.duration)}</td>
+                <td>{song.meta.artists.length === 0 ? 'Unknown' : song.meta.artists.join(', ')}</td>
+                <td>{song.meta.album ? song.meta.album : 'Unknown'}</td>
+                <td>{typeof song.meta.genre === 'undefined' || song.meta.genre[0] === '' ? 'Unkown' : song.meta.genre}</td>
               </tr>
             ))}
           </tbody>

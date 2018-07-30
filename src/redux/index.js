@@ -4,10 +4,12 @@ import { createStore, combineReducers } from 'redux'
 
 import * as user from './user'
 import * as songs from './songs'
+import * as components from './components'
 
 const states = {
   user,
   songs,
+  components,
 }
 const reducers = Object.keys(states).reduce(
   (agg, curr) => ({

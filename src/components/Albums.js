@@ -12,9 +12,6 @@ import type { File } from '~/services/types'
 import AlbumInfo from './AlbumInfo'
 
 import cover from '../static/img/album-cover.jpg'
-import cover2 from '../static/img/album-cover-2.jpg'
-import cover3 from '../static/img/album-cover-3.png'
-import cover4 from '../static/img/album-cover-4.jpg'
 
 type Props = {|
   selected: SongsStateSelected,

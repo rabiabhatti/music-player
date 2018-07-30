@@ -64,7 +64,9 @@ class Artists extends React.Component<Props, State> {
             </a>
           ))}
         </div>
-        <ContentCard songs={songs} selected={selected && selected.type === 'artist' ? selected : null} />
+        <div className="section-artists-info">
+          <ContentCard songs={songs} selected={selected && selected.type === 'artist' ? selected : null} />
+        </div>
       </div>
     )
   }

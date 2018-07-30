@@ -5,17 +5,22 @@ import { compose } from 'recompose'
 
 import connect from '../common/connect'
 import services from '../services'
+import type { ComponentsStateSelected } from '~/redux/components'
 
 import Login from './Login'
+import Songs from './Songs'
+import Albums from './Albums'
+import Genres from './Genres'
 import Player from './Player'
 import Loading from './Loading'
 import Sidebar from './Sidebar'
 import Artists from './Artists'
 import Downloader from './Downloader'
+import RecentlyPlayed from './RecentlyPlayed'
 
 type Props = {|
   hasAuthorization: boolean,
-  children?: React$Node,
+  selected: ComponentsStateSelected,
 |}
 type State = {|
   loading: boolean,
@@ -26,6 +31,14 @@ const SHOW_LOADING_SCREEN_IN = 600 // ms
 
 class App extends React.Component<Props, State> {
   state = { loading: true, showLoadingScreen: false }
+
+  components = {
+    songs: Songs,
+    artists: Artists,
+    albums: Albums,
+    genres: Genres,
+    recentlyplayed: RecentlyPlayed,
+  }
 
   componentDidMount() {
     const timeout = setTimeout(() => {
@@ -41,8 +54,9 @@ class App extends React.Component<Props, State> {
       .catch(console.error)
   }
   render() {
-    const { hasAuthorization, children } = this.props
+    const { hasAuthorization, selected } = this.props
     const { showLoadingScreen, loading } = this.state
+    const Component = this.components[selected.type.toLowerCase()]
 
     if (showLoadingScreen) {
       return <Loading />
@@ -60,8 +74,7 @@ class App extends React.Component<Props, State> {
         <Player />
         <div className="app-wrapper space-between">
           <Sidebar />
-          <Artists />
-          {children}
+          <Component />
         </div>
       </React.Fragment>
     )
@@ -71,5 +84,6 @@ class App extends React.Component<Props, State> {
 export default compose(
   connect(state => ({
     hasAuthorization: !!state.user.authorizations.size,
+    selected: state.components.selected,
   })),
 )(App)
