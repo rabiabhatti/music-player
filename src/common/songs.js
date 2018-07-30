@@ -32,6 +32,18 @@ export function getGenresFromSongs(songs: Array<File>): Array<string> {
 
   return Array.from(genres)
 }
+export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
+  const albums = new Set()
+
+  songs.forEach(function(song) {
+    const { meta } = song
+    if (meta) {
+      albums.add(meta.album || 'Unknown')
+    }
+  })
+
+  return Array.from(albums)
+}
 
 export function humanizeDuration(duration: number): string {
   const minutes = Math.floor(duration / 60)
