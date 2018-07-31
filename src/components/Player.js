@@ -22,7 +22,7 @@ type Props = {|
   authorizations: Array<UserAuthorization>,
 |}
 type State = {|
-  stop: boolean,
+  pause: boolean,
   volume: number,
   progress: number,
   duration: number,
@@ -34,7 +34,7 @@ class Player extends React.Component<Props, State> {
   audioContext = new AudioContext()
 
   state = {
-    stop: true,
+    pause: false,
     duration: 0,
     progress: DEFAULT_PROGRESS,
     volume: DEFAULT_VOLUME,
@@ -116,33 +116,39 @@ class Player extends React.Component<Props, State> {
 
       const response = await service.getFile(authorization, song.sourceId)
       const buffer = await response.arrayBuffer()
+      // console.log(this.audioContext.currentTime)
 
       const decodedData = await this.audioContext.decodeAudioData(buffer)
       if (this.source) {
         this.source.buffer = decodedData
         this.source.connect(this.audioContext.destination)
         this.source.start(0)
-        this.setState({ stop: false, duration: this.source.buffer.duration })
+        this.setState({ pause: false, duration: decodedData.duration })
       }
     })
   }
 
-  playSong = () => {
+  // playSong = () => {
+  //   if (this.source) {
+  //     this.source.start(0)
+  //     // this.setState({ pause: false })
+  //   }
+  // }
+  pauseSong = () => {
     if (this.source) {
-      this.source.start(0)
-      this.setState({ stop: false })
-    }
-  }
-  stopSong = () => {
-    if (this.source) {
-      this.source.stop(0)
-      this.setState({ stop: true })
+      if (this.audioContext.state === 'running') {
+        this.audioContext.suspend()
+        this.setState({ pause: true })
+      } else if (this.audioContext.state === 'suspended') {
+        this.audioContext.resume()
+        this.setState({ pause: false })
+      }
     }
   }
 
   render() {
     const song = this.props.songToPlay
-    const { progress, volume, showPlaylistPopup, stop, duration } = this.state
+    const { progress, volume, showPlaylistPopup, pause, duration } = this.state
 
     return (
       <div className="section-player">
@@ -182,12 +188,12 @@ class Player extends React.Component<Props, State> {
               <i title="Previous" className="material-icons">
                 fast_rewind
               </i>
-              {stop ? (
-                <i title="Play" className="material-icons play-btn" onClick={this.playSong}>
+              {pause ? (
+                <i title="Play" className="material-icons play-btn" onClick={this.pauseSong}>
                   play_circle_outline
                 </i>
               ) : (
-                <i title="Pause" className="material-icons play-btn" onClick={this.stopSong}>
+                <i title="Pause" className="material-icons play-btn" onClick={this.pauseSong}>
                   pause_circle_outline
                 </i>
               )}
