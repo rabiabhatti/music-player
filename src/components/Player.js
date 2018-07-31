@@ -26,16 +26,19 @@ type State = {|
   volume: number,
   progress: number,
   duration: number,
+  currentTime: number,
   showPlaylistPopup: number | null,
 |}
 
 class Player extends React.Component<Props, State> {
   source = null
   audioContext = new AudioContext()
+  setInterval: IntervalID
 
   state = {
     pause: false,
     duration: 0,
+    currentTime: 0,
     progress: DEFAULT_PROGRESS,
     volume: DEFAULT_VOLUME,
     showPlaylistPopup: null,
@@ -45,6 +48,9 @@ class Player extends React.Component<Props, State> {
     if (this.props.songToPlay) {
       this.getData(this.props.songToPlay)
     }
+    this.setInterval = setInterval(() => {
+      this.setState({ currentTime: this.audioContext.currentTime })
+    }, 1000)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -53,7 +59,16 @@ class Player extends React.Component<Props, State> {
         this.source.stop(0)
       }
       this.getData(nextProps.songToPlay)
+      this.clearCurrentTime()
     }
+  }
+  componentWillUnmount() {
+    this.clearCurrentTime()
+  }
+
+  clearCurrentTime = () => {
+    this.setState({ currentTime: 0 })
+    clearInterval(this.setInterval)
   }
 
   showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -116,7 +131,6 @@ class Player extends React.Component<Props, State> {
 
       const response = await service.getFile(authorization, song.sourceId)
       const buffer = await response.arrayBuffer()
-      // console.log(this.audioContext.currentTime)
 
       const decodedData = await this.audioContext.decodeAudioData(buffer)
       if (this.source) {
@@ -128,12 +142,6 @@ class Player extends React.Component<Props, State> {
     })
   }
 
-  // playSong = () => {
-  //   if (this.source) {
-  //     this.source.start(0)
-  //     // this.setState({ pause: false })
-  //   }
-  // }
   pauseSong = () => {
     if (this.source) {
       if (this.audioContext.state === 'running') {
@@ -148,7 +156,7 @@ class Player extends React.Component<Props, State> {
 
   render() {
     const song = this.props.songToPlay
-    const { progress, volume, showPlaylistPopup, pause, duration } = this.state
+    const { progress, volume, showPlaylistPopup, pause, duration, currentTime } = this.state
 
     return (
       <div className="section-player">
@@ -202,7 +210,7 @@ class Player extends React.Component<Props, State> {
               </i>
             </div>
             <div className="section-progress align-center space-between">
-              <span>2:08</span>
+              <span>{humanizeDuration(currentTime)}</span>
               <input id="range" onMouseMove={this.onDrag} className="section-progressbar" type="range" min="1" max="100" />
               <span>{humanizeDuration(duration)}</span>
             </div>
