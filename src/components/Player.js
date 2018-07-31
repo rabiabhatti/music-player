@@ -1,6 +1,12 @@
 // @flow
 
 import React from 'react'
+import { connect } from 'react-redux'
+
+import services from '~/services'
+import { humanizeDuration } from '~/common/songs'
+import type { SongToPlayState } from '~/redux/songs'
+import type { UserAuthorization } from '~/redux/user'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
@@ -10,22 +16,44 @@ import cover from '../static/img/album-cover.jpg'
 
 const DEFAULT_PROGRESS = 50
 const DEFAULT_VOLUME = 50
-const DEFAULT_FULL_SCREEN = false
 
-type Props = {||}
+type Props = {|
+  songToPlay: SongToPlayState,
+  authorizations: Array<UserAuthorization>,
+|}
 type State = {|
-  progress: number,
+  stop: boolean,
   volume: number,
-  fullScreen: boolean,
+  progress: number,
+  duration: number,
   showPlaylistPopup: number | null,
 |}
 
-export default class Player extends React.Component<Props, State> {
+class Player extends React.Component<Props, State> {
+  source = null
+  audioContext = new AudioContext()
+
   state = {
+    stop: true,
+    duration: 0,
     progress: DEFAULT_PROGRESS,
     volume: DEFAULT_VOLUME,
-    fullScreen: DEFAULT_FULL_SCREEN,
     showPlaylistPopup: null,
+  }
+
+  componentDidMount() {
+    if (this.props.songToPlay) {
+      this.getData(this.props.songToPlay)
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.songToPlay && this.props.songToPlay && nextProps.songToPlay.sourceId !== this.props.songToPlay.sourceId) {
+      if (this.source) {
+        this.source.stop(0)
+      }
+      this.getData(nextProps.songToPlay)
+    }
   }
 
   showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -71,8 +99,50 @@ export default class Player extends React.Component<Props, State> {
     }
   }
 
+  getData = (song: Object) => {
+    const { authorizations } = this.props
+    if (!authorizations.length) {
+      console.warn('No authorizations found')
+      return
+    }
+
+    this.source = this.audioContext.createBufferSource()
+    authorizations.forEach(async authorization => {
+      const service = services.find(item => item.name === authorization.service)
+      if (!service) {
+        console.warn('Service not found for authorization', authorization)
+        return
+      }
+
+      const response = await service.getFile(authorization, song.sourceId)
+      const buffer = await response.arrayBuffer()
+
+      const decodedData = await this.audioContext.decodeAudioData(buffer)
+      if (this.source) {
+        this.source.buffer = decodedData
+        this.source.connect(this.audioContext.destination)
+        this.source.start(0)
+        this.setState({ stop: false, duration: this.source.buffer.duration })
+      }
+    })
+  }
+
+  playSong = () => {
+    if (this.source) {
+      this.source.start(0)
+      this.setState({ stop: false })
+    }
+  }
+  stopSong = () => {
+    if (this.source) {
+      this.source.stop(0)
+      this.setState({ stop: true })
+    }
+  }
+
   render() {
-    const { progress, volume, fullScreen, showPlaylistPopup } = this.state
+    const song = this.props.songToPlay
+    const { progress, volume, showPlaylistPopup, stop, duration } = this.state
 
     return (
       <div className="section-player">
@@ -87,8 +157,8 @@ export default class Player extends React.Component<Props, State> {
         <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
-              <h1 className="song-title">Ho ho ho</h1>
-              <h4 className="song-artist">Sia Furler</h4>
+              <h1 className="song-title">{song.name ? song.name : 'Empty'}</h1>
+              <h4 className="song-artist">{song.artists ? song.artists : 'Empty'}</h4>
             </div>
             <Dropdown>
               <div className="align-center space-between sub-dropdown-trigger">
@@ -112,12 +182,12 @@ export default class Player extends React.Component<Props, State> {
               <i title="Previous" className="material-icons">
                 fast_rewind
               </i>
-              {progress === 0 ? (
-                <i title="Play" className="material-icons play-btn">
+              {stop ? (
+                <i title="Play" className="material-icons play-btn" onClick={this.playSong}>
                   play_circle_outline
                 </i>
               ) : (
-                <i title="Pause" className="material-icons play-btn">
+                <i title="Pause" className="material-icons play-btn" onClick={this.stopSong}>
                   pause_circle_outline
                 </i>
               )}
@@ -128,7 +198,7 @@ export default class Player extends React.Component<Props, State> {
             <div className="section-progress align-center space-between">
               <span>2:08</span>
               <input id="range" onMouseMove={this.onDrag} className="section-progressbar" type="range" min="1" max="100" />
-              <span>3:38</span>
+              <span>{humanizeDuration(duration)}</span>
             </div>
             <div className="section-volume align-center">
               {volume === 0 ? (
@@ -156,15 +226,6 @@ export default class Player extends React.Component<Props, State> {
               <i title="Shuffle" className="material-icons">
                 sync
               </i>
-              {fullScreen ? (
-                <i title="Exit full screen" className="material-icons">
-                  fullscreen_exit
-                </i>
-              ) : (
-                <i title="Full screen" className="material-icons">
-                  fullscreen
-                </i>
-              )}
             </div>
           </div>
         </div>
@@ -172,3 +233,8 @@ export default class Player extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(
+  state => ({ authorizations: state.user.authorizations.toArray(), songToPlay: state.songs.songToPlay }),
+  null,
+)(Player)

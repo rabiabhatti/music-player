@@ -1,16 +1,20 @@
 // @flow
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 
 import db from '~/db'
 import { humanizeDuration } from '~/common/songs'
+import { songToPlay } from '~/redux/songs'
 
-type Props = {||}
+type Props = {|
+  songToPlay: typeof songToPlay,
+|}
 type State = {|
   songs: Array<Object>,
 |}
 
-export default class Songs extends React.Component<Props, State> {
+class Songs extends React.Component<Props, State> {
   state = { songs: [] }
   async componentDidMount() {
     const dbSongs = await db.songs.toArray()
@@ -36,7 +40,21 @@ export default class Songs extends React.Component<Props, State> {
           </thead>
           <tbody>
             {this.state.songs.map(song => (
-              <tr key={song.sourceId}>
+              <tr
+                key={song.sourceId}
+                style={{ cursor: 'pointer' }}
+                onClick={() =>
+                  this.props.songToPlay({
+                    name:
+                      song.meta && typeof song.meta.name !== 'undefined'
+                        ? song.meta.name
+                        : song.filename.replace('.mp3', ''),
+                    sourceId: song.sourceId,
+                    sourceUid: song.sourceUid,
+                    artists: song.meta.artists.length === 0 ? 'Unknown' : song.meta.artists.join(', '),
+                  })
+                }
+              >
                 <td>
                   {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
                 </td>
@@ -52,3 +70,5 @@ export default class Songs extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(null, { songToPlay })(Songs)

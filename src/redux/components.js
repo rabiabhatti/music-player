@@ -10,11 +10,11 @@ export type ComponentsStateSelected = {|
   type: 'Albums' | 'Artists' | 'Playlist' | 'Genres' | 'Songs' | 'RecentlyPlayed',
 |}
 export type ComponentsState = {|
-  selected: ?ComponentsStateSelected,
+  selected: ComponentsStateSelected,
 |}
 
 const defaultState: ComponentsState = {
-  selected: null,
+  selected: { type: 'Songs' },
 }
 
 export const hydrators = {}

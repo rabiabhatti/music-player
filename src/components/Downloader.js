@@ -12,9 +12,6 @@ import services from '~/services'
 import parseMeta from '~/services/parseMeta'
 import connect from '../common/connect'
 
-// import services from '../services'
-// import { authorizeService } from '../redux/user'
-
 type Props = {|
   authorizations: Array<UserAuthorization>,
   incrementNonce: () => void,
