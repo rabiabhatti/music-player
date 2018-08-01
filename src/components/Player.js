@@ -75,6 +75,9 @@ class Player extends React.Component<Props, State> {
         currentTime: prevState.currentTime,
       }))
       return
+    } else if (this.state.currentTime >= this.state.duration) {
+      this.setState({ currentTime: -1 })
+      return
     }
     this.setState(prevState => ({
       currentTime: prevState.currentTime + 1,
@@ -97,48 +100,6 @@ class Player extends React.Component<Props, State> {
       this.volume.gain.value = parseInt(volume.value, 10) / 100
       this.setState({ volume: parseInt(volume.value, 10) })
     }
-  }
-
-  onDrag = () => {
-    const inlineStyle = document.createElement('style')
-    const rangeSelector = document.querySelectorAll('[type=range]')
-    const inlineStyleContent = []
-    if (document.body) {
-      document.body.appendChild(inlineStyle)
-    }
-    const eventname = new Event('input')
-    for (const item of rangeSelector) {
-      item.addEventListener(
-        'input',
-        function() {
-          const rangeInterval = Number(this.getAttribute('max') - this.getAttribute('min'))
-          const rangePercent = (Number(this.value) + Math.abs(this.getAttribute('min'))) / rangeInterval * 97
-          writeStyle({
-            id: this.id,
-            percent: rangePercent,
-          })
-        },
-        false,
-      )
-      item.dispatchEvent(eventname)
-    }
-    function writeStyle(obj) {
-      const find = inlineStyleContent.map(x => x.id).indexOf(obj.id)
-      let styleText = ''
-      if (find === -1) {
-        inlineStyleContent.push(obj)
-      } else {
-        inlineStyleContent[find] = obj
-      }
-      for (const item of inlineStyleContent) {
-        styleText += `#${item.id}::-webkit-slider-runnable-track{background-size:${item.percent}% 100%} `
-      }
-      inlineStyle.textContent = styleText
-    }
-  }
-
-  onSeekbarDrag = async () => {
-    const seekbar = document.getElementById('seekbar')
   }
 
   getData = (song: Object) => {
@@ -193,6 +154,7 @@ class Player extends React.Component<Props, State> {
   render() {
     const song = this.props.songToPlay
     const { progress, volume, showPlaylistPopup, pause, duration, currentTime } = this.state
+    const width = parseInt(currentTime / duration * 100, 10)
 
     return (
       <div className="section-player">
@@ -247,7 +209,10 @@ class Player extends React.Component<Props, State> {
             </div>
             <div className="section-progress align-center space-between">
               <span>{humanizeDuration(currentTime)}</span>
-              <input id="range" className="section-progressbar" type="range" value={currentTime} min={0} max={duration} />
+              <div className="progressbar">
+                <div className="progress-fill" style={{ width: `${width + 1}%` }} />
+                <input type="range" value={currentTime} min={0} max={duration} />
+              </div>
               <span>{humanizeDuration(duration)}</span>
             </div>
             <div className="section-volume align-center">
@@ -255,7 +220,7 @@ class Player extends React.Component<Props, State> {
                 <i title="Volume" className="material-icons">
                   volume_off
                 </i>
-              ) : volume === 30 ? (
+              ) : volume <= 40 ? (
                 <i title="Volume" className="material-icons">
                   volume_down
                 </i>
@@ -264,16 +229,10 @@ class Player extends React.Component<Props, State> {
                   volume_up
                 </i>
               )}
-              <input
-                id="range"
-                className="volume-bar"
-                onChange={this.handleVolumeChange}
-                title="Volume"
-                type="range"
-                value={volume}
-                min="1"
-                max="100"
-              />
+              <div className="volume-progressbar">
+                <div className="progress-fill" style={{ width: `${volume}%` }} />
+                <input onChange={this.handleVolumeChange} title="Volume" type="range" value={volume} min="0" max="100" />
+              </div>
               <i title="Shuffle" className="material-icons">
                 sync
               </i>

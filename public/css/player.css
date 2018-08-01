@@ -13,6 +13,19 @@
   padding: 0.3rem 0;
   background-color: #ffffff7a;
 }
+.progressbar {
+  width: 90%;
+  min-width: 90%;
+  position: relative;
+}
+.progress-fill {
+  top: 0;
+  left: 0;
+  height: 2px;
+  position: absolute;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
 i,
 progress {
   cursor: pointer;
@@ -55,8 +68,10 @@ progress {
 .section-progressbar {
   max-width: 41rem !important;
 }
-.volume-bar {
+.volume-progressbar {
+  width: 6rem;
   max-width: 6rem;
+  position: relative;
 }
 .material-icons {
   font-size: 1.5rem;
