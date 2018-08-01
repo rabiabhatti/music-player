@@ -32,6 +32,7 @@ type State = {|
 
 class Player extends React.Component<Props, State> {
   source = null
+  volume = null
   audioContext = new AudioContext()
   setInterval: IntervalID
 
@@ -47,10 +48,10 @@ class Player extends React.Component<Props, State> {
   componentDidMount() {
     if (this.props.songToPlay) {
       this.getData(this.props.songToPlay)
+      this.setInterval = setInterval(() => {
+        this.updateCurrentTime()
+      }, 1000)
     }
-    this.setInterval = setInterval(() => {
-      this.setState({ currentTime: this.audioContext.currentTime })
-    }, 1000)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,12 +59,26 @@ class Player extends React.Component<Props, State> {
       if (this.source) {
         this.source.stop(0)
       }
-      this.getData(nextProps.songToPlay)
       this.clearCurrentTime()
+      this.getData(nextProps.songToPlay)
+      this.setInterval = setInterval(() => {
+        this.updateCurrentTime()
+      }, 1000)
     }
   }
   componentWillUnmount() {
     this.clearCurrentTime()
+  }
+  updateCurrentTime = () => {
+    if (this.state.pause) {
+      this.setState(prevState => ({
+        currentTime: prevState.currentTime,
+      }))
+      return
+    }
+    this.setState(prevState => ({
+      currentTime: prevState.currentTime + 1,
+    }))
   }
 
   clearCurrentTime = () => {
@@ -74,6 +89,14 @@ class Player extends React.Component<Props, State> {
   showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
     e.preventDefault()
     this.setState({ showPlaylistPopup: Date.now() })
+  }
+
+  handleVolumeChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    const volume = event.target
+    if (this.volume) {
+      this.volume.gain.value = parseInt(volume.value, 10) / 100
+      this.setState({ volume: parseInt(volume.value, 10) })
+    }
   }
 
   onDrag = () => {
@@ -114,6 +137,10 @@ class Player extends React.Component<Props, State> {
     }
   }
 
+  onSeekbarDrag = async () => {
+    const seekbar = document.getElementById('seekbar')
+  }
+
   getData = (song: Object) => {
     const { authorizations } = this.props
     if (!authorizations.length) {
@@ -122,6 +149,13 @@ class Player extends React.Component<Props, State> {
     }
 
     this.source = this.audioContext.createBufferSource()
+    this.volume = this.audioContext.createGain()
+    this.volume.gain.value = this.state.volume / 100
+    if (this.source) {
+      this.source.connect(this.volume)
+    }
+    this.volume.connect(this.audioContext.destination)
+
     authorizations.forEach(async authorization => {
       const service = services.find(item => item.name === authorization.service)
       if (!service) {
@@ -134,9 +168,11 @@ class Player extends React.Component<Props, State> {
 
       const decodedData = await this.audioContext.decodeAudioData(buffer)
       if (this.source) {
+        this.source.loop = true
         this.source.buffer = decodedData
-        this.source.connect(this.audioContext.destination)
-        this.source.start(0)
+        if (this.source) {
+          this.source.start(0)
+        }
         this.setState({ pause: false, duration: decodedData.duration })
       }
     })
@@ -211,7 +247,7 @@ class Player extends React.Component<Props, State> {
             </div>
             <div className="section-progress align-center space-between">
               <span>{humanizeDuration(currentTime)}</span>
-              <input id="range" onMouseMove={this.onDrag} className="section-progressbar" type="range" min="1" max="100" />
+              <input id="range" className="section-progressbar" type="range" value={currentTime} min={0} max={duration} />
               <span>{humanizeDuration(duration)}</span>
             </div>
             <div className="section-volume align-center">
@@ -231,9 +267,10 @@ class Player extends React.Component<Props, State> {
               <input
                 id="range"
                 className="volume-bar"
-                onMouseMove={this.onDrag}
+                onChange={this.handleVolumeChange}
                 title="Volume"
                 type="range"
+                value={volume}
                 min="1"
                 max="100"
               />
