@@ -176,6 +176,10 @@ class Player extends React.Component<Props, State> {
         this.source.buffer = decodedData
         if (time) {
           this.source.start(this.audioContext.currentTime, time, this.state.duration)
+          if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume()
+            this.setState({ pause: false })
+          }
         } else {
           this.source.start(0)
         }
