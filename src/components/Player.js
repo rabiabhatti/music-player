@@ -22,6 +22,7 @@ type Props = {|
   authorizations: Array<UserAuthorization>,
 |}
 type State = {|
+  mute: boolean,
   pause: boolean,
   volume: number,
   duration: number,
@@ -37,8 +38,9 @@ class Player extends React.Component<Props, State> {
   setInterval: IntervalID
 
   state = {
-    pause: false,
     duration: 0,
+    mute: false,
+    pause: false,
     currentTime: 0,
     progressbarWidth: 0,
     volume: DEFAULT_VOLUME,
@@ -115,6 +117,18 @@ class Player extends React.Component<Props, State> {
     }
   }
 
+  handleMuteVolume = () => {
+    if (this.volume) {
+      if (this.state.mute) {
+        this.volume.gain.setValueAtTime(this.state.volume / 100, this.audioContext.currentTime)
+        this.setState({ mute: false })
+        return
+      }
+      this.volume.gain.setValueAtTime(0, this.audioContext.currentTime)
+      this.setState({ mute: true })
+    }
+  }
+
   applyProgressbarChange = debounce((value: number) => {
     if (this.source) {
       this.getData(this.props.songToPlay, value)
@@ -182,7 +196,7 @@ class Player extends React.Component<Props, State> {
 
   render() {
     const song = this.props.songToPlay
-    const { volume, showPlaylistPopup, pause, duration, currentTime, progressbarWidth } = this.state
+    const { volume, showPlaylistPopup, pause, duration, currentTime, progressbarWidth, mute } = this.state
 
     return (
       <div className="section-player">
@@ -244,19 +258,24 @@ class Player extends React.Component<Props, State> {
               <span>{humanizeDuration(duration)}</span>
             </div>
             <div className="section-volume align-center">
-              {volume === 0 ? (
-                <i title="Volume" className="material-icons">
+              {mute ? (
+                <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
+                  volume_off
+                </i>
+              ) : volume === 0 ? (
+                <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
                   volume_off
                 </i>
               ) : volume <= 40 ? (
-                <i title="Volume" className="material-icons">
+                <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
                   volume_down
                 </i>
               ) : (
-                <i title="Volume" className="material-icons">
+                <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
                   volume_up
                 </i>
               )}
+
               <div className="volume-progressbar">
                 <div className="progress-fill" style={{ width: `${volume}%` }} />
                 <input onChange={this.handleVolumeChange} title="Volume" type="range" value={volume} min="0" max="100" />
