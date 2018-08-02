@@ -1,6 +1,7 @@
 // @flow
 
 import React from 'react'
+import debounce from 'lodash/debounce'
 import { connect } from 'react-redux'
 
 import services from '~/services'
@@ -14,7 +15,6 @@ import SubDropdown from './SubDropdown'
 
 import cover from '../static/img/album-cover.jpg'
 
-const DEFAULT_PROGRESS = 50
 const DEFAULT_VOLUME = 50
 
 type Props = {|
@@ -24,9 +24,9 @@ type Props = {|
 type State = {|
   pause: boolean,
   volume: number,
-  progress: number,
   duration: number,
   currentTime: number,
+  progressbarWidth: number,
   showPlaylistPopup: number | null,
 |}
 
@@ -40,7 +40,7 @@ class Player extends React.Component<Props, State> {
     pause: false,
     duration: 0,
     currentTime: 0,
-    progress: DEFAULT_PROGRESS,
+    progressbarWidth: 0,
     volume: DEFAULT_VOLUME,
     showPlaylistPopup: null,
   }
@@ -60,6 +60,7 @@ class Player extends React.Component<Props, State> {
         this.source.stop(0)
       }
       this.clearCurrentTime()
+      this.audioContext.close()
       this.getData(nextProps.songToPlay)
       this.setInterval = setInterval(() => {
         this.updateCurrentTime()
@@ -81,11 +82,12 @@ class Player extends React.Component<Props, State> {
     }
     this.setState(prevState => ({
       currentTime: prevState.currentTime + 1,
+      progressbarWidth: prevState.currentTime / prevState.duration * 100,
     }))
   }
 
   clearCurrentTime = () => {
-    this.setState({ currentTime: 0 })
+    this.setState({ currentTime: 0, progressbarWidth: 0 })
     clearInterval(this.setInterval)
   }
 
@@ -102,7 +104,22 @@ class Player extends React.Component<Props, State> {
     }
   }
 
-  getData = (song: Object) => {
+  applyProgressbarChange = debounce((value: number) => {
+    if (this.source) {
+      this.getData(this.props.songToPlay, value)
+    }
+  }, 500)
+  handleProgressbarChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
+    if (this.source) {
+      this.source.stop(0)
+    }
+    const numeric = parseInt(event.target.value, 10)
+    const duration = this.state.duration
+    this.setState({ currentTime: numeric, progressbarWidth: numeric / duration * 100 })
+    this.applyProgressbarChange(numeric)
+  }
+
+  getData = (song: Object, time: ?number) => {
     const { authorizations } = this.props
     if (!authorizations.length) {
       console.warn('No authorizations found')
@@ -131,7 +148,9 @@ class Player extends React.Component<Props, State> {
       if (this.source) {
         this.source.loop = true
         this.source.buffer = decodedData
-        if (this.source) {
+        if (time) {
+          this.source.start(this.audioContext.currentTime, time, this.state.duration)
+        } else {
           this.source.start(0)
         }
         this.setState({ pause: false, duration: decodedData.duration })
@@ -140,21 +159,18 @@ class Player extends React.Component<Props, State> {
   }
 
   pauseSong = () => {
-    if (this.source) {
-      if (this.audioContext.state === 'running') {
-        this.audioContext.suspend()
-        this.setState({ pause: true })
-      } else if (this.audioContext.state === 'suspended') {
-        this.audioContext.resume()
-        this.setState({ pause: false })
-      }
+    if (this.audioContext.state === 'running') {
+      this.audioContext.suspend()
+      this.setState({ pause: true })
+    } else if (this.audioContext.state === 'suspended') {
+      this.audioContext.resume()
+      this.setState({ pause: false })
     }
   }
 
   render() {
     const song = this.props.songToPlay
-    const { progress, volume, showPlaylistPopup, pause, duration, currentTime } = this.state
-    const width = parseInt(currentTime / duration * 100, 10)
+    const { volume, showPlaylistPopup, pause, duration, currentTime, progressbarWidth } = this.state
 
     return (
       <div className="section-player">
@@ -210,8 +226,8 @@ class Player extends React.Component<Props, State> {
             <div className="section-progress align-center space-between">
               <span>{humanizeDuration(currentTime)}</span>
               <div className="progressbar">
-                <div className="progress-fill" style={{ width: `${width + 1}%` }} />
-                <input type="range" value={currentTime} min={0} max={duration} />
+                <div className="progress-fill" style={{ width: `${progressbarWidth + 0.5}%` }} />
+                <input type="range" onInput={this.handleProgressbarChange} value={currentTime} min={0} max={duration} />
               </div>
               <span>{humanizeDuration(duration)}</span>
             </div>
