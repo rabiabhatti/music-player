@@ -52,6 +52,7 @@ class Player extends React.Component<Props, State> {
         this.updateCurrentTime()
       }, 1000)
     }
+    document.addEventListener('keypress', this.handleBodyKeypress)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -67,9 +68,19 @@ class Player extends React.Component<Props, State> {
       }, 1000)
     }
   }
+
   componentWillUnmount() {
     this.clearCurrentTime()
+    document.removeEventListener('keypress', this.handleBodyKeypress)
   }
+
+  handleBodyKeypress = (e: KeyboardEvent) => {
+    e.preventDefault()
+    if (e.keyCode == 32) {
+      this.pauseSong()
+    }
+  }
+
   updateCurrentTime = () => {
     if (this.state.pause) {
       this.setState(prevState => ({
@@ -109,6 +120,7 @@ class Player extends React.Component<Props, State> {
       this.getData(this.props.songToPlay, value)
     }
   }, 500)
+
   handleProgressbarChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     if (this.source) {
       this.source.stop(0)
