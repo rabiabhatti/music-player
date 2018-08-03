@@ -82,8 +82,11 @@ class App extends React.Component<Props, State> {
 }
 
 export default compose(
-  connect(state => ({
-    hasAuthorization: !!state.user.authorizations.size,
-    selected: state.components.selected,
-  })),
+  connect(
+    state =>
+      console.log(state) || {
+        hasAuthorization: !!state.user.authorizations.size,
+        selected: state.components.selected,
+      },
+  ),
 )(App)

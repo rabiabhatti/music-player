@@ -39,30 +39,38 @@ class Genres extends React.Component<Props, State> {
     const genres = getGenresFromSongs(songs)
 
     return (
-      <div className="section-artists bound">
-        <div className="artists-bar">
-          {genres.map(
-            genre =>
-              genre !== 'Unknown' && (
-                <a
-                  className={`align-center artists-bar-row ${
-                    selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
-                  }`}
-                  href={`#${genre}`}
-                  key={genre}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => this.props.setSelected({ type: 'genre', identifier: genre })}
-                >
-                  <i className="material-icons artists-bar-row-icon">queue_music</i>
-                  <span>{genre}</span>
-                </a>
-              ),
-          )}
-        </div>
-        <div className="section-artists-info">
-          <ContentCard songs={songs} selected={selected && selected.type === 'genre' ? selected : null} />
-        </div>
-      </div>
+      <React.Fragment>
+        {this.state.songs.length ? (
+          <div className="section-artists bound">
+            <div className="artists-bar">
+              {genres.map(
+                genre =>
+                  genre !== 'Unknown' && (
+                    <a
+                      className={`align-center artists-bar-row ${
+                        selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
+                      }`}
+                      href={`#${genre}`}
+                      key={genre}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => this.props.setSelected({ type: 'genre', identifier: genre })}
+                    >
+                      <i className="material-icons artists-bar-row-icon">queue_music</i>
+                      <span>{genre}</span>
+                    </a>
+                  ),
+              )}
+            </div>
+            <div className="section-artists-info">
+              <ContentCard songs={songs} selected={selected && selected.type === 'genre' ? selected : null} />
+            </div>
+          </div>
+        ) : (
+          <div className="align-center justify-center bound" style={{ height: 300 }}>
+            <h2 className="replacement-text">Add Music</h2>
+          </div>
+        )}
+      </React.Fragment>
     )
   }
 }

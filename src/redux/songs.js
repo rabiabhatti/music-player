@@ -2,13 +2,17 @@
 
 import { createAction, handleActions } from 'redux-actions'
 
+import type { File } from '~/services/types'
+
 const SONG_TO_PLAY = 'SONGS/SONG_TO_PLAY'
 const SET_SELECTED = 'SONGS/SET_SELECTED'
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
+const SONGS_LIST_TO_PLAY = 'SONGS/SONGS_LIST_TO_PLAY'
 
 export const songToPlay = createAction(SONG_TO_PLAY)
 export const setSelected = createAction(SET_SELECTED)
 export const incrementNonce = createAction(INCREMENT_NONCE)
+export const songsListToPlay = createAction(SONGS_LIST_TO_PLAY)
 
 export type SongsStateSelected = {|
   type: 'album' | 'artist' | 'playlist' | 'genre',
@@ -24,12 +28,18 @@ export type SongsState = {|
   nonce: number,
   songToPlay: ?SongToPlayState,
   selected: ?SongsStateSelected,
+  songsListToPlay: ?SongsListToPlayState,
+|}
+
+export type SongsListToPlayState = {|
+  songsList: Array<File>,
 |}
 
 const defaultState: SongsState = {
   nonce: 0,
   selected: null,
   songToPlay: null,
+  songsListToPlay: null,
 }
 
 export const hydrators = {}
@@ -46,6 +56,10 @@ export const reducer = handleActions(
     [SONG_TO_PLAY]: (state: SongsState, { payload: songToPlay }) => ({
       ...state,
       songToPlay,
+    }),
+    [SONGS_LIST_TO_PLAY]: (state: SongsState, { payload: songsListToPlay }) => ({
+      ...state,
+      songsListToPlay,
     }),
   },
   defaultState,

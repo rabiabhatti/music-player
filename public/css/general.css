@@ -123,9 +123,17 @@ input[type='text']:focus {
   display: flex;
   flex-direction: row;
 }
+.justify-center {
+  justify-content: center;
+}
 .flex-wrap {
   display: flex;
   flex-wrap: wrap;
+}
+.replacement-text {
+  color: #e0e0e0;
+  font-size: 3.3rem;
+  text-shadow: 2px 2px 1px #bdbdbd;
 }
 @media screen and (max-width: 768px) {
   html {

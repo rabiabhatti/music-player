@@ -53,7 +53,7 @@ export default class ContentCard extends React.Component<Props, State> {
         )}
         <div className="space-between section-artist-header">
           <div>
-            <h2>{selected ? selected.identifier : 'All songs'}</h2>
+            <h2>{selected ? selected.identifier : 'All Artists'}</h2>
             <p>
               {Object.keys(songsByAlbums).length} albums, {songsToShow.length} songs
             </p>

@@ -63,7 +63,6 @@ class Player extends React.Component<Props, State> {
         this.source.stop(0)
       }
       this.clearCurrentTime()
-      this.audioContext.close()
       this.getData(nextProps.songToPlay)
       this.setInterval = setInterval(() => {
         this.updateCurrentTime()
@@ -89,8 +88,8 @@ class Player extends React.Component<Props, State> {
         currentTime: prevState.currentTime,
       }))
       return
-    } else if (this.state.currentTime >= this.state.duration) {
-      this.setState({ currentTime: -1 })
+    } else if (this.state.currentTime >= this.state.duration - 1) {
+      this.setState({ currentTime: 0 })
       return
     }
     this.setState(prevState => ({
@@ -111,8 +110,9 @@ class Player extends React.Component<Props, State> {
 
   handleVolumeChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const volume = event.target
-    if (this.volume) {
-      this.volume.gain.value = parseInt(volume.value, 10) / 100
+    const songVolume = this.volume
+    if (songVolume) {
+      songVolume.gain.value = parseInt(volume.value, 10) / 100
       this.setState({ volume: parseInt(volume.value, 10) })
     }
   }
@@ -215,8 +215,8 @@ class Player extends React.Component<Props, State> {
         <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
-              <h1 className="song-title">{song.name ? song.name : 'Empty'}</h1>
-              <h4 className="song-artist">{song.artists ? song.artists : 'Empty'}</h4>
+              <h1 className="song-title">{song ? song.name : 'Empty'}</h1>
+              <h4 className="song-artist">{song ? song.artists : 'Empty'}</h4>
             </div>
             <Dropdown>
               <div className="align-center space-between sub-dropdown-trigger">
