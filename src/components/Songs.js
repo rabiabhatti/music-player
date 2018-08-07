@@ -23,7 +23,6 @@ class Songs extends React.Component<Props, State> {
   }
 
   render() {
-    console.log(this.state.songs)
     return (
       <div className="section-songs bound">
         {this.state.songs.length ? (

@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import services from '~/services'
 import { humanizeDuration } from '~/common/songs'
-import type { SongToPlayState } from '~/redux/songs'
+import { currentSongControls, type SongToPlayState, type CurrentSongControlsState } from '~/redux/songs'
 import type { UserAuthorization } from '~/redux/user'
 
 import Popup from './Popup'
@@ -15,16 +15,13 @@ import SubDropdown from './SubDropdown'
 
 import cover from '../static/img/album-cover.jpg'
 
-const DEFAULT_VOLUME = 50
-
 type Props = {|
   songToPlay: SongToPlayState,
+  currentSongControls: typeof currentSongControls,
   authorizations: Array<UserAuthorization>,
+  songControls: CurrentSongControlsState,
 |}
 type State = {|
-  mute: boolean,
-  pause: boolean,
-  volume: number,
   duration: number,
   currentTime: number,
   progressbarWidth: number,
@@ -39,11 +36,8 @@ class Player extends React.Component<Props, State> {
 
   state = {
     duration: 0,
-    mute: false,
-    pause: false,
     currentTime: 0,
     progressbarWidth: 0,
-    volume: DEFAULT_VOLUME,
     showPlaylistPopup: null,
   }
 
@@ -83,7 +77,7 @@ class Player extends React.Component<Props, State> {
   }
 
   updateCurrentTime = () => {
-    if (this.state.pause) {
+    if (this.props.songControls.pause) {
       this.setState(prevState => ({
         currentTime: prevState.currentTime,
       }))
@@ -109,23 +103,23 @@ class Player extends React.Component<Props, State> {
   }
 
   handleVolumeChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    const volume = event.target
+    const volume = parseInt(event.target.value, 10)
     const songVolume = this.volume
     if (songVolume) {
-      songVolume.gain.value = parseInt(volume.value, 10) / 100
-      this.setState({ volume: parseInt(volume.value, 10) })
+      songVolume.gain.value = volume / 100
+      this.props.currentSongControls({ volume: volume })
     }
   }
 
   handleMuteVolume = () => {
     if (this.volume) {
-      if (this.state.mute) {
-        this.volume.gain.setValueAtTime(this.state.volume / 100, this.audioContext.currentTime)
-        this.setState({ mute: false })
+      if (this.props.songControls.mute) {
+        this.volume.gain.setValueAtTime(this.props.songControls.volume / 100, this.audioContext.currentTime)
+        this.props.currentSongControls({ mute: false })
         return
       }
       this.volume.gain.setValueAtTime(0, this.audioContext.currentTime)
-      this.setState({ mute: true })
+      this.props.currentSongControls({ mute: true })
     }
   }
 
@@ -154,7 +148,7 @@ class Player extends React.Component<Props, State> {
 
     this.source = this.audioContext.createBufferSource()
     this.volume = this.audioContext.createGain()
-    this.volume.gain.value = this.state.volume / 100
+    this.volume.gain.value = this.props.songControls.volume / 100
     if (this.source) {
       this.source.connect(this.volume)
     }
@@ -178,12 +172,13 @@ class Player extends React.Component<Props, State> {
           this.source.start(this.audioContext.currentTime, time, this.state.duration)
           if (this.audioContext.state === 'suspended') {
             this.audioContext.resume()
-            this.setState({ pause: false })
+            this.props.currentSongControls({ pause: false })
           }
         } else {
           this.source.start(0)
         }
-        this.setState({ pause: false, duration: decodedData.duration })
+        this.setState({ duration: decodedData.duration })
+        this.props.currentSongControls({ pause: false })
       }
     })
   }
@@ -191,16 +186,17 @@ class Player extends React.Component<Props, State> {
   pauseSong = () => {
     if (this.audioContext.state === 'running') {
       this.audioContext.suspend()
-      this.setState({ pause: true })
+      this.props.currentSongControls({ pause: true })
     } else if (this.audioContext.state === 'suspended') {
       this.audioContext.resume()
-      this.setState({ pause: false })
+      this.props.currentSongControls({ pause: false })
     }
   }
 
   render() {
     const song = this.props.songToPlay
-    const { volume, showPlaylistPopup, pause, duration, currentTime, progressbarWidth, mute } = this.state
+    const { showPlaylistPopup, duration, currentTime, progressbarWidth } = this.state
+    const { volume, mute, pause } = this.props.songControls
 
     return (
       <div className="section-player">
@@ -296,6 +292,10 @@ class Player extends React.Component<Props, State> {
 }
 
 export default connect(
-  state => ({ authorizations: state.user.authorizations.toArray(), songToPlay: state.songs.songToPlay }),
-  null,
+  state => ({
+    authorizations: state.user.authorizations.toArray(),
+    songControls: state.songs.songControls,
+    songToPlay: state.songs.songToPlay,
+  }),
+  { currentSongControls },
 )(Player)

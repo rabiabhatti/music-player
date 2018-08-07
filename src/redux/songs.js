@@ -8,10 +8,12 @@ const SONG_TO_PLAY = 'SONGS/SONG_TO_PLAY'
 const SET_SELECTED = 'SONGS/SET_SELECTED'
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
 const SONGS_LIST_TO_PLAY = 'SONGS/SONGS_LIST_TO_PLAY'
+const CURRENT_SONG_CONTROLS = 'SONGS/CURRENT_SONG_CONTROLS'
 
 export const songToPlay = createAction(SONG_TO_PLAY)
 export const setSelected = createAction(SET_SELECTED)
 export const incrementNonce = createAction(INCREMENT_NONCE)
+export const currentSongControls = createAction(CURRENT_SONG_CONTROLS)
 export const songsListToPlay = createAction(SONGS_LIST_TO_PLAY)
 
 export type SongsStateSelected = {|
@@ -28,7 +30,14 @@ export type SongsState = {|
   nonce: number,
   songToPlay: ?SongToPlayState,
   selected: ?SongsStateSelected,
+  songControls: ?CurrentSongControlsState,
   songsListToPlay: ?SongsListToPlayState,
+|}
+
+export type CurrentSongControlsState = {|
+  mute: boolean,
+  volume: number,
+  pause: boolean,
 |}
 
 export type SongsListToPlayState = {|
@@ -40,6 +49,7 @@ const defaultState: SongsState = {
   selected: null,
   songToPlay: null,
   songsListToPlay: null,
+  songControls: { mute: false, volume: 50, pause: true },
 }
 
 export const hydrators = {}
@@ -60,6 +70,13 @@ export const reducer = handleActions(
     [SONGS_LIST_TO_PLAY]: (state: SongsState, { payload: songsListToPlay }) => ({
       ...state,
       songsListToPlay,
+    }),
+    [CURRENT_SONG_CONTROLS]: (state: SongsState, { payload: songControls }) => ({
+      ...state,
+      songControls: {
+        ...state.songControls,
+        ...songControls,
+      },
     }),
   },
   defaultState,
