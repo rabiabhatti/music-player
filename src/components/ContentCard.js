@@ -4,7 +4,6 @@ import React from 'react'
 import groupBy from 'lodash/groupBy'
 
 import type { File } from '~/services/types'
-import type { SongsStateSelected } from '~/redux/songs'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
@@ -13,7 +12,7 @@ import SubDropdown from './SubDropdown'
 
 type Props = {|
   songs: Array<File>,
-  selected: ?SongsStateSelected,
+  selected: ?Object,
 |}
 type State = {|
   showPlaylistPopup: number | null,

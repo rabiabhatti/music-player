@@ -1,10 +1,8 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import db from '~/db'
-import { setSelected, type SongsStateSelected } from '~/redux/songs'
 import { getArtistsFromSongs } from '~/common/songs'
 import type { File } from '~/services/types'
 
@@ -15,17 +13,19 @@ import cover from '../static/img/album-cover.jpg'
 import cover3 from '../static/img/album-cover-3.png'
 import cover4 from '../static/img/album-cover-4.jpg'
 
-type Props = {|
-  selected: SongsStateSelected,
-  setSelected: typeof setSelected,
-|}
+type Props = {||}
 type State = {|
   songs: Array<File>,
+  selected: ?{|
+    type: string,
+    identifier: string,
+  |},
 |}
 
-class Artists extends React.Component<Props, State> {
+export default class Artists extends React.Component<Props, State> {
   state = {
     songs: [],
+    selected: null,
   }
 
   async componentDidMount() {
@@ -34,8 +34,7 @@ class Artists extends React.Component<Props, State> {
   }
 
   render() {
-    const { songs } = this.state
-    const { selected } = this.props
+    const { songs, selected } = this.state
     const artists = getArtistsFromSongs(songs)
 
     return (
@@ -46,7 +45,7 @@ class Artists extends React.Component<Props, State> {
               <a
                 className={`align-center artists-bar-row ${selected && selected.type === 'artist' ? '' : 'active'}`}
                 href="#allArtists"
-                onClick={() => this.props.setSelected(null)}
+                onClick={() => this.setState({ selected: null })}
               >
                 <i className="material-icons artists-bar-row-icon">mic</i>
                 <span>All Artists</span>
@@ -59,7 +58,7 @@ class Artists extends React.Component<Props, State> {
                   key={artist}
                   href={`#${artist}`}
                   style={{ cursor: 'pointer' }}
-                  onClick={() => this.props.setSelected({ type: 'artist', identifier: artist })}
+                  onClick={() => this.setState({ selected: { type: 'artist', identifier: artist } })}
                 >
                   <i className="material-icons artists-bar-row-icon">person</i>
                   <span>{artist}</span>
@@ -79,5 +78,3 @@ class Artists extends React.Component<Props, State> {
     )
   }
 }
-
-export default connect(({ songs }) => ({ selected: songs.selected }), { setSelected })(Artists)

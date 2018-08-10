@@ -2,10 +2,8 @@
 
 import * as React from 'react'
 import groupBy from 'lodash/groupBy'
-import { connect } from 'react-redux'
 
 import db from '~/db'
-import { setSelected, type SongsStateSelected } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'
 import type { File } from '~/services/types'
 
@@ -13,17 +11,19 @@ import AlbumInfo from './AlbumInfo'
 
 import cover from '../static/img/album-cover.jpg'
 
-type Props = {|
-  selected: SongsStateSelected,
-  setSelected: typeof setSelected,
-|}
+type Props = {||}
 type State = {|
   songs: Array<File>,
+  selected: ?{|
+    type: string,
+    identifier: string,
+  |},
 |}
 
-class Albums extends React.Component<Props, State> {
+export default class Albums extends React.Component<Props, State> {
   state = {
     songs: [],
+    selected: null,
   }
 
   async componentDidMount() {
@@ -31,8 +31,7 @@ class Albums extends React.Component<Props, State> {
     this.setState({ songs: dbSongs })
   }
   render() {
-    const { songs } = this.state
-    const { selected } = this.props
+    const { songs, selected } = this.state
     const albums = getAlbumsFromSongs(songs)
 
     let songsToShow = songs
@@ -60,7 +59,7 @@ class Albums extends React.Component<Props, State> {
                     <div
                       className="album-infomation"
                       style={{ cursor: 'pointer' }}
-                      onClick={() => this.props.setSelected({ type: 'album', identifier: album })}
+                      onClick={() => this.setState({ selected: { type: 'album', identifier: album } })}
                     >
                       <h4 className="album-name">{album}</h4>
                       <p className="album-artist">Sia Furler</p>
@@ -82,5 +81,3 @@ class Albums extends React.Component<Props, State> {
     )
   }
 }
-
-export default connect(({ songs }) => ({ selected: songs.selected }), { setSelected })(Albums)

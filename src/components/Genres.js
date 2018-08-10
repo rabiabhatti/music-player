@@ -4,7 +4,6 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
-import { setSelected, type SongsStateSelected } from '~/redux/songs'
 import { getGenresFromSongs } from '~/common/songs'
 import type { File } from '~/services/types'
 
@@ -15,17 +14,19 @@ import cover from '../static/img/album-cover.jpg'
 import cover3 from '../static/img/album-cover-3.png'
 import cover4 from '../static/img/album-cover-4.jpg'
 
-type Props = {|
-  selected: SongsStateSelected,
-  setSelected: typeof setSelected,
-|}
+type Props = {||}
 type State = {|
   songs: Array<File>,
+  selected: ?{|
+    type: string,
+    identifier: string,
+  |},
 |}
 
-class Genres extends React.Component<Props, State> {
+export default class Genres extends React.Component<Props, State> {
   state = {
     songs: [],
+    selected: null,
   }
 
   async componentDidMount() {
@@ -34,8 +35,7 @@ class Genres extends React.Component<Props, State> {
   }
 
   render() {
-    const { songs } = this.state
-    const { selected } = this.props
+    const { songs, selected } = this.state
     const genres = getGenresFromSongs(songs)
 
     return (
@@ -53,7 +53,7 @@ class Genres extends React.Component<Props, State> {
                       href={`#${genre}`}
                       key={genre}
                       style={{ cursor: 'pointer' }}
-                      onClick={() => this.props.setSelected({ type: 'genre', identifier: genre })}
+                      onClick={() => this.setState({ selected: { type: 'genre', identifier: genre } })}
                     >
                       <i className="material-icons artists-bar-row-icon">queue_music</i>
                       <span>{genre}</span>
@@ -74,5 +74,3 @@ class Genres extends React.Component<Props, State> {
     )
   }
 }
-
-export default connect(({ songs }) => ({ selected: songs.selected }), { setSelected })(Genres)

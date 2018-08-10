@@ -5,11 +5,11 @@ import { connect } from 'react-redux'
 
 import db from '~/db'
 import { humanizeDuration } from '~/common/songs'
-import { songToPlay, songsListToPlay } from '~/redux/songs'
+import { setSongPlaylist, incrementNonce } from '~/redux/songs'
 
 type Props = {|
-  songToPlay: typeof songToPlay,
-  songsListToPlay: typeof songsListToPlay,
+  incrementNonce: () => void,
+  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   songs: Array<Object>,
@@ -22,14 +22,24 @@ class Songs extends React.Component<Props, State> {
     this.setState({ songs: dbSongs })
   }
 
+  handleSongPlayAllInput = () => {
+    const songsList = this.state.songs
+    let songsIdsArr = []
+    songsList.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+    this.props.setSongPlaylist(songsIdsArr)
+  }
+
   render() {
+    const { songs } = this.state
     return (
       <div className="section-songs bound">
-        {this.state.songs.length ? (
+        {songs.length ? (
           <React.Fragment>
             <div className="align-center space-between">
               <h2>Songs</h2>
-              <button onClick={() => this.props.songsListToPlay(this.state.songs)}>Play All</button>
+              <button onClick={this.handleSongPlayAllInput}>Play All</button>
             </div>
             <table className="section-songs-table" cellSpacing="0">
               <thead>
@@ -42,21 +52,11 @@ class Songs extends React.Component<Props, State> {
                 </tr>
               </thead>
               <tbody>
-                {this.state.songs.map(song => (
+                {songs.map(song => (
                   <tr
                     key={song.sourceId}
                     style={{ cursor: 'pointer' }}
-                    onClick={() =>
-                      this.props.songToPlay({
-                        name:
-                          song.meta && typeof song.meta.name !== 'undefined'
-                            ? song.meta.name
-                            : song.filename.replace('.mp3', ''),
-                        sourceId: song.sourceId,
-                        sourceUid: song.sourceUid,
-                        artists: song.meta.artists.length === 0 ? 'Unknown' : song.meta.artists.join(', '),
-                      })
-                    }
+                    onClick={() => this.props.setSongPlaylist({ songs: [song.id] })}
                   >
                     <td>
                       {song.meta && typeof song.meta.name !== 'undefined'
@@ -76,7 +76,7 @@ class Songs extends React.Component<Props, State> {
                   </tr>
                 ))}
               </tbody>
-            </table>{' '}
+            </table>
           </React.Fragment>
         ) : (
           <div className="align-center justify-center" style={{ height: 300 }}>
@@ -88,4 +88,4 @@ class Songs extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { songToPlay, songsListToPlay })(Songs)
+export default connect(null, { setSongPlaylist, incrementNonce })(Songs)

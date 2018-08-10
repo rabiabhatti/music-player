@@ -3,8 +3,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { songToPlay } from '~/redux/songs'
-import type { File } from '~/services/types'
+import { setSongPlaylist } from '~/redux/songs'
+// import type { File } from '~/services/types'
 import { humanizeDuration } from '~/common/songs'
 
 import Popup from './Popup'
@@ -13,8 +13,8 @@ import SubDropdown from './SubDropdown'
 
 type Props = {|
   name: string,
-  songs: Array<File>,
-  songToPlay: typeof songToPlay,
+  songs: Array<Object>,
+  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   showPlaylistPopup: number | null,
@@ -101,22 +101,7 @@ class AlbumInfo extends React.Component<Props, State> {
                   </p>
                   <p>{humanizeDuration(song.duration)}</p>
                   <div className="song-btns space-between">
-                    <button
-                      onClick={() =>
-                        this.props.songToPlay({
-                          name:
-                            song.meta && typeof song.meta.name !== 'undefined'
-                              ? song.meta.name
-                              : song.filename.replace('.mp3', ''),
-                          sourceId: song.sourceId,
-                          sourceUid: song.sourceUid,
-                          artists:
-                            song.meta && song.meta.artists.length === 0
-                              ? 'Unknown'
-                              : song.meta && song.meta.artists.join(', '),
-                        })
-                      }
-                    >
+                    <button onClick={() => this.props.setSongPlaylist({ songs: [song.id] })}>
                       <i className="material-icons song-play-btn">play_arrow</i>
                     </button>
                     <Dropdown>
@@ -146,4 +131,4 @@ class AlbumInfo extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { songToPlay })(AlbumInfo)
+export default connect(null, { setSongPlaylist })(AlbumInfo)
