@@ -75,14 +75,20 @@ export const reducer = handleActions(
       ...state,
       mute: payload,
     }),
-    [PLAY_NEXT]: (state: SongsState, { payload }) => ({
+    [PLAY_NEXT]: (state: SongsState) => ({
       ...state,
-      songIndex: payload,
+      songIndex: (state.songIndex + 1) % state.songs.length,
     }),
-    [PLAY_PREVIOUS]: (state: SongsState, { payload }) => ({
-      ...state,
-      songIndex: payload,
-    }),
+    [PLAY_PREVIOUS]: (state: SongsState, { payload }) => {
+      let newIndex = state.songIndex - 1
+      if (newIndex < 0) {
+        newIndex = state.songs.length - 1
+      }
+      return {
+        ...state,
+        songIndex: newIndex,
+      }
+    },
     [SONG_PLAY]: (state: SongsState) => ({
       ...state,
       songState: 'playing',

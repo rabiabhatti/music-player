@@ -66,37 +66,34 @@ class Player extends React.Component<Props, State> {
   }
 
   async componentDidMount() {
-    if (this.props.songs.length) {
-      const currentSongID = this.props.songs[this.props.songIndex]
-
-      const currentSong = await db.songs.get(currentSongID)
-      this.setState({ activeSong: currentSong })
+    const currentSong = this.props.songs[this.props.songIndex]
+    if (currentSong) {
       this.playSong(currentSong)
-      this.setInterval = setInterval(() => {
-        this.updateCurrentTime()
-      }, 1000)
     }
+    this.setInterval = setInterval(() => {
+      this.updateCurrentTime()
+    }, 1000)
     document.addEventListener('keypress', this.handleBodyKeypress)
   }
 
+  stop() {
+    if (this.source) {
+      this.source.stop(0)
+    }
+  }
   async componentWillReceiveProps(nextProps) {
-    if (nextProps.songs[0] && this.props.songs[0]) {
-      const previousSongID = this.props.songs[0]
-      const nextSongID = nextProps.songs[0]
+    const newSong = nextProps.songs[nextProps.songIndex]
+    const oldSong = this.props.songs[this.props.songIndex]
 
-      const previousSong = await db.songs.get(previousSongID)
-      const nextSong = await db.songs.get(previousSong)
-
-      if (nextSong.sourceId !== previousSong.sourceId) {
-        if (this.source) {
-          this.source.stop(0)
-        }
-        this.clearCurrentTime()
-        this.playSong(nextSong)
-        this.setInterval = setInterval(() => {
-          this.updateCurrentTime()
-        }, 1000)
-      }
+    if (oldSong && !newSong) {
+      this.stop()
+    } else if (oldSong !== newSong) {
+      this.stop()
+      this.clearCurrentTime()
+      this.playSong(newSong)
+      this.setInterval = setInterval(() => {
+        this.updateCurrentTime()
+      }, 1000)
     }
   }
 
@@ -111,24 +108,6 @@ class Player extends React.Component<Props, State> {
       this.pauseSong()
     }
   }
-  playNext = async () => {
-    const nextSongIndex = this.props.playNext(this.props.songIndex + 1)
-    // = (this.props.playNext.index + 1) % this.props.songsListToPlay.length
-
-    const nextSongID = this.props.songs[nextSongIndex]
-    const nextSong = await db.songs.get(nextSongID)
-
-    console.log(nextSongIndex, this.props.songs.length, nextSong, this.props.playNext.index)
-
-    if (this.source) {
-      this.source.stop(0)
-    }
-    this.clearCurrentTime()
-    this.playSong(nextSong)
-    this.setInterval = setInterval(() => {
-      this.updateCurrentTime()
-    }, 1000)
-  }
 
   updateCurrentTime = () => {
     if (this.props.songState === 'paused') {
@@ -139,7 +118,6 @@ class Player extends React.Component<Props, State> {
     } else if (this.state.currentTime >= this.state.duration - 1) {
       if (this.props.songs.length > 1) {
         this.playNext()
-        return
       }
       this.clearCurrentTime()
       return
@@ -182,12 +160,12 @@ class Player extends React.Component<Props, State> {
   }
 
   applyProgressbarChange = debounce(async (value: number) => {
-    if (this.source) {
-      const songID = this.props.songs[0]
-      const song = await db.songs.get(songID)
-
-      this.playSong(song, value)
-    }
+    // if (this.source) {
+    //   const songID = this.props.songs[0]
+    //   const song = await db.songs.get(songID)
+    //
+    //   this.playSong(song, value)
+    // }
   }, 500)
 
   handleProgressbarChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -200,7 +178,8 @@ class Player extends React.Component<Props, State> {
     this.applyProgressbarChange(numeric)
   }
 
-  playSong = (song: Object, time: ?number) => {
+  playSong = async (songId: number) => {
+    const song = await db.songs.get(songId)
     const { authorizations } = this.props
     if (!authorizations.length) {
       console.warn('No authorizations found')
@@ -230,15 +209,7 @@ class Player extends React.Component<Props, State> {
       const decodedData = await this.audioContext.decodeAudioData(buffer)
       if (this.source) {
         this.source.buffer = decodedData
-        if (time) {
-          this.source.start(this.audioContext.currentTime, time, this.state.duration)
-          if (this.audioContext.state === 'suspended') {
-            this.audioContext.resume()
-            this.props.songPlay()
-          }
-        } else {
-          this.source.start(0)
-        }
+        this.source.start(0)
         this.setState({ duration: decodedData.duration })
         this.props.songPlay()
       }
@@ -254,6 +225,14 @@ class Player extends React.Component<Props, State> {
       this.props.songPlay()
     }
   }
+
+  playNext = () => {
+    this.props.playNext()
+  }
+  playPrevious = () => {
+    this.props.playPrevious()
+  }
+
   // hadleRepeatSong = () => {
   //   if (this.source && this.props.songControls.repeat) {
   //     this.source.loop = false
@@ -313,7 +292,11 @@ class Player extends React.Component<Props, State> {
           </div>
           <div className="section-player-controls align-center space-between">
             <div className="section-player-btns align-center">
-              <i title="Previous" className="material-icons">
+              <i
+                title="Previous"
+                className={`material-icons ${this.props.songs.length <= 1 ? 'inactive' : ''}`}
+                onClick={this.playPrevious}
+              >
                 fast_rewind
               </i>
               {songState === 'paused' ? (
@@ -325,7 +308,11 @@ class Player extends React.Component<Props, State> {
                   pause_circle_outline
                 </i>
               )}
-              <i title="Next" className="material-icons" onClick={this.playNext}>
+              <i
+                title="Next"
+                className={`material-icons ${this.props.songs.length <= 1 ? 'inactive' : ''}`}
+                onClick={this.playNext}
+              >
                 fast_forward
               </i>
             </div>
