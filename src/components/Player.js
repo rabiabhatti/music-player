@@ -4,10 +4,20 @@ import React from 'react'
 import debounce from 'lodash/debounce'
 import { connect } from 'react-redux'
 
+import db from '~/db'
 import services from '~/services'
 import { humanizeDuration } from '~/common/songs'
-import { currentSongControls, type SongToPlayState, type CurrentSongControlsState } from '~/redux/songs'
 import type { UserAuthorization } from '~/redux/user'
+import {
+  setSongRepeat,
+  setSongVolume,
+  setSongMute,
+  playNext,
+  playPrevious,
+  songPlay,
+  songPause,
+  songStop,
+} from '~/redux/songs'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
@@ -16,14 +26,27 @@ import SubDropdown from './SubDropdown'
 import cover from '../static/img/album-cover.jpg'
 
 type Props = {|
-  songToPlay: SongToPlayState,
-  currentSongControls: typeof currentSongControls,
   authorizations: Array<UserAuthorization>,
-  songControls: CurrentSongControlsState,
+  songs: Array<number>,
+  songIndex: number,
+  songsRepeat: string,
+  volume: number,
+  mute: boolean,
+  songState: string,
+
+  setSongRepeat: typeof setSongRepeat,
+  setSongVolume: typeof setSongVolume,
+  setSongMute: typeof setSongMute,
+  playNext: typeof playNext,
+  playPrevious: typeof playPrevious,
+  songPlay: () => void,
+  songPause: () => void,
+  songStop: () => void,
 |}
 type State = {|
   duration: number,
   currentTime: number,
+  activeSong: Object | null,
   progressbarWidth: number,
   showPlaylistPopup: number | null,
 |}
@@ -37,13 +60,18 @@ class Player extends React.Component<Props, State> {
   state = {
     duration: 0,
     currentTime: 0,
+    activeSong: null,
     progressbarWidth: 0,
     showPlaylistPopup: null,
   }
 
-  componentDidMount() {
-    if (this.props.songToPlay) {
-      this.getData(this.props.songToPlay)
+  async componentDidMount() {
+    if (this.props.songs.length) {
+      const currentSongID = this.props.songs[this.props.songIndex]
+
+      const currentSong = await db.songs.get(currentSongID)
+      this.setState({ activeSong: currentSong })
+      this.playSong(currentSong)
       this.setInterval = setInterval(() => {
         this.updateCurrentTime()
       }, 1000)
@@ -51,16 +79,24 @@ class Player extends React.Component<Props, State> {
     document.addEventListener('keypress', this.handleBodyKeypress)
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.songToPlay && this.props.songToPlay && nextProps.songToPlay.sourceId !== this.props.songToPlay.sourceId) {
-      if (this.source) {
-        this.source.stop(0)
+  async componentWillReceiveProps(nextProps) {
+    if (nextProps.songs[0] && this.props.songs[0]) {
+      const previousSongID = this.props.songs[0]
+      const nextSongID = nextProps.songs[0]
+
+      const previousSong = await db.songs.get(previousSongID)
+      const nextSong = await db.songs.get(previousSong)
+
+      if (nextSong.sourceId !== previousSong.sourceId) {
+        if (this.source) {
+          this.source.stop(0)
+        }
+        this.clearCurrentTime()
+        this.playSong(nextSong)
+        this.setInterval = setInterval(() => {
+          this.updateCurrentTime()
+        }, 1000)
       }
-      this.clearCurrentTime()
-      this.getData(nextProps.songToPlay)
-      this.setInterval = setInterval(() => {
-        this.updateCurrentTime()
-      }, 1000)
     }
   }
 
@@ -75,15 +111,37 @@ class Player extends React.Component<Props, State> {
       this.pauseSong()
     }
   }
+  playNext = async () => {
+    const nextSongIndex = this.props.playNext(this.props.songIndex + 1)
+    // = (this.props.playNext.index + 1) % this.props.songsListToPlay.length
+
+    const nextSongID = this.props.songs[nextSongIndex]
+    const nextSong = await db.songs.get(nextSongID)
+
+    console.log(nextSongIndex, this.props.songs.length, nextSong, this.props.playNext.index)
+
+    if (this.source) {
+      this.source.stop(0)
+    }
+    this.clearCurrentTime()
+    this.playSong(nextSong)
+    this.setInterval = setInterval(() => {
+      this.updateCurrentTime()
+    }, 1000)
+  }
 
   updateCurrentTime = () => {
-    if (this.props.songControls.pause) {
+    if (this.props.songState === 'paused') {
       this.setState(prevState => ({
         currentTime: prevState.currentTime,
       }))
       return
     } else if (this.state.currentTime >= this.state.duration - 1) {
-      this.setState({ currentTime: 0 })
+      if (this.props.songs.length > 1) {
+        this.playNext()
+        return
+      }
+      this.clearCurrentTime()
       return
     }
     this.setState(prevState => ({
@@ -107,25 +165,28 @@ class Player extends React.Component<Props, State> {
     const songVolume = this.volume
     if (songVolume) {
       songVolume.gain.value = volume / 100
-      this.props.currentSongControls({ volume: volume })
+      this.props.setSongVolume(volume)
     }
   }
 
   handleMuteVolume = () => {
     if (this.volume) {
-      if (this.props.songControls.mute) {
-        this.volume.gain.setValueAtTime(this.props.songControls.volume / 100, this.audioContext.currentTime)
-        this.props.currentSongControls({ mute: false })
+      if (this.props.mute) {
+        this.volume.gain.setValueAtTime(this.props.volume / 100, this.audioContext.currentTime)
+        this.props.setSongMute(false)
         return
       }
       this.volume.gain.setValueAtTime(0, this.audioContext.currentTime)
-      this.props.currentSongControls({ mute: true })
+      this.props.setSongMute(true)
     }
   }
 
-  applyProgressbarChange = debounce((value: number) => {
+  applyProgressbarChange = debounce(async (value: number) => {
     if (this.source) {
-      this.getData(this.props.songToPlay, value)
+      const songID = this.props.songs[0]
+      const song = await db.songs.get(songID)
+
+      this.playSong(song, value)
     }
   }, 500)
 
@@ -139,16 +200,17 @@ class Player extends React.Component<Props, State> {
     this.applyProgressbarChange(numeric)
   }
 
-  getData = (song: Object, time: ?number) => {
+  playSong = (song: Object, time: ?number) => {
     const { authorizations } = this.props
     if (!authorizations.length) {
       console.warn('No authorizations found')
       return
     }
+    this.setState({ activeSong: song })
 
     this.source = this.audioContext.createBufferSource()
     this.volume = this.audioContext.createGain()
-    this.volume.gain.value = this.props.songControls.volume / 100
+    this.volume.gain.value = this.props.volume / 100
     if (this.source) {
       this.source.connect(this.volume)
     }
@@ -162,23 +224,23 @@ class Player extends React.Component<Props, State> {
       }
 
       const response = await service.getFile(authorization, song.sourceId)
+
       const buffer = await response.arrayBuffer()
 
       const decodedData = await this.audioContext.decodeAudioData(buffer)
       if (this.source) {
-        this.source.loop = true
         this.source.buffer = decodedData
         if (time) {
           this.source.start(this.audioContext.currentTime, time, this.state.duration)
           if (this.audioContext.state === 'suspended') {
             this.audioContext.resume()
-            this.props.currentSongControls({ pause: false })
+            this.props.songPlay()
           }
         } else {
           this.source.start(0)
         }
         this.setState({ duration: decodedData.duration })
-        this.props.currentSongControls({ pause: false })
+        this.props.songPlay()
       }
     })
   }
@@ -186,17 +248,35 @@ class Player extends React.Component<Props, State> {
   pauseSong = () => {
     if (this.audioContext.state === 'running') {
       this.audioContext.suspend()
-      this.props.currentSongControls({ pause: true })
+      this.props.songPause()
     } else if (this.audioContext.state === 'suspended') {
       this.audioContext.resume()
-      this.props.currentSongControls({ pause: false })
+      this.props.songPlay()
     }
   }
+  // hadleRepeatSong = () => {
+  //   if (this.source && this.props.songControls.repeat) {
+  //     this.source.loop = false
+  //     this.props.currentSongControls({ repeat: false })
+  //     return
+  //   }
+  //   if (this.source) {
+  //     this.source.loop = true
+  //     this.props.currentSongControls({ repeat: true })
+  //   }
+  // }
 
   render() {
-    const song = this.props.songToPlay
-    const { showPlaylistPopup, duration, currentTime, progressbarWidth } = this.state
-    const { volume, mute, pause } = this.props.songControls
+    const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong } = this.state
+    const { volume, mute, songState } = this.props
+    const name =
+      activeSong && activeSong.meta && typeof activeSong.meta.name !== 'undefined'
+        ? activeSong.meta.name
+        : activeSong && activeSong.filename.replace('.mp3', '')
+    const artist =
+      activeSong && activeSong.meta && activeSong.meta.artists.length === 0
+        ? 'Unknown'
+        : activeSong && activeSong.meta && activeSong.meta.artists.join(', ')
 
     return (
       <div className="section-player">
@@ -211,8 +291,8 @@ class Player extends React.Component<Props, State> {
         <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
-              <h1 className="song-title">{song ? song.name : 'Empty'}</h1>
-              <h4 className="song-artist">{song ? song.artists : 'Empty'}</h4>
+              <h1 className="song-title">{name !== null ? name : 'Empty'}</h1>
+              <h4 className="song-artist">{artist !== null ? artist : 'Empty'}</h4>
             </div>
             <Dropdown>
               <div className="align-center space-between sub-dropdown-trigger">
@@ -236,7 +316,7 @@ class Player extends React.Component<Props, State> {
               <i title="Previous" className="material-icons">
                 fast_rewind
               </i>
-              {pause ? (
+              {songState === 'paused' ? (
                 <i title="Play" className="material-icons play-btn" onClick={this.pauseSong}>
                   play_circle_outline
                 </i>
@@ -245,7 +325,7 @@ class Player extends React.Component<Props, State> {
                   pause_circle_outline
                 </i>
               )}
-              <i title="Next" className="material-icons">
+              <i title="Next" className="material-icons" onClick={this.playNext}>
                 fast_forward
               </i>
             </div>
@@ -280,7 +360,7 @@ class Player extends React.Component<Props, State> {
                 <div className="progress-fill" style={{ width: `${volume}%` }} />
                 <input onChange={this.handleVolumeChange} title="Volume" type="range" value={volume} min="0" max="100" />
               </div>
-              <i title="Shuffle" className="material-icons">
+              <i title="Repeat" className="material-icons">
                 sync
               </i>
             </div>
@@ -294,8 +374,12 @@ class Player extends React.Component<Props, State> {
 export default connect(
   state => ({
     authorizations: state.user.authorizations.toArray(),
-    songControls: state.songs.songControls,
-    songToPlay: state.songs.songToPlay,
+    songs: state.songs.songs,
+    songsRepeat: state.songs.songsRepeat,
+    volume: state.songs.songVolume,
+    mute: state.songs.mute,
+    songIndex: state.songs.songIndex,
+    songState: state.songs.songState,
   }),
-  { currentSongControls },
+  { setSongRepeat, setSongVolume, setSongMute, playNext, playPrevious, songPlay, songPause, songStop },
 )(Player)

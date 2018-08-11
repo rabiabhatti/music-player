@@ -4,52 +4,50 @@ import { createAction, handleActions } from 'redux-actions'
 
 import type { File } from '~/services/types'
 
-const SONG_TO_PLAY = 'SONGS/SONG_TO_PLAY'
-const SET_SELECTED = 'SONGS/SET_SELECTED'
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
-const SONGS_LIST_TO_PLAY = 'SONGS/SONGS_LIST_TO_PLAY'
-const CURRENT_SONG_CONTROLS = 'SONGS/CURRENT_SONG_CONTROLS'
+const SET_SONG_PLAYLIST = 'SONGS/SET_SONG_PLAYLIST'
+const SET_SONG_REPEAT = 'SONGS/SET_SONG_REPEAT'
+const SET_SONG_VOLUME = 'SONG/SET_SONG_VOLUME'
+const SET_SONG_MUTE = 'SONG/SET_SONG_MUTE'
 
-export const songToPlay = createAction(SONG_TO_PLAY)
-export const setSelected = createAction(SET_SELECTED)
+const PLAY_NEXT = 'SONGS/PLAY_NEXT'
+const PLAY_PREVIOUS = 'SONGS/PLAY_PREVIOUS'
+
+const SONG_PLAY = 'SONGS/SONG_PLAY'
+const SONG_PAUSE = 'SONGS/SONG_PAUSE'
+const SONG_STOP = 'SONG/SONG_STOP'
+
 export const incrementNonce = createAction(INCREMENT_NONCE)
-export const currentSongControls = createAction(CURRENT_SONG_CONTROLS)
-export const songsListToPlay = createAction(SONGS_LIST_TO_PLAY)
+export const setSongPlaylist = createAction(SET_SONG_PLAYLIST)
+export const setSongRepeat = createAction(SET_SONG_REPEAT)
+export const setSongVolume = createAction(SET_SONG_VOLUME)
+export const setSongMute = createAction(SET_SONG_MUTE)
 
-export type SongsStateSelected = {|
-  type: 'album' | 'artist' | 'playlist' | 'genre',
-  identifier: string,
-|}
-export type SongToPlayState = {|
-  name: string,
-  sourceId: string,
-  sourceUid: string,
-  artists: Array<string>,
-|}
+export const playNext = createAction(PLAY_NEXT)
+export const playPrevious = createAction(PLAY_PREVIOUS)
+
+export const songPlay = createAction(SONG_PLAY)
+export const songPause = createAction(SONG_PAUSE)
+export const songStop = createAction(SONG_STOP)
+
 export type SongsState = {|
   nonce: number,
-  songToPlay: ?SongToPlayState,
-  selected: ?SongsStateSelected,
-  songControls: ?CurrentSongControlsState,
-  songsListToPlay: ?SongsListToPlayState,
-|}
-
-export type CurrentSongControlsState = {|
+  songs: Array<number>,
+  songsRepeat: 'all' | 'single' | 'none',
+  songState: 'paused' | 'stopped' | 'playing',
+  songIndex: number,
+  songVolume: number,
   mute: boolean,
-  volume: number,
-  pause: boolean,
-|}
-
-export type SongsListToPlayState = {|
-  songsList: Array<File>,
 |}
 
 const defaultState: SongsState = {
   nonce: 0,
-  selected: null,
-  songToPlay: null,
-  songsListToPlay: null,
-  songControls: { mute: false, volume: 50, pause: true },
+  songs: [],
+  songsRepeat: 'none',
+  songState: 'stopped',
+  songIndex: -1,
+  songVolume: 50,
+  mute: false,
 }
 
 export const hydrators = {}
@@ -59,24 +57,43 @@ export const reducer = handleActions(
       ...state,
       nonce: state.nonce + 1,
     }),
-    [SET_SELECTED]: (state: SongsState, { payload: selected }) => ({
+    [SET_SONG_PLAYLIST]: (state: SongsState, { payload }) => ({
       ...state,
-      selected,
+      songs: payload,
+      songState: 'playing',
+      songIndex: 0,
     }),
-    [SONG_TO_PLAY]: (state: SongsState, { payload: songToPlay }) => ({
+    [SET_SONG_REPEAT]: (state: SongsState, { payload }) => ({
       ...state,
-      songToPlay,
+      songsRepeat: payload,
     }),
-    [SONGS_LIST_TO_PLAY]: (state: SongsState, { payload: songsListToPlay }) => ({
+    [SET_SONG_VOLUME]: (state: SongsState, { payload }) => ({
       ...state,
-      songsListToPlay,
+      songVolume: payload,
     }),
-    [CURRENT_SONG_CONTROLS]: (state: SongsState, { payload: songControls }) => ({
+    [SET_SONG_MUTE]: (state: SongsState, { payload }) => ({
       ...state,
-      songControls: {
-        ...state.songControls,
-        ...songControls,
-      },
+      mute: payload,
+    }),
+    [PLAY_NEXT]: (state: SongsState, { payload }) => ({
+      ...state,
+      songIndex: payload,
+    }),
+    [PLAY_PREVIOUS]: (state: SongsState, { payload }) => ({
+      ...state,
+      songIndex: payload,
+    }),
+    [SONG_PLAY]: (state: SongsState) => ({
+      ...state,
+      songState: 'playing',
+    }),
+    [SONG_PAUSE]: (state: SongsState) => ({
+      ...state,
+      songState: 'paused',
+    }),
+    [SONG_STOP]: (state: SongsState) => ({
+      ...state,
+      songState: 'stopped',
     }),
   },
   defaultState,

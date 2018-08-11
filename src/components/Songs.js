@@ -56,7 +56,7 @@ class Songs extends React.Component<Props, State> {
                   <tr
                     key={song.sourceId}
                     style={{ cursor: 'pointer' }}
-                    onClick={() => this.props.setSongPlaylist({ songs: [song.id] })}
+                    onClick={() => this.props.setSongPlaylist([song.id])}
                   >
                     <td>
                       {song.meta && typeof song.meta.name !== 'undefined'

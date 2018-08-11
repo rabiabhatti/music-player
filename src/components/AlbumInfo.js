@@ -101,7 +101,7 @@ class AlbumInfo extends React.Component<Props, State> {
                   </p>
                   <p>{humanizeDuration(song.duration)}</p>
                   <div className="song-btns space-between">
-                    <button onClick={() => this.props.setSongPlaylist({ songs: [song.id] })}>
+                    <button onClick={() => this.props.setSongPlaylist([song.id])}>
                       <i className="material-icons song-play-btn">play_arrow</i>
                     </button>
                     <Dropdown>
