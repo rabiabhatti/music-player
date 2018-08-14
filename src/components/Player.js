@@ -89,6 +89,7 @@ class Player extends React.Component<Props, State> {
 
     if (oldSong && !newSong) {
       this.stop()
+      this.clearCurrentTime()
     } else if (oldSong !== newSong) {
       this.stop()
       this.clearCurrentTime()
@@ -112,16 +113,18 @@ class Player extends React.Component<Props, State> {
   }
 
   updateCurrentTime = () => {
-    if (this.props.songState === 'paused') {
+    if (this.props.songState === 'paused' || this.props.songState === 'stopped') {
       this.setState(prevState => ({
         currentTime: prevState.currentTime,
       }))
       return
     } else if (this.state.currentTime >= this.state.duration - 1) {
-      if (this.props.songs.length > 1) {
+      this.setState({ currentTime: 0, progressbarWidth: 0 })
+      if (this.props.songs.length === 1) {
+        this.props.songStop()
+      } else {
         this.playNext()
       }
-      this.setState({ currentTime: 0 })
       return
     }
     this.setState(prevState => ({
@@ -225,7 +228,9 @@ class Player extends React.Component<Props, State> {
   }
 
   pauseSong = () => {
-    if (this.audioContext.state === 'running') {
+    if (this.props.songState === 'stopped' && this.audioContext.state === 'running') {
+      this.playSong(this.props.songs[this.props.songIndex])
+    } else if (this.audioContext.state === 'running') {
       this.audioContext.suspend()
       this.props.songPause()
     } else if (this.audioContext.state === 'suspended') {
@@ -307,7 +312,7 @@ class Player extends React.Component<Props, State> {
               >
                 fast_rewind
               </i>
-              {songState === 'paused' ? (
+              {songState === 'paused' || songState === 'stopped' ? (
                 <i title="Play" className="material-icons play-btn" onClick={this.pauseSong}>
                   play_circle_outline
                 </i>
