@@ -46,6 +46,7 @@ type Props = {|
 type State = {|
   duration: number,
   currentTime: number,
+  localVolume: number,
   activeSong: Object | null,
   progressbarWidth: number,
   showPlaylistPopup: number | null,
@@ -60,6 +61,7 @@ class Player extends React.Component<Props, State> {
   state = {
     duration: 0,
     currentTime: 0,
+    localVolume: 50,
     activeSong: null,
     progressbarWidth: 0,
     showPlaylistPopup: null,
@@ -119,7 +121,7 @@ class Player extends React.Component<Props, State> {
       if (this.props.songs.length > 1) {
         this.playNext()
       }
-      this.clearCurrentTime()
+      this.setState({ currentTime: 0 })
       return
     }
     this.setState(prevState => ({
@@ -140,12 +142,16 @@ class Player extends React.Component<Props, State> {
 
   handleVolumeChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     const volume = parseInt(event.target.value, 10)
-    const songVolume = this.volume
-    if (songVolume) {
-      songVolume.gain.value = volume / 100
+    this.setState({ localVolume: volume })
+    this.applyVolumeChange(volume)
+  }
+
+  applyVolumeChange = debounce((volume: number) => {
+    if (this.volume) {
+      this.volume.gain.value = volume / 100
       this.props.setSongVolume(volume)
     }
-  }
+  }, 50)
 
   handleMuteVolume = () => {
     if (this.volume) {
@@ -160,25 +166,19 @@ class Player extends React.Component<Props, State> {
   }
 
   applyProgressbarChange = debounce(async (value: number) => {
-    // if (this.source) {
-    //   const songID = this.props.songs[0]
-    //   const song = await db.songs.get(songID)
-    //
-    //   this.playSong(song, value)
-    // }
+    this.stop()
+    const song = this.props.songs[this.props.songIndex]
+    this.playSong(song, value)
   }, 500)
 
   handleProgressbarChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    if (this.source) {
-      this.source.stop(0)
-    }
     const numeric = parseInt(event.target.value, 10)
     const duration = this.state.duration
     this.setState({ currentTime: numeric, progressbarWidth: numeric / duration * 100 })
     this.applyProgressbarChange(numeric)
   }
 
-  playSong = async (songId: number) => {
+  playSong = async (songId: number, time: ?number) => {
     const song = await db.songs.get(songId)
     const { authorizations } = this.props
     if (!authorizations.length) {
@@ -207,9 +207,17 @@ class Player extends React.Component<Props, State> {
       const buffer = await response.arrayBuffer()
 
       const decodedData = await this.audioContext.decodeAudioData(buffer)
-      if (this.source) {
-        this.source.buffer = decodedData
-        this.source.start(0)
+      const localSource = this.source
+      if (localSource) {
+        localSource.buffer = decodedData
+        if (time) {
+          localSource.start(this.audioContext.currentTime, time, this.state.duration)
+          if (this.audioContext.state === 'suspended') {
+            this.audioContext.resume()
+          }
+        } else {
+          localSource.start(0)
+        }
         this.setState({ duration: decodedData.duration })
         this.props.songPlay()
       }
@@ -246,7 +254,7 @@ class Player extends React.Component<Props, State> {
   // }
 
   render() {
-    const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong } = this.state
+    const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong, localVolume } = this.state
     const { volume, mute, songState } = this.props
     const name =
       activeSong && activeSong.meta && typeof activeSong.meta.name !== 'undefined'
@@ -329,11 +337,11 @@ class Player extends React.Component<Props, State> {
                 <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
                   volume_off
                 </i>
-              ) : volume === 0 ? (
+              ) : localVolume === 0 ? (
                 <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
                   volume_off
                 </i>
-              ) : volume <= 40 ? (
+              ) : localVolume <= 40 ? (
                 <i title="Volume" onClick={this.handleMuteVolume} className="material-icons">
                   volume_down
                 </i>
@@ -344,8 +352,15 @@ class Player extends React.Component<Props, State> {
               )}
 
               <div className="volume-progressbar">
-                <div className="progress-fill" style={{ width: `${volume}%` }} />
-                <input onChange={this.handleVolumeChange} title="Volume" type="range" value={volume} min="0" max="100" />
+                <div className="progress-fill" style={{ width: `${localVolume}%` }} />
+                <input
+                  onChange={this.handleVolumeChange}
+                  title="Volume"
+                  type="range"
+                  value={localVolume}
+                  min="0"
+                  max="100"
+                />
               </div>
               <i title="Repeat" className="material-icons">
                 sync
