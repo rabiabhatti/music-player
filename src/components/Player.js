@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import debounce from 'lodash/debounce'
 import { connect } from 'react-redux'
 
@@ -72,6 +72,7 @@ class Player extends React.Component<Props, State> {
     if (currentSong) {
       this.playSong(currentSong)
     }
+
     this.setInterval = setInterval(() => {
       this.updateCurrentTime()
     }, 1000)
@@ -83,6 +84,7 @@ class Player extends React.Component<Props, State> {
       this.source.stop(0)
     }
   }
+
   async componentWillReceiveProps(nextProps) {
     const newSong = nextProps.songs[nextProps.songIndex]
     const oldSong = this.props.songs[this.props.songIndex]
@@ -120,12 +122,14 @@ class Player extends React.Component<Props, State> {
       return
     } else if (this.state.currentTime >= this.state.duration - 1) {
       this.setState({ currentTime: 0, progressbarWidth: 0 })
-      if (this.props.songs.length === 1) {
-        this.props.songStop()
-      } else {
+      this.props.songStop()
+      if (this.props.songsRepeat === 'single') {
+        this.playSong(this.props.songs[this.props.songIndex])
+        return
+      } else if (this.props.songs.length > 1 || (this.props.songs.length > 1 && this.props.songsRepeat === 'all')) {
         this.playNext()
+        return
       }
-      return
     }
     this.setState(prevState => ({
       currentTime: prevState.currentTime + 1,
@@ -246,21 +250,9 @@ class Player extends React.Component<Props, State> {
     this.props.playPrevious()
   }
 
-  // hadleRepeatSong = () => {
-  //   if (this.source && this.props.songControls.repeat) {
-  //     this.source.loop = false
-  //     this.props.currentSongControls({ repeat: false })
-  //     return
-  //   }
-  //   if (this.source) {
-  //     this.source.loop = true
-  //     this.props.currentSongControls({ repeat: true })
-  //   }
-  // }
-
   render() {
     const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong, localVolume } = this.state
-    const { volume, mute, songState } = this.props
+    const { volume, mute, songState, songsRepeat, songs } = this.props
     const name =
       activeSong && activeSong.meta && typeof activeSong.meta.name !== 'undefined'
         ? activeSong.meta.name
@@ -298,7 +290,9 @@ class Player extends React.Component<Props, State> {
                   <a className="dropdown-option">Rock n Roll</a>
                 </SubDropdown>
               </div>
-              <a className="dropdown-option">Play Next</a>
+              <a className="dropdown-option" onClick={this.playNext}>
+                Play Next
+              </a>
               <a className="dropdown-option">Play Later</a>
               <a className="dropdown-option">Delete from Library</a>
             </Dropdown>
@@ -307,7 +301,7 @@ class Player extends React.Component<Props, State> {
             <div className="section-player-btns align-center">
               <i
                 title="Previous"
-                className={`material-icons ${this.props.songs.length <= 1 ? 'inactive' : ''}`}
+                className={`material-icons ${songs.length <= 1 ? 'inactive' : ''}`}
                 onClick={this.playPrevious}
               >
                 fast_rewind
@@ -321,11 +315,7 @@ class Player extends React.Component<Props, State> {
                   pause_circle_outline
                 </i>
               )}
-              <i
-                title="Next"
-                className={`material-icons ${this.props.songs.length <= 1 ? 'inactive' : ''}`}
-                onClick={this.playNext}
-              >
+              <i title="Next" className={`material-icons ${songs.length <= 1 ? 'inactive' : ''}`} onClick={this.playNext}>
                 fast_forward
               </i>
             </div>
@@ -367,9 +357,22 @@ class Player extends React.Component<Props, State> {
                   max="100"
                 />
               </div>
-              <i title="Repeat" className="material-icons">
-                sync
-              </i>
+              {songsRepeat === 'none' ? (
+                <i title="Repeat disabled" className="material-icons" onClick={() => this.props.setSongRepeat('all')}>
+                  sync_disabled
+                </i>
+              ) : songsRepeat === 'all' ? (
+                <i title="Repeat all" className="material-icons" onClick={() => this.props.setSongRepeat('single')}>
+                  sync
+                </i>
+              ) : (
+                <div style={{ position: 'relative', top: 2 }}>
+                  <i title="Repeat single" className="material-icons" onClick={() => this.props.setSongRepeat('none')}>
+                    sync
+                  </i>
+                  <span className="superscript">1</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

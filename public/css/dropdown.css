@@ -13,6 +13,7 @@
   display: flex;
   color: #757575;
   padding: 0.9rem;
+  cursor: pointer;
   border-radius: 4px;
   font-size: 0.85rem;
   border-bottom: 1px solid #0000000a;
