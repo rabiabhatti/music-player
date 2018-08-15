@@ -32,6 +32,7 @@ export function getGenresFromSongs(songs: Array<File>): Array<string> {
 
   return Array.from(genres)
 }
+
 export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
   const albums = new Set()
 

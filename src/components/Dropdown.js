@@ -3,7 +3,7 @@
 
 import React from 'react'
 
-import getEventPath from '../common/getEventPath'
+import getEventPath from '~/common/getEventPath'
 
 type Props = {|
   children: React$Node,
