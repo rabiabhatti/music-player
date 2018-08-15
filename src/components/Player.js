@@ -108,8 +108,8 @@ class Player extends React.Component<Props, State> {
   }
 
   handleBodyKeypress = (e: KeyboardEvent) => {
-    e.preventDefault()
-    if (e.keyCode == 32) {
+    if (document.activeElement === document.body && e.keyCode == 32) {
+      e.preventDefault()
       this.pauseSong()
     }
   }
@@ -123,10 +123,13 @@ class Player extends React.Component<Props, State> {
     } else if (this.state.currentTime >= this.state.duration - 1) {
       this.setState({ currentTime: 0, progressbarWidth: 0 })
       this.props.songStop()
-      if (this.props.songsRepeat === 'single') {
+      if (this.props.songsRepeat === 'single' || (this.props.songs.length === 1 && this.props.songsRepeat === 'all')) {
         this.playSong(this.props.songs[this.props.songIndex])
         return
-      } else if (this.props.songs.length > 1 || (this.props.songs.length > 1 && this.props.songsRepeat === 'all')) {
+      } else if (
+        (this.props.songs.length > 1 && this.props.songIndex !== this.props.songs.length - 1) ||
+        (this.props.songsRepeat === 'all' && this.props.songIndex === this.props.songs.length - 1)
+      ) {
         this.playNext()
         return
       }
@@ -264,13 +267,8 @@ class Player extends React.Component<Props, State> {
 
     return (
       <div className="section-player">
-        {showPlaylistPopup ? (
-          <Popup hash={showPlaylistPopup.toString()}>
-            <input type="text" placeholder="Choose name" />
-            <button className="btn-blue">Save</button>
-          </Popup>
-        ) : (
-          <div />
+        {showPlaylistPopup && (
+          <Popup hash={showPlaylistPopup.toString()} songsIds={[this.props.songs[this.props.songIndex]]} />
         )}
         <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
           <div className="section-song-description flex-row space-between">
