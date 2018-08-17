@@ -55,7 +55,7 @@ export default class Popup extends React.Component<Props, State> {
 
     const hidden = this.state.hidden
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!hidden || firedOnSelf) {
+    if (!hidden && !firedOnSelf) {
       this.setState({
         hidden: !hidden,
       })
@@ -95,13 +95,13 @@ export default class Popup extends React.Component<Props, State> {
     }
 
     return (
-      <div
-        className="section-popup"
-        ref={element => {
-          this.ref = element
-        }}
-      >
-        <div className="popup-content flex-wrap">
+      <div className="section-popup">
+        <div
+          className="popup-content flex-wrap"
+          ref={element => {
+            this.ref = element
+          }}
+        >
           <button className="close" onClick={this.close}>
             ×
           </button>
