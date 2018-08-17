@@ -4,8 +4,10 @@ import * as React from 'react'
 import groupBy from 'lodash/groupBy'
 import { connect } from 'react-redux'
 
+import db from '~/db'
 import type { File } from '~/services/types'
 import { setSongPlaylist } from '~/redux/songs'
+import { addSongsToPlaylist } from '~/common/songs'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
@@ -18,12 +20,19 @@ type Props = {|
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
+  playlists: Array<Object> | null,
   showPlaylistPopup: number | null,
 |}
 
 class ContentCard extends React.Component<Props, State> {
   state = {
+    playlists: null,
     showPlaylistPopup: null,
+  }
+
+  async componentDidMount() {
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists: playlists })
   }
 
   showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -33,7 +42,7 @@ class ContentCard extends React.Component<Props, State> {
 
   render() {
     const { songs, selected } = this.props
-    const { showPlaylistPopup } = this.state
+    const { showPlaylistPopup, playlists } = this.state
 
     let songsToShow = songs
     if (selected) {
@@ -67,6 +76,16 @@ class ContentCard extends React.Component<Props, State> {
                 <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                   New Playlist
                 </a>
+                {playlists &&
+                  playlists.map(playlist => (
+                    <a
+                      key={playlist.id}
+                      className="dropdown-option"
+                      onClick={() => addSongsToPlaylist(songsIdsArr, playlist.id)}
+                    >
+                      {playlist.name}
+                    </a>
+                  ))}
               </SubDropdown>
             </div>
             <a className="dropdown-option" onClick={() => this.props.setSongPlaylist(songsIdsArr)}>

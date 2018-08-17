@@ -1,5 +1,6 @@
 .section-sidebar {
   left: 0;
+  z-index: 51;
   top: 12.5rem;
   width: 19.58%;
   height: 100vh;

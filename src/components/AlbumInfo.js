@@ -3,9 +3,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
-// import type { File } from '~/services/types'
-import { humanizeDuration } from '~/common/songs'
+import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
@@ -17,12 +17,19 @@ type Props = {|
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
+  playlists: Array<Object> | null,
   showPlaylistPopup: number | null,
 |}
 
 class AlbumInfo extends React.Component<Props, State> {
   state = {
+    playlists: null,
     showPlaylistPopup: null,
+  }
+
+  async componentDidMount() {
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists: playlists })
   }
 
   showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
@@ -32,7 +39,7 @@ class AlbumInfo extends React.Component<Props, State> {
 
   render() {
     const { songs, name } = this.props
-    const { showPlaylistPopup } = this.state
+    const { showPlaylistPopup, playlists } = this.state
     let i = 1
 
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
@@ -80,6 +87,16 @@ class AlbumInfo extends React.Component<Props, State> {
                     <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                       New Playlist
                     </a>
+                    {playlists &&
+                      playlists.map(playlist => (
+                        <a
+                          key={playlist.id}
+                          className="dropdown-option"
+                          onClick={() => addSongsToPlaylist(songsIdsArr, playlist.id)}
+                        >
+                          {playlist.name}
+                        </a>
+                      ))}
                   </SubDropdown>
                 </div>
                 <a className="dropdown-option">Play Next</a>
@@ -106,6 +123,16 @@ class AlbumInfo extends React.Component<Props, State> {
                           <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                             New Playlist
                           </a>
+                          {playlists &&
+                            playlists.map(playlist => (
+                              <a
+                                key={playlist.id}
+                                className="dropdown-option"
+                                onClick={() => addSongsToPlaylist([song.id], playlist.id)}
+                              >
+                                {playlist.name}
+                              </a>
+                            ))}
                         </SubDropdown>
                       </div>
                       <a className="dropdown-option">Play Next</a>

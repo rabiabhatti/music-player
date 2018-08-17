@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import db from '~/db'
 import services from '~/services'
-import { humanizeDuration } from '~/common/songs'
+import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
 import type { UserAuthorization } from '~/redux/user'
 import {
   setSongRepeat,
@@ -49,6 +49,7 @@ type State = {|
   localVolume: number,
   activeSong: Object | null,
   progressbarWidth: number,
+  playlists: Array<Object> | null,
   showPlaylistPopup: number | null,
 |}
 
@@ -61,6 +62,7 @@ class Player extends React.Component<Props, State> {
   state = {
     duration: 0,
     currentTime: 0,
+    playlists: null,
     localVolume: 50,
     activeSong: null,
     progressbarWidth: 0,
@@ -76,6 +78,8 @@ class Player extends React.Component<Props, State> {
     this.setInterval = setInterval(() => {
       this.updateCurrentTime()
     }, 1000)
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists: playlists })
     document.addEventListener('keypress', this.handleBodyKeypress)
   }
 
@@ -199,7 +203,11 @@ class Player extends React.Component<Props, State> {
 
     this.source = this.audioContext.createBufferSource()
     this.volume = this.audioContext.createGain()
-    this.volume.gain.value = this.props.volume / 100
+    if (this.props.mute) {
+      this.volume.gain.value = 0
+    } else {
+      this.volume.gain.value = this.props.volume / 100
+    }
     if (this.source) {
       this.source.connect(this.volume)
     }
@@ -254,7 +262,7 @@ class Player extends React.Component<Props, State> {
   }
 
   render() {
-    const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong, localVolume } = this.state
+    const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong, localVolume, playlists } = this.state
     const { volume, mute, songState, songsRepeat, songs } = this.props
     const name =
       activeSong && activeSong.meta && typeof activeSong.meta.name !== 'undefined'
@@ -283,6 +291,17 @@ class Player extends React.Component<Props, State> {
                   <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                     New Playlist
                   </a>
+                  {playlists &&
+                    activeSong &&
+                    playlists.map(playlist => (
+                      <a
+                        key={playlist.id}
+                        className="dropdown-option"
+                        onClick={() => addSongsToPlaylist([activeSong.id], playlist.id)}
+                      >
+                        {playlist.name}
+                      </a>
+                    ))}
                 </SubDropdown>
               </div>
               <a className="dropdown-option" onClick={this.playNext}>

@@ -1,5 +1,6 @@
 // @flow
 
+import db from '~/db'
 import type { File } from '~/services/types'
 
 export function getArtistsFromSongs(songs: Array<File>): Array<string> {
@@ -44,6 +45,18 @@ export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
   })
 
   return Array.from(albums)
+}
+
+export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {
+  const playlist = await db.playlists.get(playlistId)
+  const songs = playlist.songs
+  await songsIds.forEach(id => {
+    if (!songs.includes(id)) {
+      songs.push(id)
+    }
+  })
+  await db.playlists.update(playlistId, { songs: songs })
+  return
 }
 
 export function humanizeDuration(duration: number): string {
