@@ -15,6 +15,7 @@ import Player from './Player'
 import Loading from './Loading'
 import Sidebar from './Sidebar'
 import Artists from './Artists'
+import Playlist from './Playlist'
 import Downloader from './Downloader'
 import RecentlyPlayed from './RecentlyPlayed'
 
@@ -37,6 +38,7 @@ class App extends React.Component<Props, State> {
     artists: Artists,
     albums: Albums,
     genres: Genres,
+    playlist: Playlist,
     recentlyplayed: RecentlyPlayed,
   }
 

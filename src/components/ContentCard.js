@@ -1,9 +1,11 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import groupBy from 'lodash/groupBy'
+import { connect } from 'react-redux'
 
 import type { File } from '~/services/types'
+import { setSongPlaylist } from '~/redux/songs'
 
 import Popup from './Popup'
 import Dropdown from './Dropdown'
@@ -11,14 +13,15 @@ import AlbumInfo from './AlbumInfo'
 import SubDropdown from './SubDropdown'
 
 type Props = {|
-  songs: Array<File>,
+  songs: Array<Object>,
   selected: ?Object,
+  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   showPlaylistPopup: number | null,
 |}
 
-export default class ContentCard extends React.Component<Props, State> {
+class ContentCard extends React.Component<Props, State> {
   state = {
     showPlaylistPopup: null,
   }
@@ -27,6 +30,16 @@ export default class ContentCard extends React.Component<Props, State> {
     e.preventDefault()
     this.setState({ showPlaylistPopup: Date.now() })
   }
+
+  handleSongsShuffleAll = () => {
+    const songsList = this.props.songs
+    let songsIdsArr = []
+    songsList.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+    this.props.setSongPlaylist(songsIdsArr)
+  }
+
   render() {
     const { songs, selected } = this.props
     const { showPlaylistPopup } = this.state
@@ -40,16 +53,15 @@ export default class ContentCard extends React.Component<Props, State> {
       }
     }
     const songsByAlbums = groupBy(songsToShow, 'meta.album')
+
+    let songsIdsArr = []
+    songsToShow.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+
     return (
       <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
-        {showPlaylistPopup ? (
-          <Popup hash={showPlaylistPopup.toString()}>
-            <input type="text" placeholder="Choose name" />
-            <button className="btn-blue">Save</button>
-          </Popup>
-        ) : (
-          <div />
-        )}
+        {showPlaylistPopup && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
         <div className="space-between section-artist-header">
           <div>
             <h2>{selected ? selected.identifier : 'All Artists'}</h2>
@@ -64,12 +76,11 @@ export default class ContentCard extends React.Component<Props, State> {
                 <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                   New Playlist
                 </a>
-                <a className="dropdown-option">90's</a>
-                <a className="dropdown-option">Peace of Mind</a>
-                <a className="dropdown-option">Rock n Roll</a>
               </SubDropdown>
             </div>
-            <a className="dropdown-option">Shuffle All</a>
+            <a className="dropdown-option" onClick={this.handleSongsShuffleAll}>
+              Shuffle All
+            </a>
             <a className="dropdown-option">Play Next</a>
             <a className="dropdown-option">Play Later</a>
             <a className="dropdown-option">Delete from Library</a>
@@ -82,3 +93,5 @@ export default class ContentCard extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(null, { setSongPlaylist })(ContentCard)

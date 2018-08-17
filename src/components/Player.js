@@ -283,9 +283,6 @@ class Player extends React.Component<Props, State> {
                   <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                     New Playlist
                   </a>
-                  <a className="dropdown-option">90's</a>
-                  <a className="dropdown-option">Peace of Mind</a>
-                  <a className="dropdown-option">Rock n Roll</a>
                 </SubDropdown>
               </div>
               <a className="dropdown-option" onClick={this.playNext}>

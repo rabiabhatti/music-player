@@ -5,10 +5,9 @@ import { connect } from 'react-redux'
 
 import db from '~/db'
 import { humanizeDuration } from '~/common/songs'
-import { setSongPlaylist, incrementNonce } from '~/redux/songs'
+import { setSongPlaylist } from '~/redux/songs'
 
 type Props = {|
-  incrementNonce: () => void,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
@@ -17,6 +16,7 @@ type State = {|
 
 class Songs extends React.Component<Props, State> {
   state = { songs: [] }
+
   async componentDidMount() {
     const dbSongs = await db.songs.toArray()
     this.setState({ songs: dbSongs })
@@ -88,4 +88,4 @@ class Songs extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { setSongPlaylist, incrementNonce })(Songs)
+export default connect(null, { setSongPlaylist })(Songs)

@@ -30,6 +30,15 @@ class AlbumInfo extends React.Component<Props, State> {
     this.setState({ showPlaylistPopup: Date.now() })
   }
 
+  handleSongsShuffleAll = () => {
+    const songsList = this.props.songs
+    let songsIdsArr = []
+    songsList.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+    this.props.setSongPlaylist(songsIdsArr)
+  }
+
   render() {
     const { songs, name } = this.props
     const { showPlaylistPopup } = this.state
@@ -37,16 +46,14 @@ class AlbumInfo extends React.Component<Props, State> {
 
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
 
+    let songsIdsArr = []
+    songs.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+
     return (
       <div id="album-info">
-        {showPlaylistPopup ? (
-          <Popup hash={showPlaylistPopup.toString()}>
-            <input type="text" placeholder="Choose name" />
-            <button className="btn-blue">Save</button>
-          </Popup>
-        ) : (
-          <div />
-        )}
+        {showPlaylistPopup && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
         <div className="section-album-info space-between flex-wrap">
           <div className="album-title flex-column">
             <div className="album-cover">
@@ -60,7 +67,7 @@ class AlbumInfo extends React.Component<Props, State> {
               <p>
                 {songs.length} songs, {humanizeDuration(totalDuration)} minutes
               </p>
-              <button>Shuffle</button>
+              <button onClick={this.handleSongsShuffleAll}>Shuffle</button>
             </div>
           </div>
           <div className="album-info-content">
@@ -82,9 +89,6 @@ class AlbumInfo extends React.Component<Props, State> {
                     <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                       New Playlist
                     </a>
-                    <a className="dropdown-option">90's</a>
-                    <a className="dropdown-option">Peace of Mind</a>
-                    <a className="dropdown-option">Rock n Roll</a>
                   </SubDropdown>
                 </div>
                 <a className="dropdown-option">Play Next</a>
@@ -111,9 +115,6 @@ class AlbumInfo extends React.Component<Props, State> {
                           <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
                             New Playlist
                           </a>
-                          <a className="dropdown-option">90's</a>
-                          <a className="dropdown-option">Peace of Mind</a>
-                          <a className="dropdown-option">Rock n Roll</a>
                         </SubDropdown>
                       </div>
                       <a className="dropdown-option">Play Next</a>

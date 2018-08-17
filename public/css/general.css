@@ -28,6 +28,7 @@ body {
   position: relative;
 }
 a {
+  cursor: pointer;
   color: currentColor;
   text-decoration: none;
 }

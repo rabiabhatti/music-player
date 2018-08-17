@@ -3,20 +3,41 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import { setSelected, type ComponentsStateSelected } from '~/redux/components'
+import db from '~/db'
+import { setSelected, playlistSelected, type ComponentsStateSelected } from '~/redux/components'
 
 import Picker from './Picker'
 import Logout from './Logout'
 
 type Props = {|
-  selected: ComponentsStateSelected,
+  selected: Object,
+  playlist: Object,
   setSelected: typeof setSelected,
+  playlistSelected: typeof playlistSelected,
 |}
-type State = {||}
+type State = {|
+  playlists: Array<Object>,
+|}
 
 class Sidebar extends React.Component<Props, State> {
+  state = {
+    playlists: [],
+  }
+
+  async componentDidMount() {
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists: playlists })
+  }
+
+  handlePlaylistClick = (id: number) => e => {
+    e.preventDefault()
+    this.props.setSelected({ type: 'Playlist' })
+    this.props.playlistSelected({ id: id })
+  }
+
   render() {
-    const { selected } = this.props
+    const { selected, playlist } = this.props
+    const { playlists } = this.state
 
     return (
       <div className="section-sidebar">
@@ -26,35 +47,30 @@ class Sidebar extends React.Component<Props, State> {
             <h3>Library</h3>
             <a
               className={`content-row align-center ${selected && selected.type === 'RecentlyPlayed' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
               onClick={() => this.props.setSelected({ type: 'RecentlyPlayed' })}
             >
               <i className="material-icons row-icon">access_time</i>Recently Played
             </a>
             <a
               className={`content-row align-center ${selected && selected.type === 'Songs' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
               onClick={() => this.props.setSelected({ type: 'Songs' })}
             >
               <i className="material-icons row-icon">music_note</i>Songs
             </a>
             <a
               className={`content-row align-center ${selected && selected.type === 'Albums' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
               onClick={() => this.props.setSelected({ type: 'Albums' })}
             >
               <i className="material-icons row-icon">album</i>Albums
             </a>
             <a
               className={`content-row align-center ${selected && selected.type === 'Artists' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
               onClick={() => this.props.setSelected({ type: 'Artists' })}
             >
               <i className="material-icons row-icon">mic</i>Artists
             </a>
             <a
               className={`content-row align-center ${selected && selected.type === 'Genres' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
               onClick={() => this.props.setSelected({ type: 'Genres' })}
             >
               <i className="material-icons row-icon">queue_music</i>Genres
@@ -62,28 +78,18 @@ class Sidebar extends React.Component<Props, State> {
           </div>
           <div className="sidebar-content flex-column">
             <h3>PlayLists</h3>
-            <a
-              className={`content-row align-center ${selected && selected.type === 'Playlist' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
-              onClick={() => this.props.setSelected({ type: 'Playlist' })}
-            >
-              <i className="material-icons row-icon">playlist_play</i>90's
-            </a>
-            <a
-              className={`content-row align-center ${selected && selected.type === 'Playlist' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
-              onClick={() => this.props.setSelected({ type: 'Playlist' })}
-            >
-              <i className="material-icons row-icon">playlist_play</i>Peace of Mind
-            </a>
-            <a
-              className={`content-row align-center ${selected && selected.type === 'Playlist' ? 'active' : ''}`}
-              style={{ cursor: 'pointer' }}
-              onClick={() => this.props.setSelected({ type: 'Playlist' })}
-            >
-              <i className="material-icons row-icon">playlist_play</i>Rock n Roll
-            </a>
-            <button />
+            {playlists.map(loaclPlaylist => (
+              <a
+                key={loaclPlaylist.id}
+                className={`content-row align-center ${
+                  selected && selected.type === 'Playlist' && playlist && playlist.id === loaclPlaylist.id ? 'active' : ''
+                }`}
+                onClick={this.handlePlaylistClick(loaclPlaylist.id)}
+              >
+                <i className="material-icons row-icon">playlist_play</i>
+                {loaclPlaylist.name}
+              </a>
+            ))}
           </div>
           <Picker />
           <Logout />
@@ -93,4 +99,7 @@ class Sidebar extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ components }) => ({ selected: components.selected }), { setSelected })(Sidebar)
+export default connect(({ components }) => ({ selected: components.selected, playlist: components.playlist }), {
+  setSelected,
+  playlistSelected,
+})(Sidebar)

@@ -1,155 +1,124 @@
 // @flow
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 
-export default class Playlist extends React.Component<$FlowFixMe, $FlowFixMe> {
+import db from '~/db'
+import { humanizeDuration } from '~/common/songs'
+import { setSongPlaylist, incrementNonce } from '~/redux/songs'
+
+type Props = {|
+  playlist: Object,
+  incrementNonce: () => void,
+  setSongPlaylist: typeof setSongPlaylist,
+|}
+type State = {|
+  playlist: Object,
+  songs: Array<Object>,
+|}
+
+class Playlist extends React.Component<Props, State> {
+  state = { playlist: {}, songs: [] }
+
+  async componentDidMount() {
+    const playlist = await db.playlists.get(this.props.playlist.id)
+    this.setState({ playlist: playlist })
+
+    this.getPlaylistSongs(playlist)
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    const oldPlaylist = this.props.playlist.id
+    const newPlaylist = nextProps.playlist.id
+
+    if (newPlaylist !== oldPlaylist) {
+      const playlist = await db.playlists.get(newPlaylist)
+      this.setState({ playlist: playlist })
+      this.setState({ songs: [] })
+
+      this.getPlaylistSongs(playlist)
+    }
+  }
+
+  getPlaylistSongs = (playlist: Object) => {
+    if (playlist.songs.length) {
+      playlist.songs.forEach(async songsId => {
+        const song = await db.songs.get(songsId)
+        this.setState(prevState => ({
+          songs: [...prevState.songs, song],
+        }))
+        this.props.incrementNonce()
+      })
+    }
+  }
+
+  handleSongPlayAllInput = () => {
+    const songsList = this.state.songs
+    let songsIdsArr = []
+    songsList.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+    this.props.setSongPlaylist(songsIdsArr)
+  }
+
   render() {
+    const { songs, playlist } = this.state
+
     return (
-      <div className="section-songs">
-        <div className="align-center space-between">
-          <h2>Playlist Name</h2>
-          <button>Play All</button>
-        </div>
-        <table className="section-songs-table" cellSpacing="0">
-          <thead>
-            <tr className="table-heading">
-              <th>Title</th>
-              <th>Time</th>
-              <th>Artist</th>
-              <th>Album</th>
-              <th>Genre</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>lastMind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <React.Fragment>
+        {songs.length ? (
+          <div className="section-songs bound">
+            <div className="align-center space-between">
+              <h2>{playlist.name}</h2>
+              <button onClick={this.handleSongPlayAllInput}>Play All</button>
+            </div>
+            <table className="section-songs-table" cellSpacing="0">
+              <thead>
+                <tr className="table-heading">
+                  <th>Title</th>
+                  <th>Time</th>
+                  <th>Artist</th>
+                  <th>Album</th>
+                  <th>Genre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {songs.map(song => (
+                  <tr
+                    key={song.sourceId}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => this.props.setSongPlaylist([song.id])}
+                  >
+                    <td>
+                      {song.meta && typeof song.meta.name !== 'undefined'
+                        ? song.meta.name
+                        : song.filename.replace('.mp3', '')}
+                    </td>
+                    <td>{humanizeDuration(song.duration)}</td>
+                    <td>
+                      {song.meta && song.meta.artists.length === 0 ? 'Unknown' : song.meta && song.meta.artists.join(', ')}
+                    </td>
+                    <td>{song.meta && song.meta.album ? song.meta && song.meta.album : 'Unknown'}</td>
+                    <td>
+                      {(song.meta && typeof song.meta.genre === 'undefined') || (song.meta && song.meta.genre[0] === '')
+                        ? 'Unkown'
+                        : song.meta && song.meta.genre}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="align-center justify-center bound" style={{ height: 300 }}>
+            <h2 className="replacement-text">Add Music</h2>
+          </div>
+        )}
+      </React.Fragment>
     )
   }
 }
+
+export default connect(({ components }) => ({ playlist: components.playlist }), { setSongPlaylist, incrementNonce })(
+  Playlist,
+)
