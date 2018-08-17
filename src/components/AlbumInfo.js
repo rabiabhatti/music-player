@@ -30,15 +30,6 @@ class AlbumInfo extends React.Component<Props, State> {
     this.setState({ showPlaylistPopup: Date.now() })
   }
 
-  handleSongsShuffleAll = () => {
-    const songsList = this.props.songs
-    let songsIdsArr = []
-    songsList.forEach(song => {
-      songsIdsArr.push(song.id)
-    })
-    this.props.setSongPlaylist(songsIdsArr)
-  }
-
   render() {
     const { songs, name } = this.props
     const { showPlaylistPopup } = this.state
@@ -67,7 +58,7 @@ class AlbumInfo extends React.Component<Props, State> {
               <p>
                 {songs.length} songs, {humanizeDuration(totalDuration)} minutes
               </p>
-              <button onClick={this.handleSongsShuffleAll}>Shuffle</button>
+              <button onClick={() => this.props.setSongPlaylist(songsIdsArr)}>Shuffle</button>
             </div>
           </div>
           <div className="album-info-content">

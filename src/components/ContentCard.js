@@ -31,15 +31,6 @@ class ContentCard extends React.Component<Props, State> {
     this.setState({ showPlaylistPopup: Date.now() })
   }
 
-  handleSongsShuffleAll = () => {
-    const songsList = this.props.songs
-    let songsIdsArr = []
-    songsList.forEach(song => {
-      songsIdsArr.push(song.id)
-    })
-    this.props.setSongPlaylist(songsIdsArr)
-  }
-
   render() {
     const { songs, selected } = this.props
     const { showPlaylistPopup } = this.state
@@ -78,7 +69,7 @@ class ContentCard extends React.Component<Props, State> {
                 </a>
               </SubDropdown>
             </div>
-            <a className="dropdown-option" onClick={this.handleSongsShuffleAll}>
+            <a className="dropdown-option" onClick={() => this.props.setSongPlaylist(songsIdsArr)}>
               Shuffle All
             </a>
             <a className="dropdown-option">Play Next</a>
