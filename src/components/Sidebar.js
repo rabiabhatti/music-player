@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import db from '~/db'
 import { setSelected, playlistSelected, type ComponentsStateSelected } from '~/redux/components'
 
+import Popup from './Popup'
 import Picker from './Picker'
 import Logout from './Logout'
 
@@ -17,11 +18,13 @@ type Props = {|
 |}
 type State = {|
   playlists: Array<Object>,
+  showPlaylistPopup: number | null,
 |}
 
 class Sidebar extends React.Component<Props, State> {
   state = {
     playlists: [],
+    showPlaylistPopup: null,
   }
 
   async componentDidMount() {
@@ -35,12 +38,18 @@ class Sidebar extends React.Component<Props, State> {
     this.props.playlistSelected({ id: id })
   }
 
+  showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
+    e.preventDefault()
+    this.setState({ showPlaylistPopup: Date.now() })
+  }
+
   render() {
     const { selected, playlist } = this.props
-    const { playlists } = this.state
+    const { playlists, showPlaylistPopup } = this.state
 
     return (
       <div className="section-sidebar">
+        {showPlaylistPopup && <Popup hash={showPlaylistPopup.toString()} songsIds={[]} />}
         <div className="flex-column">
           <input id="sidebar-search-input" type="text" placeholder="Search" />
           <div className="sidebar-content flex-column">
@@ -78,6 +87,10 @@ class Sidebar extends React.Component<Props, State> {
           </div>
           <div className="sidebar-content flex-column">
             <h3>PlayLists</h3>
+            <a onClick={this.showPlaylistPopupInput} className="content-row align-center">
+              <i className="material-icons row-icon">playlist_add</i>
+              New
+            </a>
             {playlists.map(loaclPlaylist => (
               <a
                 key={loaclPlaylist.id}
