@@ -1,6 +1,6 @@
 // @flow
 
-import { Set as ImmSet } from 'immutable'
+import { Set as ImmSet, Record, type RecordOf, type RecordFactory } from 'immutable'
 import { createAction, handleActions } from 'redux-actions'
 import type { ServiceName } from '~/types'
 
@@ -15,30 +15,30 @@ export type UserAuthorization = {|
   meta: Object,
   service: ServiceName,
 |}
-export type UserState = {|
+export type UserStateFields = {|
   authorizations: ImmSet<UserAuthorization>,
 |}
 
-const defaultState: UserState = {
+export type UserState = RecordOf<UserStateFields>
+const createUserState: RecordFactory<UserStateFields> = Record({
   authorizations: new ImmSet(),
-}
+})
 
 export default handleActions(
   {
-    [AUTHORIZE_SERVICE]: (state: UserState, { payload }) => ({
-      ...state,
-      authorizations: state.authorizations.add(payload.authorization),
-    }),
+    [AUTHORIZE_SERVICE]: (state: UserState, { payload }) =>
+      state.merge({
+        authorizations: state.authorizations.add(payload.authorization),
+      }),
     [UNAUTHORIZE_SERVICE]: (state: UserState, { payload }) => {
       const found = state.authorizations.find(item => item.uid === payload.authorization.uid)
       if (found) {
-        return {
-          ...state,
+        return state.merge({
           authorizations: state.authorizations.delete(found),
-        }
+        })
       }
       return state
     },
   },
-  defaultState,
+  createUserState(),
 )

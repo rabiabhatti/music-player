@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "immutable": "^3.8.2",
+    "immutable": "4.0.0-rc.9",
     "lodash": "^4.17.10",
     "music-metadata": "^2.4.2",
     "normalize.css": "^8.0.0",
@@ -31,7 +31,7 @@
     "eslint-config-steelbrain": "^5.0.2",
     "eslint-import-resolver-babel-module": "^4.0.0",
     "eslint-plugin-import": "^2.13.0",
-    "flow-bin": "^0.69.0",
+    "flow-bin": "^0.79.1",
     "pundle-cli": "^3.0.0-beta6",
     "pundle-preset-default": "^3.0.0-beta6"
   },

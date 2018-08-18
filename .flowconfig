@@ -5,8 +5,18 @@
 [libs]
 flow-typed
 
+[lints]
+all=error
+sketchy-null-bool=warn
+sketchy-null-string=warn
+unclear-type=warn
+untyped-import=off
+
 [options]
 module.system=node
 module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
+
+[version]
+^0.79.1
