@@ -32,13 +32,13 @@ class PlayerControlDuration extends React.Component<Props, State> {
     })
   }
 
-  handleSliderChange = (e: SyntheticInputEvent<HTMLInputElement>) => {
+  handleDurationSlide = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ currentSeekTime: parseInt(e.target.value, 10) })
 
     this.dragging = true
-    this.handleSliderValueFlush()
+    this.handleDurationSlideFlush()
   }
-  handleSliderValueFlush = debounce(() => {
+  handleDurationSlideFlush = debounce(() => {
     const { currentSeekTime } = this.state
     if (currentSeekTime !== null) {
       this.props.audioElement.currentTime = currentSeekTime
@@ -57,7 +57,7 @@ class PlayerControlDuration extends React.Component<Props, State> {
         <span>{humanizeDuration(currentTime)}</span>
         <div className="progressbar">
           <div className="progress-fill" style={{ width: `${percentage + 0.5}%` }} />
-          <input type="range" onChange={this.handleSliderChange} value={currentTimeToUse} min={0} max={duration} />
+          <input type="range" onChange={this.handleDurationSlide} value={currentTimeToUse} min={0} max={duration} />
         </div>
         <span>{humanizeDuration(duration)}</span>
       </React.Fragment>

@@ -88,6 +88,10 @@ export default handleActions(
       state.merge({
         songState: 'paused',
       }),
+    [SET_SONG_MUTE]: (state: SongsState, { payload }) =>
+      state.merge({
+        songMuted: !!payload,
+      }),
   },
   createSongsState(),
 )

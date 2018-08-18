@@ -27,7 +27,7 @@ import SubDropdown from '../SubDropdown'
 
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
-import PlayerControlDuration from './PlayerControlDuration'
+import PlayerControlDuration from './PlayerControlsDuration'
 
 import cover from '../../static/img/album-cover.jpg'
 
@@ -193,7 +193,7 @@ class Player extends React.Component<Props, State> {
               <PlayerControlDuration audioElement={this.audioElement} />
             </div>
             <div className="section-volume align-center">
-              {/* <PlayerControlsVolume /> */}
+              <PlayerControlsVolume audioElement={this.audioElement} />
               <PlayerControlsRepeat />
             </div>
           </div>
