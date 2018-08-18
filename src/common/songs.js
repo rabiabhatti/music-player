@@ -1,7 +1,7 @@
 // @flow
 
 import db from '~/db'
-import type { File } from '~/services/types'
+import type { File } from '~/types'
 
 export function getArtistsFromSongs(songs: Array<File>): Array<string> {
   const artists = new Set()

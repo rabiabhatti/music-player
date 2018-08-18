@@ -5,7 +5,7 @@ import groupBy from 'lodash/groupBy'
 
 import db from '~/db'
 import { getAlbumsFromSongs } from '~/common/songs'
-import type { File } from '~/services/types'
+import type { File } from '~/types'
 
 import AlbumInfo from './AlbumInfo'
 

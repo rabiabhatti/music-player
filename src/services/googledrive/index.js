@@ -2,8 +2,9 @@
 
 import flatten from 'lodash/flatten'
 
+import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
-import type { Service, File } from '../types'
+import type { Service } from '../types'
 import { API_KEY, CLIENT_ID, SCOPES, DISCOVERY_DOCS, APP_ID } from './constants'
 
 declare var gapi

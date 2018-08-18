@@ -4,7 +4,7 @@ import * as React from 'react'
 
 import db from '~/db'
 import { getArtistsFromSongs } from '~/common/songs'
-import type { File } from '~/services/types'
+import type { File } from '~/types'
 
 import ContentCard from './ContentCard'
 import AlbumInfo from './AlbumInfo'

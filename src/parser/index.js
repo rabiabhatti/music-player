@@ -4,7 +4,7 @@ import path from 'path'
 import { toNodeReadable } from 'web-streams-node'
 import { parseStream } from 'music-metadata'
 
-import type { File } from '../types'
+import type { File } from '~/types'
 
 const parsers = {
   mpeg() {
@@ -34,6 +34,7 @@ const parsers = {
 }
 
 // TODO: Maybe , ?
+// TODO: Make this configurable
 const NAME_DELIMITERS = /&/
 function normalizeArtist(name: string | Array<string>): Array<string> {
   if (!name) {
@@ -51,23 +52,14 @@ function normalizeArtist(name: string | Array<string>): Array<string> {
   return nameNormalized
 }
 
-export default async function parseMeta(
-  song: File,
-  response: Object,
-): Promise<{ duration: number, meta: ?Object, artwork: ?Object }> {
-  let metadata = {}
+async function parse(song: File, response: Object): Promise<{ duration: number, meta: ?Object, artwork: ?Object }> {
   const nodeStream = toNodeReadable(response.body)
-  try {
-    metadata = await parseStream(nodeStream, path.extname(song.filename), {
-      path: song.filename,
-      loadParser(parser) {
-        return parsers[parser]().then(module => new module.default())
-      },
-    })
-  } catch (error) {
-    console.error(error)
-    throw error
-  }
+  const metadata = await parseStream(nodeStream, path.extname(song.filename), {
+    path: song.filename,
+    loadParser(parser) {
+      return parsers[parser]().then(ImportedParser => new ImportedParser())
+    },
+  })
 
   return {
     duration: metadata.format.duration,
@@ -80,8 +72,11 @@ export default async function parseMeta(
       track: metadata.common.track,
       disc: metadata.common.comment,
       genre: metadata.common.genre,
-      picture: metadata.common.picture,
+      // picture: metadata.common.picture,
+      // ^ TODO: Set this in artwork instead
     },
     artwork: null,
   }
 }
+
+export { parse }

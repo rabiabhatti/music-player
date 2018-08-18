@@ -5,7 +5,7 @@ import groupBy from 'lodash/groupBy'
 import { connect } from 'react-redux'
 
 import db from '~/db'
-import type { File } from '~/services/types'
+import type { File } from '~/types'
 import { setSongPlaylist } from '~/redux/songs'
 import { addSongsToPlaylist } from '~/common/songs'
 
@@ -104,4 +104,7 @@ class ContentCard extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { setSongPlaylist })(ContentCard)
+export default connect(
+  null,
+  { setSongPlaylist },
+)(ContentCard)

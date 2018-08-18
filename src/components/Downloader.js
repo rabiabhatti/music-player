@@ -9,7 +9,7 @@ import { incrementNonce } from '~/redux/songs'
 import type { UserAuthorization } from '~/redux/user'
 
 import services from '~/services'
-import parseMeta from '~/services/parseMeta'
+import * as parser from '~/parser'
 import connect from '../common/connect'
 
 type Props = {|
@@ -36,7 +36,7 @@ class Downloader extends React.Component<Props, State> {
         return
       }
       const response = await service.getFile(authorization, await song.sourceId)
-      const { duration, meta, artwork } = await parseMeta(song, response)
+      const { duration, meta, artwork } = await parser.parse(song, response)
 
       await db.songs.update(song.id, {
         duration,
@@ -53,6 +53,9 @@ class Downloader extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(state => ({ authorizations: state.user.authorizations.toArray() }), { incrementNonce }))(
-  Downloader,
-)
+export default compose(
+  connect(
+    state => ({ authorizations: state.user.authorizations.toArray() }),
+    { incrementNonce },
+  ),
+)(Downloader)

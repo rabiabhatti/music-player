@@ -1,6 +1,5 @@
 // @flow
 
-import type { ServiceName } from '~/types'
 import type { Service } from './types'
 import googleDriveService from './googledrive'
 

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import db from '~/db'
 import { getGenresFromSongs } from '~/common/songs'
-import type { File } from '~/services/types'
+import type { File } from '~/types'
 
 import ContentCard from './ContentCard'
 import AlbumInfo from './AlbumInfo'
