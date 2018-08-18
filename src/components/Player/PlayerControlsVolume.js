@@ -77,7 +77,7 @@ class PlayerControlsVolume extends React.Component<Props, State> {
   handleMuteUnmute = (mute: boolean) => {
     const { dispatch } = this.props
 
-    if (this.props.songMuted) {
+    if (this.props.songMuted || mute) {
       dispatch(setSongMute(mute))
     } else {
       dispatch(setSongVolume(50))
