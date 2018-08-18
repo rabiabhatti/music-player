@@ -8,6 +8,7 @@ import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist } from '~/redux/songs'
 
 type Props = {|
+  nonce: number,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
@@ -18,10 +19,22 @@ class Songs extends React.Component<Props, State> {
   state = { songs: [] }
 
   componentDidMount() {
-    db.songs.toArray().then(songs => {
-      // TODO: Filter this in query instead
-      this.setState({ songs: songs.filter(song => song.state === 'downloaded') })
-    })
+    this.fetchSongs()
+  }
+  componentWillReceiveProps(newProps) {
+    if (newProps.nonce !== this.props.nonce) {
+      this.fetchSongs()
+    }
+  }
+
+  fetchSongs() {
+    db.songs
+      .where('state')
+      .equals('downloaded')
+      .toArray()
+      .then(songs => {
+        this.setState({ songs })
+      })
   }
 
   playAtIndex = (index: number) => {
@@ -75,6 +88,6 @@ class Songs extends React.Component<Props, State> {
 }
 
 export default connect(
-  null,
+  ({ songs }) => ({ nonce: songs.nonce }),
   { setSongPlaylist },
 )(Songs)

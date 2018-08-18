@@ -103,7 +103,7 @@ class Downloader extends React.Component<Props, State> {
 
 export default compose(
   connect(
-    state => ({ authorizations: state.user.authorizations.toArray(), nonce: state.songs.nonce }),
+    ({ user, songs }) => ({ authorizations: user.authorizations.toArray(), nonce: songs.nonce }),
     { incrementNonce },
   ),
 )(Downloader)
