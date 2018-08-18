@@ -1,29 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import debounce from 'lodash/debounce'
 import { connect } from 'react-redux'
 
 import db from '~/db'
 import services from '~/services'
-import { humanizeDuration, addSongsToPlaylist, deleteSongsFromLibrary } from '~/common/songs'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
-import {
-  setSongRepeat,
-  setSongVolume,
-  setSongMute,
-  playNext,
-  playPrevious,
-  songPlay,
-  songPause,
-  setSongPlaylist,
-} from '~/redux/songs'
-
-import Popup from '../Popup'
-import Dropdown from '../Dropdown'
-import SubDropdown from '../SubDropdown'
+import { playNext, playPrevious, songPlay, songPause } from '~/redux/songs'
 
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
