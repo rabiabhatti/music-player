@@ -17,18 +17,18 @@ type State = {|
 class Songs extends React.Component<Props, State> {
   state = { songs: [] }
 
-  async componentDidMount() {
-    const dbSongs = await db.songs.toArray()
-    this.setState({ songs: dbSongs })
+  componentDidMount() {
+    db.songs.toArray().then(songs => {
+      // TODO: Filter this in query instead
+      this.setState({ songs: songs.filter(song => song.state === 'downloaded') })
+    })
   }
 
-  handleSongPlayAllInput = () => {
-    const songsList = this.state.songs
-    let songsIdsArr = []
-    songsList.forEach(song => {
-      songsIdsArr.push(song.id)
+  playAtIndex = (index: number) => {
+    this.props.setSongPlaylist({
+      songs: this.state.songs.map(song => song.id),
+      index,
     })
-    this.props.setSongPlaylist(songsIdsArr)
   }
 
   render() {
@@ -39,7 +39,7 @@ class Songs extends React.Component<Props, State> {
           <React.Fragment>
             <div className="align-center space-between">
               <h2>Songs</h2>
-              <button onClick={this.handleSongPlayAllInput}>Play All</button>
+              <button onClick={() => this.playAtIndex(0)}>Play All</button>
             </div>
             <table className="section-songs-table" cellSpacing="0">
               <thead>
@@ -52,27 +52,13 @@ class Songs extends React.Component<Props, State> {
                 </tr>
               </thead>
               <tbody>
-                {songs.map(song => (
-                  <tr
-                    key={song.sourceId}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => this.props.setSongPlaylist([song.id])}
-                  >
-                    <td>
-                      {song.meta && typeof song.meta.name !== 'undefined'
-                        ? song.meta.name
-                        : song.filename.replace('.mp3', '')}
-                    </td>
+                {songs.map((song, index) => (
+                  <tr key={song.sourceId} style={{ cursor: 'pointer' }} onClick={() => this.playAtIndex(index)}>
+                    <td>{song.meta.name || song.filename}</td>
                     <td>{humanizeDuration(song.duration)}</td>
-                    <td>
-                      {song.meta && song.meta.artists.length === 0 ? 'Unknown' : song.meta && song.meta.artists.join(', ')}
-                    </td>
-                    <td>{song.meta && song.meta.album ? song.meta && song.meta.album : 'Unknown'}</td>
-                    <td>
-                      {(song.meta && typeof song.meta.genre === 'undefined') || (song.meta && song.meta.genre[0] === '')
-                        ? 'Unkown'
-                        : song.meta && song.meta.genre}
-                    </td>
+                    <td>{song.meta.artists_original || 'Unknown'}</td>
+                    <td>{song.meta.album || 'Unknown'}</td>
+                    <td>{song.meta.genre || 'Unknown'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -88,4 +74,7 @@ class Songs extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { setSongPlaylist })(Songs)
+export default connect(
+  null,
+  { setSongPlaylist },
+)(Songs)
