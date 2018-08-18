@@ -30,6 +30,7 @@ class Player extends React.Component<Props, State> {
   constructor(props, context) {
     super(props, context)
     this.audioElement = document.createElement('audio')
+    this.audioElement.addEventListener('ended', this.handleEnded)
   }
 
   state = {
@@ -37,7 +38,6 @@ class Player extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    console.log((window.tmp = this))
     const { activeSong, songs } = this.props
     if (activeSong) {
       this.loadSong(activeSong, songs.songState).catch(console.error)
@@ -78,6 +78,17 @@ class Player extends React.Component<Props, State> {
     if (document.activeElement === document.body && e.keyCode === 32) {
       e.preventDefault()
       this.playPause()
+    }
+  }
+  handleEnded = () => {
+    const { songsRepeat, songIndex, playlist } = this.props.songs
+    if (songsRepeat === 'single') {
+      this.audioElement.play()
+    } else {
+      const isLastSong = songIndex === playlist.length - 1
+      if (!isLastSong || songsRepeat === 'all') {
+        this.props.dispatch(playNext())
+      }
     }
   }
 

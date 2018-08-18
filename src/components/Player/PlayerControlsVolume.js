@@ -20,7 +20,7 @@ class PlayerControlsVolume extends React.Component<Props, State> {
   state = { currentSeekVolume: null }
 
   componentDidMount() {
-    this.props.audioElement.volume = this.props.songMuted ? 0 : this.props.songVolume
+    this.props.audioElement.volume = this.props.songMuted ? 0 : this.props.songVolume / 100
     this.props.audioElement.addEventListener('volumechange', this.handleVolumeChange)
   }
   componentWillReceiveProps(newProps) {
