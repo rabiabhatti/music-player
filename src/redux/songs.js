@@ -6,34 +6,37 @@ import { Record, type RecordOf, type RecordFactory } from 'immutable'
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
 const SET_SONG_PLAYLIST = 'SONGS/SET_SONG_PLAYLIST'
 const SET_SONG_REPEAT = 'SONGS/SET_SONG_REPEAT'
-const SET_SONG_VOLUME = 'SONG/SET_SONG_VOLUME'
+const SET_SONG_VOLUME = 'SONGS/SET_SONG_VOLUME'
+const SET_SONG_MUTE = 'SONGS/SET_SONG_MUTE'
 
 const PLAY_NEXT = 'SONGS/PLAY_NEXT'
 const PLAY_PREVIOUS = 'SONGS/PLAY_PREVIOUS'
 
 const SONG_PLAY = 'SONGS/SONG_PLAY'
 const SONG_PAUSE = 'SONGS/SONG_PAUSE'
-const SONG_STOP = 'SONG/SONG_STOP'
+
+export type RepeatMode = 'all' | 'single' | 'none'
 
 export const incrementNonce = createAction(INCREMENT_NONCE)
 export const setSongPlaylist = createAction(SET_SONG_PLAYLIST)
 export const setSongRepeat = createAction(SET_SONG_REPEAT)
 export const setSongVolume = createAction(SET_SONG_VOLUME)
+export const setSongMute = createAction(SET_SONG_MUTE)
 
 export const playNext = createAction(PLAY_NEXT)
 export const playPrevious = createAction(PLAY_PREVIOUS)
 
 export const songPlay = createAction(SONG_PLAY)
 export const songPause = createAction(SONG_PAUSE)
-export const songStop = createAction(SONG_STOP)
 
 export type SongsStateFields = {|
   nonce: number,
   playlist: Array<number>,
-  songsRepeat: 'all' | 'single' | 'none',
-  songState: 'paused' | 'stopped' | 'playing',
+  songsRepeat: RepeatMode,
+  songState: 'paused' | 'playing',
   songIndex: number,
   songVolume: number,
+  songMuted: boolean,
 |}
 
 export type SongsState = RecordOf<SongsStateFields>
@@ -41,9 +44,10 @@ const createSongsState: RecordFactory<SongsStateFields> = Record({
   nonce: 0,
   playlist: [],
   songsRepeat: 'none',
-  songState: 'stopped',
+  songState: 'paused',
   songIndex: -1,
   songVolume: 50,
+  songMuted: false,
 })
 
 export default handleActions(
@@ -83,10 +87,6 @@ export default handleActions(
     [SONG_PAUSE]: (state: SongsState) =>
       state.merge({
         songState: 'paused',
-      }),
-    [SONG_STOP]: (state: SongsState) =>
-      state.merge({
-        songState: 'stopped',
       }),
   },
   createSongsState(),
