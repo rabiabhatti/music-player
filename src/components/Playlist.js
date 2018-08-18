@@ -21,19 +21,19 @@ class Playlist extends React.Component<Props, State> {
   state = { playlist: {}, songs: [] }
 
   async componentDidMount() {
-    const playlist = await db.playlists.get(this.props.playlist.id)
-    this.setState({ playlist: playlist })
+    const playlist = await db.playlists.get(this.props.route.id)
+    this.setState({ playlist })
 
     this.getPlaylistSongs(playlist)
   }
 
   async componentWillReceiveProps(nextProps) {
-    const oldPlaylist = this.props.playlist.id
+    const oldPlaylist = this.props.route.id
     const newPlaylist = nextProps.playlist.id
 
     if (newPlaylist !== oldPlaylist) {
       const playlist = await db.playlists.get(newPlaylist)
-      this.setState({ playlist: playlist })
+      this.setState({ playlist })
       this.setState({ songs: [] })
 
       this.getPlaylistSongs(playlist)
@@ -56,7 +56,7 @@ class Playlist extends React.Component<Props, State> {
 
   handleSongPlayAllInput = () => {
     const songsList = this.state.songs
-    let songsIdsArr = []
+    const songsIdsArr = []
     songsList.forEach(song => {
       songsIdsArr.push(song.id)
     })
@@ -121,6 +121,7 @@ class Playlist extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ components }) => ({ playlist: components.playlist }), { setSongPlaylist, incrementNonce })(
-  Playlist,
-)
+export default connect(
+  ({ router }) => ({ route: router.route }),
+  { setSongPlaylist, incrementNonce },
+)(Playlist)

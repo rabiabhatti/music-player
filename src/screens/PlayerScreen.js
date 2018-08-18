@@ -3,7 +3,7 @@
 import React from 'react'
 import connect from '~/common/connect'
 
-import type { RouteName } from '~/redux/router'
+import type { RouteName, RouterRoute } from '~/redux/router'
 
 import Albums from '~/components/Albums'
 import Player from '~/components/Player'
@@ -23,7 +23,7 @@ const ROUTES: { [RouteName]: $FlowFixMe } = {
   RecentlyPlayed,
 }
 
-const PlayerScreen = ({ route }) => {
+const PlayerScreen = ({ route }: { route: RouterRoute }) => {
   const ActiveRoute = ROUTES[route.name]
 
   return (
