@@ -57,7 +57,7 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
   const metadata = await parseStream(nodeStream, path.extname(song.filename), {
     path: song.filename,
     loadParser(parser) {
-      return parsers[parser]().then(ImportedParser => new ImportedParser())
+      return parsers[parser]().then(importedParser => new importedParser.default())
     },
   })
 

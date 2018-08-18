@@ -10,6 +10,7 @@ import Player from '~/components/Player'
 import Sidebar from '~/components/Sidebar'
 import Artists from '~/components/Artists'
 import Playlist from '~/components/Playlist'
+import Downloader from '~/components/Downloader'
 import Genres from '~/components/Genres'
 import Songs from '~/components/Songs'
 import RecentlyPlayed from '~/components/RecentlyPlayed'
@@ -28,6 +29,7 @@ const PlayerScreen = ({ route }: { route: RouterRoute }) => {
 
   return (
     <div>
+      <Downloader />
       <Player />
       <div className="app-wrapper space-between">
         <Sidebar />
