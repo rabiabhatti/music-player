@@ -4,7 +4,7 @@ import path from 'path'
 import { toNodeReadable } from 'web-streams-node'
 import { parseStream } from 'music-metadata'
 
-import type { File } from '~/types'
+import type { File, FileArtwork, FileMeta } from '~/types'
 
 const parsers = {
   mpeg() {
@@ -52,7 +52,7 @@ function normalizeArtist(name: string | Array<string>): Array<string> {
   return nameNormalized
 }
 
-async function parse(song: File, response: Object): Promise<{ duration: number, meta: ?Object, artwork: ?Object }> {
+async function parse(song: File, response: Object): Promise<{ duration: number, meta: ?FileMeta, artwork: ?FileArtwork }> {
   const nodeStream = toNodeReadable(response.body)
   const metadata = await parseStream(nodeStream, path.extname(song.filename), {
     path: song.filename,
@@ -66,8 +66,10 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     meta: {
       name: metadata.common.title,
       artists: normalizeArtist(metadata.common.artists),
+      artists_original: metadata.common.artists,
       album: metadata.common.album,
       album_artists: normalizeArtist(metadata.common.artist),
+      album_artists_original: metadata.common.artist,
       year: metadata.common.year,
       track: metadata.common.track,
       disc: metadata.common.comment,

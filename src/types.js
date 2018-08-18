@@ -1,9 +1,9 @@
 // @flow
 
-export type ServiceName = 'googledrive'
+export type ServiceName = 'GoogleDrive'
 
 export type ArtWork = {
-  source: 'googledrive',
+  source: ServiceName,
   sourceId: string,
   sourceUid: string,
   filename: string,

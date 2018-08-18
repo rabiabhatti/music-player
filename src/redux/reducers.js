@@ -2,10 +2,10 @@
 
 import user from './user'
 import songs from './songs'
-import components from './components'
+import router from './router'
 
 export default {
   user,
   songs,
-  components,
+  router,
 }

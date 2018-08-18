@@ -14,7 +14,7 @@
     "recompose": "^0.27.1",
     "redux": "^4.0.0",
     "redux-actions": "^2.3.2",
-    "redux-memory": "^1.0.0",
+    "redux-memory": "^1.0.2",
     "web-streams-node": "JCCR/web-streams-node#8a5910a911"
   },
   "scripts": {

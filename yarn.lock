@@ -4627,9 +4627,9 @@ redux-actions@^2.3.2:
     lodash-es "^4.17.4"
     reduce-reducers "^0.1.0"
 
-redux-memory@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/redux-memory/-/redux-memory-1.0.0.tgz#dfe2aabc65af33455455d2544eabf1cfb4588b37"
+redux-memory@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/redux-memory/-/redux-memory-1.0.2.tgz#c21c53fb4af463b8d7240935f553011aaa738697"
   dependencies:
     is-primitive "^3.0.1"
     lodash "^4"

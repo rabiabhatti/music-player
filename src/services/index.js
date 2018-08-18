@@ -1,8 +1,8 @@
 // @flow
 
 import type { Service } from './types'
-import googleDriveService from './googledrive'
+import GoogleDriveService from './googledrive'
 
-const services: Array<Service> = [googleDriveService]
+const services: Array<Service> = [GoogleDriveService]
 
 export default services

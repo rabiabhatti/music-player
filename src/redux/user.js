@@ -7,9 +7,6 @@ import type { ServiceName } from '~/types'
 const AUTHORIZE_SERVICE = 'USER/AUTHORIZE_SERVICE'
 const UNAUTHORIZE_SERVICE = 'USER/UNAUTHORIZE_SERVICEs'
 
-export const authorizeService = createAction(AUTHORIZE_SERVICE)
-export const unauthorizeService = createAction(UNAUTHORIZE_SERVICE)
-
 export type UserAuthorization = {|
   uid: string,
   meta: Object,
@@ -24,14 +21,20 @@ const createUserState: RecordFactory<UserStateFields> = Record({
   authorizations: new ImmSet(),
 })
 
+export const authorizeService = createAction(AUTHORIZE_SERVICE, (payload: { authorization: UserAuthorization }) => payload)
+export const unauthorizeService = createAction(
+  UNAUTHORIZE_SERVICE,
+  (payload: { authorization: UserAuthorization }) => payload,
+)
+
 export default handleActions(
   {
-    [AUTHORIZE_SERVICE]: (state: UserState, { payload }) =>
+    [AUTHORIZE_SERVICE]: (state: UserState, { payload: { authorization } }) =>
       state.merge({
-        authorizations: state.authorizations.add(payload.authorization),
+        authorizations: state.authorizations.add(authorization),
       }),
-    [UNAUTHORIZE_SERVICE]: (state: UserState, { payload }) => {
-      const found = state.authorizations.find(item => item.uid === payload.authorization.uid)
+    [UNAUTHORIZE_SERVICE]: (state: UserState, { payload: { authorization } }) => {
+      const found = state.authorizations.find(item => item.uid === authorization.uid)
       if (found) {
         return state.merge({
           authorizations: state.authorizations.delete(found),

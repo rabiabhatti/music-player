@@ -59,7 +59,7 @@ async function resolveFileIds(authorization: UserAuthorization, doc: GoogleDocTy
   return files
 }
 
-const SERVICE_NAME = 'googledrive'
+const SERVICE_NAME = 'GoogleDrive'
 const googleDriveService: Service = {
   name: SERVICE_NAME,
   async load() {
