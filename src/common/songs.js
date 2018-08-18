@@ -59,6 +59,12 @@ export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: nu
   return
 }
 
+export function deleteSongsFromLibrary(songsIds: Array<number>) {
+  songsIds.forEach(async id => {
+    await db.songs.delete(id)
+  })
+}
+
 export function humanizeDuration(duration: number): string {
   const minutes = Math.floor(duration / 60)
   const seconds = Math.ceil(duration % 60)

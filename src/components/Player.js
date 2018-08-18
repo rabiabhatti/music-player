@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import db from '~/db'
 import services from '~/services'
-import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
+import { humanizeDuration, addSongsToPlaylist, deleteSongsFromLibrary } from '~/common/songs'
 import type { UserAuthorization } from '~/redux/user'
 import {
   setSongRepeat,
@@ -17,6 +17,7 @@ import {
   songPlay,
   songPause,
   songStop,
+  setSongPlaylist,
 } from '~/redux/songs'
 
 import Popup from './Popup'
@@ -34,6 +35,7 @@ type Props = {|
   mute: boolean,
   songState: string,
 
+  setSongPlaylist: typeof setSongPlaylist,
   setSongRepeat: typeof setSongRepeat,
   setSongVolume: typeof setSongVolume,
   setSongMute: typeof setSongMute,
@@ -261,6 +263,19 @@ class Player extends React.Component<Props, State> {
     this.props.playPrevious()
   }
 
+  deleteSong = (id: number) => e => {
+    deleteSongsFromLibrary([id])
+    const songs = this.props.songs
+    if (songs.length > 1) {
+      songs.splice(this.props.songIndex, 1)
+      this.props.setSongPlaylist(songs)
+    } else {
+      db.songs.limit(1).each(song => {
+        this.props.setSongPlaylist([song.id])
+      })
+    }
+  }
+
   render() {
     const { showPlaylistPopup, duration, currentTime, progressbarWidth, activeSong, localVolume, playlists } = this.state
     const { volume, mute, songState, songsRepeat, songs } = this.props
@@ -308,7 +323,9 @@ class Player extends React.Component<Props, State> {
                 Play Next
               </a>
               <a className="dropdown-option">Play Later</a>
-              <a className="dropdown-option">Delete from Library</a>
+              <a className="dropdown-option" onClick={activeSong && this.deleteSong(activeSong.id)}>
+                Delete from Library
+              </a>
             </Dropdown>
           </div>
           <div className="section-player-controls align-center space-between">
@@ -405,5 +422,5 @@ export default connect(
     songIndex: state.songs.songIndex,
     songState: state.songs.songState,
   }),
-  { setSongRepeat, setSongVolume, setSongMute, playNext, playPrevious, songPlay, songPause, songStop },
+  { setSongRepeat, setSongVolume, setSongMute, playNext, playPrevious, songPlay, songPause, songStop, setSongPlaylist },
 )(Player)

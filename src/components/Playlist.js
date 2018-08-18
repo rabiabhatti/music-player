@@ -44,10 +44,12 @@ class Playlist extends React.Component<Props, State> {
     if (playlist.songs.length) {
       playlist.songs.forEach(async songsId => {
         const song = await db.songs.get(songsId)
-        this.setState(prevState => ({
-          songs: [...prevState.songs, song],
-        }))
-        this.props.incrementNonce()
+        if (song) {
+          this.setState(prevState => ({
+            songs: [...prevState.songs, song],
+          }))
+          this.props.incrementNonce()
+        }
       })
     }
   }
