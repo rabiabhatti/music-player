@@ -1,7 +1,6 @@
 // @flow
 
 import path from 'path'
-import parser from 'id3-meta'
 import { toNodeReadable } from 'web-streams-node'
 import { parseStream } from 'music-metadata'
 

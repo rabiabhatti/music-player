@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "id3-meta": "^1.1.0",
     "immutable": "^3.8.2",
     "lodash": "^4.17.10",
     "music-metadata": "^2.4.2",
@@ -32,8 +31,8 @@
     "eslint-import-resolver-babel-module": "^4.0.0",
     "eslint-plugin-import": "^2.13.0",
     "flow-bin": "^0.69.0",
-    "pundle-cli": "^3.0.0-beta2",
-    "pundle-preset-default": "^3.0.0-beta2"
+    "pundle-cli": "^3.0.0-beta6",
+    "pundle-preset-default": "^3.0.0-beta6"
   },
   "babel": {
     "plugins": [
