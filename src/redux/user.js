@@ -1,7 +1,7 @@
 // @flow
 
-import { Set as ImmSet, Record, type RecordOf, type RecordFactory } from 'immutable'
 import { createAction, handleActions } from 'redux-actions'
+import { Set as ImmSet, Record, type RecordOf, type RecordFactory } from 'immutable'
 import type { ServiceName } from '~/types'
 
 const AUTHORIZE_SERVICE = 'USER/AUTHORIZE_SERVICE'

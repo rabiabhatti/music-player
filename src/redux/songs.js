@@ -1,6 +1,7 @@
 // @flow
 
 import { createAction, handleActions } from 'redux-actions'
+import { Record, type RecordOf, type RecordFactory } from 'immutable'
 
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
 const SET_SONG_PLAYLIST = 'SONGS/SET_SONG_PLAYLIST'
@@ -28,7 +29,7 @@ export const songPlay = createAction(SONG_PLAY)
 export const songPause = createAction(SONG_PAUSE)
 export const songStop = createAction(SONG_STOP)
 
-export type SongsState = {|
+export type SongsStateFields = {|
   nonce: number,
   songs: Array<number>,
   songsRepeat: 'all' | 'single' | 'none',
@@ -38,7 +39,8 @@ export type SongsState = {|
   mute: boolean,
 |}
 
-const defaultState: SongsState = {
+export type SongsState = RecordOf<SongsStateFields>
+const createSongsState: RecordFactory<SongsStateFields> = Record({
   nonce: 0,
   songs: [],
   songsRepeat: 'none',
@@ -46,58 +48,54 @@ const defaultState: SongsState = {
   songIndex: -1,
   songVolume: 50,
   mute: false,
-}
+})
 
 export default handleActions(
   {
-    [INCREMENT_NONCE]: (state: SongsState) => ({
-      ...state,
-      nonce: state.nonce + 1,
-    }),
-    [SET_SONG_PLAYLIST]: (state: SongsState, { payload }) => ({
-      ...state,
-      songs: payload,
-      songState: 'playing',
-      songIndex: 0,
-    }),
-    [SET_SONG_REPEAT]: (state: SongsState, { payload }) => ({
-      ...state,
-      songsRepeat: payload,
-    }),
-    [SET_SONG_VOLUME]: (state: SongsState, { payload }) => ({
-      ...state,
-      songVolume: payload,
-    }),
-    [SET_SONG_MUTE]: (state: SongsState, { payload }) => ({
-      ...state,
-      mute: payload,
-    }),
-    [PLAY_NEXT]: (state: SongsState) => ({
-      ...state,
-      songIndex: (state.songIndex + 1) % state.songs.length,
-    }),
+    [INCREMENT_NONCE]: (state: SongsState) => state.merge({ nonce: state.nonce + 1 }),
+    [SET_SONG_PLAYLIST]: (state: SongsState, { payload }) =>
+      state.merge({
+        songs: payload,
+        songState: 'playing',
+        songIndex: 0,
+      }),
+    [SET_SONG_REPEAT]: (state: SongsState, { payload }) =>
+      state.merge({
+        songsRepeat: payload,
+      }),
+    [SET_SONG_VOLUME]: (state: SongsState, { payload }) =>
+      state.merge({
+        songVolume: payload,
+      }),
+    [SET_SONG_MUTE]: (state: SongsState, { payload }) =>
+      state.merge({
+        mute: payload,
+      }),
+    [PLAY_NEXT]: (state: SongsState) =>
+      state.merge({
+        songIndex: (state.songIndex + 1) % state.songs.length,
+      }),
     [PLAY_PREVIOUS]: (state: SongsState, { payload }) => {
       let newIndex = state.songIndex - 1
       if (newIndex < 0) {
         newIndex = state.songs.length - 1
       }
-      return {
-        ...state,
+      return state.merge({
         songIndex: newIndex,
-      }
+      })
     },
-    [SONG_PLAY]: (state: SongsState) => ({
-      ...state,
-      songState: 'playing',
-    }),
-    [SONG_PAUSE]: (state: SongsState) => ({
-      ...state,
-      songState: 'paused',
-    }),
-    [SONG_STOP]: (state: SongsState) => ({
-      ...state,
-      songState: 'stopped',
-    }),
+    [SONG_PLAY]: (state: SongsState) =>
+      state.merge({
+        songState: 'playing',
+      }),
+    [SONG_PAUSE]: (state: SongsState) =>
+      state.merge({
+        songState: 'paused',
+      }),
+    [SONG_STOP]: (state: SongsState) =>
+      state.merge({
+        songState: 'stopped',
+      }),
   },
-  defaultState,
+  createSongsState(),
 )
