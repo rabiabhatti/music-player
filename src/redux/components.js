@@ -24,8 +24,7 @@ const defaultState: ComponentsState = {
   playlist: { id: null },
 }
 
-export const hydrators = {}
-export const reducer = handleActions(
+export default handleActions(
   {
     [SET_SELECTED]: (state: ComponentsState, { payload: selected }) => ({
       ...state,

@@ -3009,6 +3009,10 @@ is-plain-object@^2.0.1, is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   dependencies:
     isobject "^3.0.1"
 
+is-primitive@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/is-primitive/-/is-primitive-3.0.1.tgz#98c4db1abff185485a657fc2905052b940524d05"
+
 is-promise@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-2.1.0.tgz#79a2a9ece7f096e80f36d2b2f3bc16c1ff4bf3fa"
@@ -3214,7 +3218,7 @@ lodash.uniq@^4.5.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
 
-lodash@4, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.5, lodash@^4.2.0:
+lodash@4, lodash@^4, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.5, lodash@^4.2.0:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
 
@@ -4622,6 +4626,13 @@ redux-actions@^2.3.2:
     lodash "^4.13.1"
     lodash-es "^4.17.4"
     reduce-reducers "^0.1.0"
+
+redux-memory@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/redux-memory/-/redux-memory-1.0.0.tgz#dfe2aabc65af33455455d2544eabf1cfb4588b37"
+  dependencies:
+    is-primitive "^3.0.1"
+    lodash "^4"
 
 redux@^4.0.0:
   version "4.0.0"

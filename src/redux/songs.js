@@ -2,8 +2,6 @@
 
 import { createAction, handleActions } from 'redux-actions'
 
-import type { File } from '~/services/types'
-
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
 const SET_SONG_PLAYLIST = 'SONGS/SET_SONG_PLAYLIST'
 const SET_SONG_REPEAT = 'SONGS/SET_SONG_REPEAT'
@@ -50,8 +48,7 @@ const defaultState: SongsState = {
   mute: false,
 }
 
-export const hydrators = {}
-export const reducer = handleActions(
+export default handleActions(
   {
     [INCREMENT_NONCE]: (state: SongsState) => ({
       ...state,

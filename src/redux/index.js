@@ -1,53 +1,19 @@
 // @flow
 
 import { createStore, combineReducers } from 'redux'
+import { getReduxMemory, EngineLocalStorage } from 'redux-memory'
+import { Set as ImmSet, Map as ImmMap, Record as ImmRecord } from 'immutable'
 
-import * as user from './user'
-import * as songs from './songs'
-import * as components from './components'
+import reducers from './reducers'
 
-const states = {
-  user,
-  songs,
-  components,
-}
-const reducers = Object.keys(states).reduce(
-  (agg, curr) => ({
-    ...agg,
-    [curr]: states[curr].reducer,
-  }),
-  {},
-)
-const hydrators = Object.keys(states).reduce(
-  (agg, curr) => ({
-    ...agg,
-    [curr]: states[curr].hydrators,
-  }),
-  {},
-)
-
-const LOCAL_STORAGE_KEY = 'reduxState'
-function getCachedState() {
-  const storedVal = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}')
-  Object.keys(hydrators).forEach(item => {
-    const localState = storedVal[item]
-    const localHydrators = hydrators[item]
-    if (!localState) return
-    Object.keys(localHydrators).forEach(localHydratorKey => {
-      const localHydratorState = localState[localHydratorKey]
-      if (localHydratorState) {
-        localState[localHydratorKey] = new localHydrators[localHydratorKey](localHydratorState)
-      }
-    })
+export default async function getReduxStore() {
+  const reducer = combineReducers(reducers)
+  const store = getReduxMemory({
+    scope: [ImmSet, ImmMap, ImmRecord],
+    storage: new EngineLocalStorage('appState'),
+    reducer,
+    createStore,
   })
 
-  return storedVal
+  return store
 }
-
-const store = createStore(combineReducers(reducers), getCachedState())
-
-store.subscribe(() => {
-  localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(store.getState()))
-})
-
-export default store

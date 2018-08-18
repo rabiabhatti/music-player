@@ -23,10 +23,7 @@ const defaultState: UserState = {
   authorizations: new ImmSet(),
 }
 
-export const hydrators = {
-  authorizations: ImmSet,
-}
-export const reducer = handleActions(
+export default handleActions(
   {
     [AUTHORIZE_SERVICE]: (state: UserState, { payload }) => ({
       ...state,
