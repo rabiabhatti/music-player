@@ -29,7 +29,7 @@ export const songStop = createAction(SONG_STOP)
 
 export type SongsStateFields = {|
   nonce: number,
-  songs: Array<number>,
+  playlist: Array<number>,
   songsRepeat: 'all' | 'single' | 'none',
   songState: 'paused' | 'stopped' | 'playing',
   songIndex: number,
@@ -39,7 +39,7 @@ export type SongsStateFields = {|
 export type SongsState = RecordOf<SongsStateFields>
 const createSongsState: RecordFactory<SongsStateFields> = Record({
   nonce: 0,
-  songs: [],
+  playlist: [],
   songsRepeat: 'none',
   songState: 'stopped',
   songIndex: -1,
@@ -51,7 +51,7 @@ export default handleActions(
     [INCREMENT_NONCE]: (state: SongsState) => state.merge({ nonce: state.nonce + 1 }),
     [SET_SONG_PLAYLIST]: (state: SongsState, { payload }) =>
       state.merge({
-        songs: payload.songs,
+        playlist: payload.songs,
         songState: 'playing',
         songIndex: payload.index,
       }),
@@ -65,12 +65,12 @@ export default handleActions(
       }),
     [PLAY_NEXT]: (state: SongsState) =>
       state.merge({
-        songIndex: (state.songIndex + 1) % state.songs.length,
+        songIndex: (state.songIndex + 1) % state.playlist.length,
       }),
     [PLAY_PREVIOUS]: (state: SongsState) => {
       let newIndex = state.songIndex - 1
       if (newIndex < 0) {
-        newIndex = state.songs.length - 1
+        newIndex = state.playlist.length - 1
       }
       return state.merge({
         songIndex: newIndex,

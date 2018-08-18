@@ -9,7 +9,8 @@ import { setSongPlaylist } from '~/redux/songs'
 
 type Props = {|
   nonce: number,
-  setSongPlaylist: typeof setSongPlaylist,
+  activeSong: number | null,
+  setSongPlaylist: setSongPlaylist,
 |}
 type State = {|
   songs: Array<Object>,
@@ -45,7 +46,9 @@ class Songs extends React.Component<Props, State> {
   }
 
   render() {
+    const { activeSong } = this.props
     const { songs } = this.state
+
     return (
       <div className="section-songs bound">
         {songs.length ? (
@@ -66,7 +69,12 @@ class Songs extends React.Component<Props, State> {
               </thead>
               <tbody>
                 {songs.map((song, index) => (
-                  <tr key={song.sourceId} style={{ cursor: 'pointer' }} onClick={() => this.playAtIndex(index)}>
+                  <tr
+                    key={song.sourceId}
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => this.playAtIndex(index)}
+                    className={song.id === activeSong ? 'active' : ''}
+                  >
                     <td>{song.meta.name || song.filename}</td>
                     <td>{humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>
@@ -88,6 +96,6 @@ class Songs extends React.Component<Props, State> {
 }
 
 export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
+  ({ songs }) => ({ nonce: songs.nonce, activeSong: songs.playlist[songs.songIndex] || null }),
   { setSongPlaylist },
 )(Songs)
