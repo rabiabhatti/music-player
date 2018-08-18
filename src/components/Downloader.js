@@ -33,34 +33,50 @@ class Downloader extends React.Component<Props, State> {
     }
   }
 
-  downloadState = 'sleeping'
+  lastSong = null
+  downloading = false
 
   startProcessingPendingSongs() {
-    if (this.downloadState === 'sleeping') {
-      this.processPendingSongs()
+    if (this.downloading) {
+      return
     }
+    this.downloading = true
+    this.processPendingSongs()
+      .catch(console.error)
+      .then(() => {
+        this.downloading = false
+        if (this.lastSong) {
+          this.startProcessingPendingSongs()
+        }
+      })
   }
   async processPendingSongs() {
-    const [song] = await db.songs
+    const [song = null] = await db.songs
       .where('state')
       .equals('pending')
       .limit(1)
       .toArray()
 
+    this.lastSong = song
     if (!song) {
-      this.downloadState = 'sleeping'
       console.debug('[Downloader] No song to download, going back to sleep')
       return
     }
 
     const authorization = this.props.authorizations.find(auth => auth.uid === song.sourceUid)
     if (!authorization) {
-      console.warn('Authorization not found for song', song)
+      await db.songs.update(song.id, {
+        state: 'error',
+        stateMessage: 'Authorization not found for song',
+      })
       return
     }
     const service = services.find(item => item.name === authorization.service)
     if (!service) {
-      console.warn('Service not found for authorization', authorization)
+      await db.songs.update(song.id, {
+        state: 'error',
+        stateMessage: 'Service not found for authorization',
+      })
       return
     }
     await db.songs.update(song.id, {

@@ -33,7 +33,8 @@ export type File = {
   sourceUid: string,
   filename: string,
   duration: number,
-  state: 'downloaded' | 'downloading' | 'pending',
+  state: 'downloaded' | 'downloading' | 'pending' | 'error',
+  stateMessage: ?string,
   meta: ?FileMeta,
   artwork: ?FileArtwork,
 }
