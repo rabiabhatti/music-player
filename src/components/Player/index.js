@@ -170,7 +170,7 @@ class Player extends React.Component<Props, State> {
           <div className="section-player-controls align-center space-between">
             <div className="section-player-btns align-center">
               <button onClick={this.playPrevious}>
-                <i title="Previous" className={`material-icons ${songs.playlist.length === 0 ? 'inactive' : ''}`}>
+                <i title="Previous" className='material-icons'>
                   fast_rewind
                 </i>
               </button>
@@ -180,7 +180,7 @@ class Player extends React.Component<Props, State> {
                 </i>
               </button>
               <button onClick={this.playNext}>
-                <i title="Previous" className={`material-icons ${songs.playlist.length === 0 ? 'inactive' : ''}`}>
+                <i title="Previous" className='material-icons'>
                   fast_forward
                 </i>
               </button>

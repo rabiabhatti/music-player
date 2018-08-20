@@ -61,7 +61,7 @@ class ContentCard extends React.Component<Props, State> {
 
     return (
       <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
-        {showPlaylistPopup && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
+        {showPlaylistPopup !== null && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
         <div className="space-between section-artist-header">
           <div>
             <h2>{selected ? selected.identifier : 'All Artists'}</h2>
@@ -104,7 +104,4 @@ class ContentCard extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { setSongPlaylist },
-)(ContentCard)
+export default connect(null, { setSongPlaylist })(ContentCard)

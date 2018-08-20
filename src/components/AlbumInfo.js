@@ -51,7 +51,7 @@ class AlbumInfo extends React.Component<Props, State> {
 
     return (
       <div id="album-info">
-        {showPlaylistPopup && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
+        {showPlaylistPopup !== null && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
         <div className="section-album-info space-between flex-wrap">
           <div className="album-title flex-column">
             <div className="album-cover">

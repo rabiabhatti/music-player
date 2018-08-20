@@ -39,9 +39,8 @@ const PlayerControlsRepeat = ({
       onClick={() => {
         setSongRepeatProp(newState)
       }}
-      {...(dim ? { style: { color: 'rgba(0,0,0, 0.4)' } } : {})}
     >
-      <i title={title} className="material-icons">
+      <i title={title} className="material-icons"   {...(dim ? { style: { color: '#ffffff7a' } } : {})}>
         {icon}
       </i>
     </button>

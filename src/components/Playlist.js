@@ -4,11 +4,13 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
+import type { RouterRoute } from '~/redux/router'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, incrementNonce } from '~/redux/songs'
 
 type Props = {|
   playlist: Object,
+  route: RouterRoute,
   incrementNonce: () => void,
   setSongPlaylist: typeof setSongPlaylist,
 |}
@@ -121,7 +123,4 @@ class Playlist extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ router }) => ({ route: router.route }),
-  { setSongPlaylist, incrementNonce },
-)(Playlist)
+export default connect(({ router }) => ({ route: router.route }), { setSongPlaylist, incrementNonce })(Playlist)
