@@ -5,7 +5,7 @@ import { Record, type RecordOf, type RecordFactory } from 'immutable'
 
 const NAVIGATE_TO = 'ROUTES/NAVIGATE_TO'
 
-export type RouteName = 'Albums' | 'Artists' | 'Playlist' | 'Genres' | 'Songs' | 'RecentlyPlayed'
+export type RouteName = 'Albums' | 'Artists' | 'Playlist' | 'Genres' | 'Songs' | 'RecentlyPlayed' | 'NewPlaylist'
 
 export type RouterRoute = {
   name: RouteName,

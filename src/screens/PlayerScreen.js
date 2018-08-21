@@ -3,8 +3,10 @@
 import React from 'react'
 import connect from '~/common/connect'
 
+import { type Popup, showPopup } from '~/redux/popup'
 import type { RouteName, RouterRoute } from '~/redux/router'
 
+import PopupComponent from '~/components/Popup'
 import Albums from '~/components/Albums'
 import Player from '~/components/Player'
 import Sidebar from '~/components/Sidebar'
@@ -24,19 +26,42 @@ const ROUTES: { [RouteName]: $FlowFixMe } = {
   RecentlyPlayed,
 }
 
-const PlayerScreen = ({ route }: { route: RouterRoute }) => {
-  const ActiveRoute = ROUTES[route.name]
+type Props = {|
+  popup: Popup,
+  route: RouterRoute,
+  showPopup: showPopup,
+|}
+type State = {|
+  showPlaylistPopup: number | null,
+|}
 
-  return (
-    <div>
-      <Downloader />
-      <Player />
-      <div className="app-wrapper space-between">
-        <Sidebar />
-        <ActiveRoute />
+class PlayerScreen extends React.Component<Props, State> {
+  state = {
+    showPlaylistPopup: null,
+  }
+
+  componentWillReceiveProps({ popup }) {
+    if (popup.show) {
+      this.setState({ showPlaylistPopup: Date.now() })
+    }
+  }
+
+  render() {
+    const ActiveRoute = ROUTES[this.props.route.name]
+    const { showPlaylistPopup } = this.state
+
+    return (
+      <div>
+        {showPlaylistPopup !== null && <PopupComponent hash={showPlaylistPopup.toString()} songsIds={this.props.popup.songsIds} />}
+        <Downloader />
+        <Player />
+        <div className="app-wrapper space-between">
+          <Sidebar />
+          <ActiveRoute />
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
-export default connect(({ router }) => ({ route: router.route }))(PlayerScreen)
+export default connect(({ router, popup }) => ({ route: router.route, popup: popup.popup }))(PlayerScreen)

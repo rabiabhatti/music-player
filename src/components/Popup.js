@@ -1,14 +1,17 @@
 // @flow
 
 import React from 'react'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import getEventPath from '~/common/getEventPath'
+import { showPopup } from '~/redux/popup'
 
 const DEFAULT_DURATION = 5000 * 60
 
 type Props = {|
   hash: string,
+  showPopup: showPopup,
   songsIds: ?Array<number>,
   duration: number,
 |}
@@ -16,7 +19,7 @@ type State = {|
   hidden: boolean,
   value: string,
 |}
-export default class Popup extends React.Component<Props, State> {
+class Popup extends React.Component<Props, State> {
   ref: ?HTMLDivElement = null
   timeout: TimeoutID
 
@@ -59,12 +62,14 @@ export default class Popup extends React.Component<Props, State> {
       this.setState({
         hidden: !hidden,
       })
+      this.props.showPopup({ show: false, songsIds:[] })
     }
   }
 
   start = () => {
     this.timeout = setTimeout(() => {
       this.setState({ hidden: true })
+      this.props.showPopup({ show: false, songsIds:[] })
     }, this.props.duration)
   }
   stop = () => {
@@ -76,6 +81,7 @@ export default class Popup extends React.Component<Props, State> {
   close = () => {
     clearTimeout(this.timeout)
     this.setState({ hidden: true })
+    this.props.showPopup({ show: false, songsIds:[] })
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -114,3 +120,5 @@ export default class Popup extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(null, { showPopup })(Popup)

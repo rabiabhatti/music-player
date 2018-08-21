@@ -4,6 +4,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
+import { showPopup } from '~/redux/popup'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
 import Popup from './Popup'
@@ -12,28 +13,22 @@ import Logout from './Logout'
 
 type Props = {|
   route: RouterRoute,
+  showPopup: showPopup,
   navigateTo: navigateTo,
 |}
 type State = {|
   playlists: Array<Object>,
-  showPlaylistPopup: number | null,
 |}
 
 class Sidebar extends React.Component<Props, State> {
   state = {
     playlists: [],
-    showPlaylistPopup: null,
   }
 
   componentDidMount() {
     db.playlists.toArray().then(playlists => {
       this.setState({ playlists })
     })
-  }
-
-  showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    this.setState({ showPlaylistPopup: Date.now() })
   }
 
   renderNavigationItem(icon: string, routeName: RouteName, name: string = routeName, id: number | null = null) {
@@ -43,7 +38,7 @@ class Sidebar extends React.Component<Props, State> {
       <button
         key={`route-${name}-${id !== null ? id : 'none'}`}
         className={`content-row align-center btn-dull ${route.name === routeName && route.id === id ? 'active' : ''}`}
-        onClick={() => this.props.navigateTo({ name: routeName, id })}
+        onClick={() => routeName === 'NewPlaylist' ? this.props.showPopup({ show: true, songsIds:[] }) : this.props.navigateTo({ name: routeName, id })}
       >
         <i className="material-icons row-icon">{icon}</i>
         {name}
@@ -52,11 +47,10 @@ class Sidebar extends React.Component<Props, State> {
   }
 
   render() {
-    const { playlists, showPlaylistPopup } = this.state
+    const { playlists } = this.state
 
     return (
       <div className="section-sidebar">
-        {showPlaylistPopup !== null && <Popup hash={showPlaylistPopup.toString()} songsIds={[]} />}
         <div className="flex-column">
           <input id="sidebar-search-input" type="text" placeholder="Search" />
           <div className="sidebar-content flex-column">
@@ -69,7 +63,7 @@ class Sidebar extends React.Component<Props, State> {
           </div>
           <div className="sidebar-content flex-column">
             <h3>PlayLists</h3>
-            {this.renderNavigationItem('playlist_add', 'Playlist', 'New')}
+            {this.renderNavigationItem('playlist_add', 'NewPlaylist', 'New')}
             {playlists.map(localPlaylist =>
               this.renderNavigationItem('playlist_play', 'Playlist', localPlaylist.name, localPlaylist.id),
             )}
@@ -86,5 +80,6 @@ export default connect(
   ({ router }) => ({ route: router.route }),
   {
     navigateTo,
+    showPopup,
   },
 )(Sidebar)
