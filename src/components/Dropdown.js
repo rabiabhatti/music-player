@@ -1,23 +1,33 @@
 // @flow
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
-import React from 'react'
+import * as React from 'react'
+import { connect } from 'react-redux'
+
+import db from '~/db'
+import { showPopup } from '~/redux/popup'
+import getEventPath from '~/common/getEventPath'
+import { addSongsToPlaylist } from '~/common/songs'
+import { setSongPlaylist } from '~/redux/songs'
 
 import '~/css/dropdown.css'
 
-import getEventPath from '~/common/getEventPath'
-
 type Props = {|
-  children: React$Node,
+  showPopup: showPopup,
+  songsIds: Array<number>,
+  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   opened: boolean,
+  playlists: Array<Object> | null,
 |}
 
-export default class Dropdown extends React.Component<Props, State> {
-  state = { opened: false }
+class Dropdown extends React.Component<Props, State> {
+  state = { opened: false, playlists: null }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists: playlists })
     document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleBodyKeypress)
   }
@@ -44,7 +54,11 @@ export default class Dropdown extends React.Component<Props, State> {
       this.setState({ opened: false })
     }
   }
+
   render() {
+    const { playlists } = this.state
+    const { songsIds } = this.props
+
     return (
       <div
         className="section-dropdown"
@@ -53,8 +67,46 @@ export default class Dropdown extends React.Component<Props, State> {
         }}
       >
         <i className="material-icons song-dropdown">more_horiz</i>
-        <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>{this.props.children}</div>
+        <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
+          <div className="align-center space-between sub-dropdown-trigger">
+            <button>Add to Playlist</button>
+            <div className="section-sub-dropdown">
+              <i className="material-icons">play_arrow</i>
+              <div className="sub-dropdown-content dropdown-content hidden">
+                <button
+                  onClick={() =>
+                    this.props.showPopup({
+                      show: true,
+                      songsIds,
+                    })
+                  }
+                  className="dropdown-option"
+                >
+                  New Playlist
+                </button>
+                {playlists &&
+                  playlists.map(playlist => (
+                    <button
+                      key={playlist.id}
+                      className="dropdown-option"
+                      onClick={() => addSongsToPlaylist(songsIds, playlist.id)}
+                    >
+                      {playlist.name}
+                    </button>
+                  ))}
+              </div>
+            </div>
+          </div>
+          <button className="dropdown-option">Play Next</button>
+          <button className="dropdown-option">Play Later</button>
+          <button className="dropdown-option">Delete from Library</button>
+        </div>
       </div>
     )
   }
 }
+
+export default connect(
+  null,
+  { setSongPlaylist, showPopup },
+)(Dropdown)

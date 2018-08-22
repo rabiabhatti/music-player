@@ -6,16 +6,18 @@ import connect from '~/common/connect'
 import '~/css/popup.css'
 
 import db from '~/db'
-import getEventPath from '~/common/getEventPath'
 import { showPopup } from '~/redux/popup'
+import { incrementNonce } from '~/redux/songs'
+import getEventPath from '~/common/getEventPath'
 
 const DEFAULT_DURATION = 5000 * 60
 
 type Props = {|
   hash: string,
+  duration: number,
   showPopup: showPopup,
   songsIds: ?Array<number>,
-  duration: number,
+  incrementNonce: () => void,
 |}
 type State = {|
   hidden: boolean,
@@ -98,6 +100,7 @@ class Popup extends React.Component<Props, State> {
 
   savePlaylist = () => {
     db.playlists.add({ name: this.state.value, songs: this.props.songsIds })
+    this.props.incrementNonce()
     this.close()
   }
 
@@ -131,5 +134,5 @@ class Popup extends React.Component<Props, State> {
 
 export default connect(
   null,
-  { showPopup },
+  { showPopup, incrementNonce },
 )(Popup)

@@ -13,6 +13,7 @@ import Picker from './Picker'
 import Logout from './Logout'
 
 type Props = {|
+  nonce: number,
   route: RouterRoute,
   showPopup: showPopup,
   navigateTo: navigateTo,
@@ -27,6 +28,14 @@ class Sidebar extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    this.fetchPlaylists()
+  }
+  componentWillReceiveProps(newProps) {
+    if (newProps.nonce !== this.props.nonce) {
+      this.fetchPlaylists()
+    }
+  }
+  fetchPlaylists = () => {
     db.playlists.toArray().then(playlists => {
       this.setState({ playlists })
     })
@@ -82,7 +91,7 @@ class Sidebar extends React.Component<Props, State> {
 }
 
 export default connect(
-  ({ router }) => ({ route: router.route }),
+  ({ router, songs }) => ({ route: router.route, nonce: songs.nonce }),
   {
     navigateTo,
     showPopup,
