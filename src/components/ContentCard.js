@@ -6,10 +6,12 @@ import { connect } from 'react-redux'
 
 import db from '~/db'
 import type { File } from '~/types'
+import { showPopup } from '~/redux/popup'
 import { setSongPlaylist } from '~/redux/songs'
 import { addSongsToPlaylist } from '~/common/songs'
 
-import Popup from './Popup'
+import '~/css/content-card.css'
+
 import Dropdown from './Dropdown'
 import AlbumInfo from './AlbumInfo'
 import SubDropdown from './SubDropdown'
@@ -17,17 +19,16 @@ import SubDropdown from './SubDropdown'
 type Props = {|
   songs: Array<Object>,
   selected: ?Object,
+  showPopup: showPopup,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   playlists: Array<Object> | null,
-  showPlaylistPopup: number | null,
 |}
 
 class ContentCard extends React.Component<Props, State> {
   state = {
     playlists: null,
-    showPlaylistPopup: null,
   }
 
   async componentDidMount() {
@@ -35,14 +36,9 @@ class ContentCard extends React.Component<Props, State> {
     this.setState({ playlists: playlists })
   }
 
-  showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    this.setState({ showPlaylistPopup: Date.now() })
-  }
-
   render() {
     const { songs, selected } = this.props
-    const { showPlaylistPopup, playlists } = this.state
+    const { playlists } = this.state
 
     let songsToShow = songs
     if (selected) {
@@ -61,7 +57,6 @@ class ContentCard extends React.Component<Props, State> {
 
     return (
       <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
-        {showPlaylistPopup !== null && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
         <div className="space-between section-artist-header">
           <div>
             <h2>{selected ? selected.identifier : 'All Artists'}</h2>
@@ -71,29 +66,32 @@ class ContentCard extends React.Component<Props, State> {
           </div>
           <Dropdown>
             <div className="align-center space-between sub-dropdown-trigger">
-              <a>Add to Playlist</a>
+              <button>Add to Playlist</button>
               <SubDropdown>
-                <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
+                <button
+                  onClick={() => this.props.showPopup({ show: true, songsIds: songsIdsArr })}
+                  className="dropdown-option"
+                >
                   New Playlist
-                </a>
+                </button>
                 {playlists &&
                   playlists.map(playlist => (
-                    <a
+                    <button
                       key={playlist.id}
                       className="dropdown-option"
                       onClick={() => addSongsToPlaylist(songsIdsArr, playlist.id)}
                     >
                       {playlist.name}
-                    </a>
+                    </button>
                   ))}
               </SubDropdown>
             </div>
-            <a className="dropdown-option" onClick={() => this.props.setSongPlaylist(songsIdsArr)}>
+            <button className="dropdown-option" onClick={() => this.props.setSongPlaylist(songsIdsArr)}>
               Shuffle All
-            </a>
-            <a className="dropdown-option">Play Next</a>
-            <a className="dropdown-option">Play Later</a>
-            <a className="dropdown-option">Delete from Library</a>
+            </button>
+            <button className="dropdown-option">Play Next</button>
+            <button className="dropdown-option">Play Later</button>
+            <button className="dropdown-option">Delete from Library</button>
           </Dropdown>
         </div>
         {Object.keys(songsByAlbums).map(albumName => (
@@ -104,4 +102,7 @@ class ContentCard extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { setSongPlaylist })(ContentCard)
+export default connect(
+  null,
+  { setSongPlaylist, showPopup },
+)(ContentCard)

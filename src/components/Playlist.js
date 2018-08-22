@@ -8,6 +8,9 @@ import type { RouterRoute } from '~/redux/router'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, incrementNonce } from '~/redux/songs'
 
+import '~/css/songs.css'
+import '~/css/table.css'
+
 type Props = {|
   playlist: Object,
   route: RouterRoute,
@@ -123,4 +126,7 @@ class Playlist extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ router }) => ({ route: router.route }), { setSongPlaylist, incrementNonce })(Playlist)
+export default connect(
+  ({ router }) => ({ route: router.route }),
+  { setSongPlaylist, incrementNonce },
+)(Playlist)

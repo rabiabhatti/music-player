@@ -3,24 +3,36 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
+import '~/css/songs.css'
+import '~/css/table.css'
+
 import db from '~/db'
-import { humanizeDuration } from '~/common/songs'
+import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
 import { setSongPlaylist } from '~/redux/songs'
+import { showPopup } from '~/redux/popup'
+
+import Popup from './Popup'
+import Dropdown from './Dropdown'
+import SubDropdown from './SubDropdown'
 
 type Props = {|
   nonce: number,
+  showPopup: showPopup,
   activeSong: number | null,
   setSongPlaylist: setSongPlaylist,
 |}
 type State = {|
   songs: Array<Object>,
+  playlists: Array<Object> | null,
 |}
 
 class Songs extends React.Component<Props, State> {
-  state = { songs: [] }
+  state = { songs: [], playlists: null }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.fetchSongs()
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists: playlists })
   }
   componentWillReceiveProps(newProps) {
     if (newProps.nonce !== this.props.nonce) {
@@ -46,8 +58,14 @@ class Songs extends React.Component<Props, State> {
   }
 
   render() {
+    let i = 1
     const { activeSong } = this.props
-    const { songs } = this.state
+    const { songs, playlists } = this.state
+
+    let songsIdsArr = []
+    songs.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
 
     return (
       <div className="section-songs bound">
@@ -65,6 +83,7 @@ class Songs extends React.Component<Props, State> {
                   <th>Artist</th>
                   <th>Album</th>
                   <th>Genre</th>
+                  <th />
                 </tr>
               </thead>
               <tbody>
@@ -79,7 +98,40 @@ class Songs extends React.Component<Props, State> {
                     <td>{humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>
                     <td>{song.meta.album || 'Unknown'}</td>
-                    <td>{song.meta.genre || 'Unknown'}</td>
+                    <td>{song.meta.genre || 'Unknown'} </td>
+                    <td>
+                      <Dropdown>
+                        <div className="align-center space-between sub-dropdown-trigger">
+                          <a>Add to Playlist</a>
+                          <SubDropdown>
+                            <button
+                              onClick={() =>
+                                this.props.showPopup({
+                                  show: true,
+                                  songsIds: songsIdsArr,
+                                })
+                              }
+                              className="dropdown-option"
+                            >
+                              New Playlist
+                            </button>
+                            {playlists &&
+                              playlists.map(playlist => (
+                                <button
+                                  key={playlist.id}
+                                  className="dropdown-option"
+                                  onClick={() => addSongsToPlaylist([song.id], playlist.id)}
+                                >
+                                  {playlist.name}
+                                </button>
+                              ))}
+                          </SubDropdown>
+                        </div>
+                        <button className="dropdown-option">Play Next</button>
+                        <button className="dropdown-option">Play Later</button>
+                        <button className="dropdown-option">Delete from Library</button>
+                      </Dropdown>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -96,6 +148,9 @@ class Songs extends React.Component<Props, State> {
 }
 
 export default connect(
-  ({ songs }) => ({ nonce: songs.nonce, activeSong: songs.playlist[songs.songIndex] || null }),
-  { setSongPlaylist },
+  ({ songs }) => ({
+    nonce: songs.nonce,
+    activeSong: songs.playlist[songs.songIndex] || null,
+  }),
+  { setSongPlaylist, showPopup },
 )(Songs)

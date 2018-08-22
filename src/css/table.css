@@ -37,3 +37,7 @@ tbody tr {
   display: table;
   table-layout: fixed;
 }
+td:last-child,
+th:last-child {
+  width: 2%;
+}

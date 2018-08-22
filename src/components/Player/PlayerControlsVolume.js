@@ -103,7 +103,7 @@ class PlayerControlsVolume extends React.Component<Props, State> {
             this.handleMuteUnmute(icon !== 'volume_off')
           }}
         >
-          <i title="Volume" className="material-icons">
+          <i title="Volume" className="material-icons player-material-icons">
             {icon}
           </i>
         </button>

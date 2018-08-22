@@ -6,6 +6,8 @@ import connect from '~/common/connect'
 import { type Popup, showPopup } from '~/redux/popup'
 import type { RouteName, RouterRoute } from '~/redux/router'
 
+import '~/css/general.css'
+
 import PopupComponent from '~/components/Popup'
 import Albums from '~/components/Albums'
 import Player from '~/components/Player'
@@ -43,6 +45,8 @@ class PlayerScreen extends React.Component<Props, State> {
   componentWillReceiveProps({ popup }) {
     if (popup.show) {
       this.setState({ showPlaylistPopup: Date.now() })
+    } else {
+      this.setState({ showPlaylistPopup: null })
     }
   }
 
@@ -52,7 +56,9 @@ class PlayerScreen extends React.Component<Props, State> {
 
     return (
       <div>
-        {showPlaylistPopup !== null && <PopupComponent hash={showPlaylistPopup.toString()} songsIds={this.props.popup.songsIds} />}
+        {showPlaylistPopup !== null && (
+          <PopupComponent hash={showPlaylistPopup.toString()} songsIds={this.props.popup.songsIds} />
+        )}
         <Downloader />
         <Player />
         <div className="app-wrapper space-between">
@@ -64,4 +70,7 @@ class PlayerScreen extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ router, popup }) => ({ route: router.route, popup: popup.popup }))(PlayerScreen)
+export default connect(({ router, popup }) => ({
+  route: router.route,
+  popup: popup.popup,
+}))(PlayerScreen)

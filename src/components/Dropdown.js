@@ -3,6 +3,8 @@
 
 import React from 'react'
 
+import '~/css/dropdown.css'
+
 import getEventPath from '~/common/getEventPath'
 
 type Props = {|

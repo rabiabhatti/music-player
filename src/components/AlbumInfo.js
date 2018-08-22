@@ -4,27 +4,28 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
+import { showPopup } from '~/redux/popup'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
 
-import Popup from './Popup'
+import '~/css/album-info.css'
+
 import Dropdown from './Dropdown'
 import SubDropdown from './SubDropdown'
 
 type Props = {|
   name: string,
+  showPopup: showPopup,
   songs: Array<Object>,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   playlists: Array<Object> | null,
-  showPlaylistPopup: number | null,
 |}
 
 class AlbumInfo extends React.Component<Props, State> {
   state = {
     playlists: null,
-    showPlaylistPopup: null,
   }
 
   async componentDidMount() {
@@ -32,14 +33,9 @@ class AlbumInfo extends React.Component<Props, State> {
     this.setState({ playlists: playlists })
   }
 
-  showPlaylistPopupInput = (e: SyntheticInputEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    this.setState({ showPlaylistPopup: Date.now() })
-  }
-
   render() {
     const { songs, name } = this.props
-    const { showPlaylistPopup, playlists } = this.state
+    const { playlists } = this.state
     let i = 1
 
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
@@ -51,7 +47,6 @@ class AlbumInfo extends React.Component<Props, State> {
 
     return (
       <div id="album-info">
-        {showPlaylistPopup !== null && <Popup hash={showPlaylistPopup.toString()} songsIds={songsIdsArr} />}
         <div className="section-album-info space-between flex-wrap">
           <div className="album-title flex-column">
             <div className="album-cover">
@@ -82,20 +77,28 @@ class AlbumInfo extends React.Component<Props, State> {
               </div>
               <Dropdown>
                 <div className="align-center space-between sub-dropdown-trigger">
-                  <a>Add to Playlist</a>
+                  <button>Add to Playlist</button>
                   <SubDropdown>
-                    <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
+                    <button
+                      onClick={() =>
+                        this.props.showPopup({
+                          show: true,
+                          songsIds: songsIdsArr,
+                        })
+                      }
+                      className="dropdown-option"
+                    >
                       New Playlist
-                    </a>
+                    </button>
                     {playlists &&
                       playlists.map(playlist => (
-                        <a
+                        <button
                           key={playlist.id}
                           className="dropdown-option"
                           onClick={() => addSongsToPlaylist(songsIdsArr, playlist.id)}
                         >
                           {playlist.name}
-                        </a>
+                        </button>
                       ))}
                   </SubDropdown>
                 </div>
@@ -118,26 +121,34 @@ class AlbumInfo extends React.Component<Props, State> {
                     </button>
                     <Dropdown>
                       <div className="align-center space-between sub-dropdown-trigger">
-                        <a onClick={this.showPlaylistPopupInput}>Add to Playlist</a>
+                        <button>Add to Playlist</button>
                         <SubDropdown>
-                          <a onClick={this.showPlaylistPopupInput} className="dropdown-option">
+                          <button
+                            onClick={() =>
+                              this.props.showPopup({
+                                show: true,
+                                songsIds: [song.id],
+                              })
+                            }
+                            className="dropdown-option"
+                          >
                             New Playlist
-                          </a>
+                          </button>
                           {playlists &&
                             playlists.map(playlist => (
-                              <a
+                              <button
                                 key={playlist.id}
                                 className="dropdown-option"
                                 onClick={() => addSongsToPlaylist([song.id], playlist.id)}
                               >
                                 {playlist.name}
-                              </a>
+                              </button>
                             ))}
                         </SubDropdown>
                       </div>
-                      <a className="dropdown-option">Play Next</a>
-                      <a className="dropdown-option">Play Later</a>
-                      <a className="dropdown-option">Delete from Library</a>
+                      <button className="dropdown-option">Play Next</button>
+                      <button className="dropdown-option">Play Later</button>
+                      <button className="dropdown-option">Delete from Library</button>
                     </Dropdown>
                   </div>
                 </div>
@@ -150,4 +161,7 @@ class AlbumInfo extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { setSongPlaylist })(AlbumInfo)
+export default connect(
+  null,
+  { setSongPlaylist, showPopup },
+)(AlbumInfo)

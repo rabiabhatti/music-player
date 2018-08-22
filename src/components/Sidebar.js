@@ -7,6 +7,7 @@ import db from '~/db'
 import { showPopup } from '~/redux/popup'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
+import '~/css/sidebar.css'
 import Popup from './Popup'
 import Picker from './Picker'
 import Logout from './Logout'
@@ -38,7 +39,11 @@ class Sidebar extends React.Component<Props, State> {
       <button
         key={`route-${name}-${id !== null ? id : 'none'}`}
         className={`content-row align-center btn-dull ${route.name === routeName && route.id === id ? 'active' : ''}`}
-        onClick={() => routeName === 'NewPlaylist' ? this.props.showPopup({ show: true, songsIds:[] }) : this.props.navigateTo({ name: routeName, id })}
+        onClick={() =>
+          routeName === 'NewPlaylist'
+            ? this.props.showPopup({ show: true, songsIds: [] })
+            : this.props.navigateTo({ name: routeName, id })
+        }
       >
         <i className="material-icons row-icon">{icon}</i>
         {name}

@@ -2,6 +2,7 @@
 
 import React from 'react'
 
+import '~/css/dropdown.css'
 import db from '~/db'
 
 type Props = {|
@@ -9,7 +10,7 @@ type Props = {|
 |}
 type State = {||}
 
-export default class Sidebar extends React.Component<Props, State> {
+export default class SubDropdown extends React.Component<Props, State> {
   render() {
     return (
       <div className="section-sub-dropdown">

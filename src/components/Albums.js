@@ -9,6 +9,7 @@ import type { File } from '~/types'
 
 import AlbumInfo from './AlbumInfo'
 
+import '~/css/albums.css'
 import cover from '../static/img/album-cover.jpg'
 
 type Props = {||}
@@ -59,7 +60,11 @@ export default class Albums extends React.Component<Props, State> {
                     <div
                       className="album-infomation"
                       style={{ cursor: 'pointer' }}
-                      onClick={() => this.setState({ selected: { type: 'album', identifier: album } })}
+                      onClick={() =>
+                        this.setState({
+                          selected: { type: 'album', identifier: album },
+                        })
+                      }
                     >
                       <h4 className="album-name">{album}</h4>
                       <p className="album-artist">Sia Furler</p>

@@ -2,6 +2,8 @@
 
 import React from 'react'
 
+import '~/css/loading.css'
+
 export default () => (
   <div className="section-loading align-center">
     <svg viewBox="-25 -25 100 100" id="loading-icon">

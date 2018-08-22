@@ -8,6 +8,8 @@ import { authorizeService } from '~/redux/user'
 
 import type { Service } from '~/services/types'
 
+import '~/css/login.css'
+
 type Props = {|
   authorizeService: authorizeService,
 |}

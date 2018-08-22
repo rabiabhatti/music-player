@@ -2,6 +2,9 @@
 
 import * as React from 'react'
 
+import '~/css/songs.css'
+import '~/css/table.css'
+
 export default class RecentlyPlayed extends React.Component<$FlowFixMe, $FlowFixMe> {
   render() {
     return (

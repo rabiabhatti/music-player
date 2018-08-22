@@ -14,6 +14,8 @@ import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
 import PlayerControlDuration from './PlayerControlsDuration'
 
+import '~/css/slider.css'
+import '~/css/player.css'
 import cover from '../../static/img/album-cover.jpg'
 
 type Props = {|
@@ -163,24 +165,27 @@ class Player extends React.Component<Props, State> {
         <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
-              <h1 className="song-title">{songName}</h1>
-              <h4 className="song-artist">{songArtist}</h4>
+              <h1 className="song-title">{activeSong ? songName : 'Empty'}</h1>
+              <h4 className="song-artist">{activeSong ? songArtist : 'Empty'}</h4>
             </div>
           </div>
           <div className="section-player-controls align-center space-between">
             <div className="section-player-btns align-center">
               <button onClick={this.playPrevious}>
-                <i title="Previous" className='material-icons'>
+                <i title="Previous" className="material-icons player-material-icons">
                   fast_rewind
                 </i>
               </button>
               <button onClick={this.playPause}>
-                <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons play-btn">
+                <i
+                  title={songs.songState === 'playing' ? 'Pause' : 'Play'}
+                  className="material-icons player-material-icons play-btn"
+                >
                   {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
                 </i>
               </button>
               <button onClick={this.playNext}>
-                <i title="Previous" className='material-icons'>
+                <i title="Previous" className="material-icons player-material-icons">
                   fast_forward
                 </i>
               </button>

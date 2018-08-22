@@ -7,6 +7,7 @@
     "lodash": "^4.17.10",
     "music-metadata": "^2.4.2",
     "normalize.css": "^8.0.0",
+    "prettier": "^1.14.2",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-redux": "^5.0.7",

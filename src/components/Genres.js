@@ -4,11 +4,13 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
-import { getGenresFromSongs } from '~/common/songs'
 import type { File } from '~/types'
+import { getGenresFromSongs } from '~/common/songs'
 
-import ContentCard from './ContentCard'
 import AlbumInfo from './AlbumInfo'
+import ContentCard from './ContentCard'
+
+import '~/css/artists.css'
 
 import cover from '../static/img/album-cover.jpg'
 import cover3 from '../static/img/album-cover-3.png'
@@ -53,7 +55,11 @@ export default class Genres extends React.Component<Props, State> {
                       href={`#${genre}`}
                       key={genre}
                       style={{ cursor: 'pointer' }}
-                      onClick={() => this.setState({ selected: { type: 'genre', identifier: genre } })}
+                      onClick={() =>
+                        this.setState({
+                          selected: { type: 'genre', identifier: genre },
+                        })
+                      }
                     >
                       <i className="material-icons artists-bar-row-icon">queue_music</i>
                       <span>{genre}</span>

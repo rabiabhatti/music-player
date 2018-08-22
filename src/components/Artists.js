@@ -9,6 +9,8 @@ import type { File } from '~/types'
 import ContentCard from './ContentCard'
 import AlbumInfo from './AlbumInfo'
 
+import '~/css/artists.css'
+
 import cover from '../static/img/album-cover.jpg'
 import cover3 from '../static/img/album-cover-3.png'
 import cover4 from '../static/img/album-cover-4.jpg'
@@ -58,7 +60,11 @@ export default class Artists extends React.Component<Props, State> {
                   key={artist}
                   href={`#${artist}`}
                   style={{ cursor: 'pointer' }}
-                  onClick={() => this.setState({ selected: { type: 'artist', identifier: artist } })}
+                  onClick={() =>
+                    this.setState({
+                      selected: { type: 'artist', identifier: artist },
+                    })
+                  }
                 >
                   <i className="material-icons artists-bar-row-icon">person</i>
                   <span>{artist}</span>
