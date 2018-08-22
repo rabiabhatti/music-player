@@ -33,7 +33,7 @@ class Popup extends React.Component<Props, State> {
   componentDidMount() {
     this.start()
     document.addEventListener('click', this.handleBodyClick)
-    document.addEventListener('keydown', this.handleEscapeKeyPress)
+    document.addEventListener('keydown', this.handleKeyPress)
   }
   componentWillReceiveProps(nextProps: Props) {
     if (nextProps.hash !== this.props.hash) {
@@ -44,11 +44,17 @@ class Popup extends React.Component<Props, State> {
   componentWillUnmount() {
     this.stop()
     document.removeEventListener('click', this.handleBodyClick)
-    document.removeEventListener('keydown', this.handleEscapeKeyPress)
+    document.removeEventListener('keydown', this.handleKeyPress)
   }
 
-  handleEscapeKeyPress = (e: KeyboardEvent) => {
+  handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && !this.state.hidden) {
+      this.close()
+    } else if (e.key === 'Enter') {
+      if (this.state.value !== '' && this.state.value.replace(/\s/g, '') !== '') {
+        this.savePlaylist()
+        return
+      }
       this.close()
     }
   }
