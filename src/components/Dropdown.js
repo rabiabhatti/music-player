@@ -69,9 +69,9 @@ class Dropdown extends React.Component<Props, State> {
         <i className="material-icons song-dropdown">more_horiz</i>
         <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
           <div className="align-center space-between sub-dropdown-trigger">
-            <button>Add to Playlist</button>
-            <div className="section-sub-dropdown">
-              <i className="material-icons">play_arrow</i>
+            <button className="btn-dull">Add to Playlist</button>
+            <i className="material-icons">play_arrow</i>
+            <React.Fragment>
               <div className="sub-dropdown-content dropdown-content hidden">
                 <button
                   onClick={() =>
@@ -95,7 +95,7 @@ class Dropdown extends React.Component<Props, State> {
                     </button>
                   ))}
               </div>
-            </div>
+            </React.Fragment>
           </div>
           <button className="dropdown-option">Play Next</button>
           <button className="dropdown-option">Play Later</button>

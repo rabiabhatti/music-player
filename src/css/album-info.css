@@ -57,6 +57,7 @@
   transition: opacity 0.4s ease-in-out;
 }
 .album-cover-icon .material-icons {
+  color: #ffffff;
   font-size: 3rem;
 }
 .album-cover:hover .album-cover-icon {

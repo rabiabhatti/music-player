@@ -78,9 +78,7 @@ class Sidebar extends React.Component<Props, State> {
           <div className="sidebar-content flex-column">
             <h3>PlayLists</h3>
             {this.renderNavigationItem('playlist_add', 'NewPlaylist', 'New')}
-            {playlists.map(localPlaylist =>
-              this.renderNavigationItem('playlist_play', 'Playlist', localPlaylist.name, localPlaylist.id),
-            )}
+            {playlists.map(playlist => this.renderNavigationItem('playlist_play', 'Playlist', playlist.name, playlist.id))}
           </div>
           <Picker />
           <Logout />

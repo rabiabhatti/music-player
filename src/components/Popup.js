@@ -123,7 +123,7 @@ class Popup extends React.Component<Props, State> {
             ×
           </button>
           <input type="text" placeholder="Choose name" value={value} name="name" onInput={this.handleChange} />
-          <button className="btn-blue" onClick={this.savePlaylist} disabled={!enable}>
+          <button className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
             Save
           </button>
         </div>

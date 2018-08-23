@@ -10,6 +10,7 @@
 }
 .dropdown-option,
 .sub-dropdown-trigger {
+  width: 100%;
   display: flex;
   color: #757575;
   padding: 0.9rem;
@@ -17,10 +18,10 @@
   border-radius: 4px;
   font-size: 0.85rem;
   border-bottom: 1px solid #0000000a;
+  transition: background-color 0.25s ease-in;
 }
 .dropdown-option:hover,
 .sub-dropdown-trigger:hover {
-  color: #515151 !important;
   background-color: rgba(0, 0, 0, 0.07);
 }
 .sub-dropdown-trigger {

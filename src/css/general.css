@@ -48,6 +48,11 @@ img {
 p {
   font-size: 0.85rem;
 }
+i {
+  color: #9c9c9c;
+  cursor: pointer;
+  margin-right: 0.5rem;
+}
 button {
   border: 0;
   padding: 0;
@@ -71,6 +76,9 @@ button:disabled {
 }
 .btn-blue {
   color: #2f75ff;
+}
+.btn-blue-border {
+  color: #2f75ff;
   margin-top: 1rem;
   font-size: 0.8rem;
   border-radius: 5px;
@@ -79,8 +87,8 @@ button:disabled {
   border: 1px solid rgba(0, 0, 0, 0.13);
   transition: background-color 0.3s ease-out;
 }
-.btn-blue:hover:not([disabled]),
-.btn-blue:active:not([disabled]) {
+.btn-blue-border:hover:not([disabled]),
+.btn-blue-border:active:not([disabled]) {
   background-color: #eff4fe;
 }
 input[type='text'] {

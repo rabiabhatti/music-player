@@ -11,15 +11,9 @@
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 }
 .artists-bar-row {
-  font-size: 0.8rem;
   padding: 0.6rem;
+  font-size: 0.8rem;
   transition: all 0.1s ease-in-out;
-}
-.artists-bar-row-icon {
-  color: inherit;
-  font-size: 1.5rem;
-  margin-right: 0.6rem;
-  transition: all 0.2s ease-in-out;
 }
 .artists-bar-row:hover,
 .active {

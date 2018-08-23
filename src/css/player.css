@@ -26,9 +26,6 @@
   border-radius: 10px;
   background-color: #ffffff;
 }
-i {
-  cursor: pointer;
-}
 .section-song-description {
   position: relative;
   margin-right: 1rem;
@@ -74,11 +71,5 @@ i {
 }
 .player-material-icons {
   color: #ffffff;
-  font-size: 1.5rem;
-}
-.superscript {
-  top: 0;
-  font-weight: bold;
-  font-size: 0.7rem;
-  position: absolute;
+  margin-right: 0;
 }
