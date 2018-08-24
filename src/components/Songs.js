@@ -10,7 +10,6 @@ import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
 
-import Popup from './Popup'
 import Dropdown from './Dropdown'
 
 type Props = {|
@@ -25,7 +24,7 @@ type State = {|
 class Songs extends React.Component<Props, State> {
   state = { songs: [] }
 
-  async componentDidMount() {
+  componentDidMount() {
     this.fetchSongs()
   }
   componentWillReceiveProps(newProps) {
@@ -52,7 +51,6 @@ class Songs extends React.Component<Props, State> {
   }
 
   render() {
-    let i = 1
     const { activeSong } = this.props
     const { songs } = this.state
 
@@ -79,24 +77,21 @@ class Songs extends React.Component<Props, State> {
                   <th>Artist</th>
                   <th>Album</th>
                   <th>Genre</th>
-                  <th />
                 </tr>
               </thead>
               <tbody>
                 {songs.map((song, index) => (
-                  <tr
-                    key={song.sourceId}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => this.playAtIndex(index)}
-                    className={song.id === activeSong ? 'active' : ''}
-                  >
+                  <tr key={song.sourceId} className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}>
                     <td>{song.meta.name || song.filename}</td>
                     <td>{humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>
                     <td>{song.meta.album || 'Unknown'}</td>
                     <td>{song.meta.genre || 'Unknown'} </td>
-                    <td>
-                      <Dropdown songsIds={[song.id]} />
+                    <td className="song-wrapper-btns space-between">
+                      <button onClick={() => this.playAtIndex(index)}>
+                        <i className="material-icons song-play-btn btn-blue">play_arrow</i>
+                      </button>
+                      <Dropdown songsIds={song.id} />
                     </td>
                   </tr>
                 ))}

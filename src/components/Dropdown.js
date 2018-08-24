@@ -97,7 +97,8 @@ class Dropdown extends React.Component<Props, State> {
               </div>
             </React.Fragment>
           </div>
-          <button className="dropdown-option">Play Next</button>
+          <button className="dropdown-option">Edit</button>
+          <button className="dropdown-option">Play Later</button>
           <button className="dropdown-option">Play Later</button>
           <button className="dropdown-option">Delete from Library</button>
         </div>
