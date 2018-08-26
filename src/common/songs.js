@@ -50,7 +50,7 @@ export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {
   const playlist = await db.playlists.get(playlistId)
   const songs = playlist.songs
-  await songsIds.forEach(id => {
+  songsIds.forEach(id => {
     if (!songs.includes(id)) {
       songs.push(id)
     }

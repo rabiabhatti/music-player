@@ -18,19 +18,31 @@ type Props = {|
   setSongPlaylist: setSongPlaylist,
 |}
 type State = {|
+  index: number,
   songs: Array<Object>,
 |}
 
 class Songs extends React.Component<Props, State> {
-  state = { songs: [] }
+  state = { songs: [], index: 0 }
 
   componentDidMount() {
     this.fetchSongs()
+    document.addEventListener('dblclick', this.handleDblClick)
   }
+
   componentWillReceiveProps(newProps) {
     if (newProps.nonce !== this.props.nonce) {
       this.fetchSongs()
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('dblclick', this.handleDblClick)
+  }
+
+  handleDblClick = (e: MouseEvent) => {
+    e.preventDefault()
+    this.playAtIndex(this.state.index)
   }
 
   fetchSongs() {
@@ -81,7 +93,11 @@ class Songs extends React.Component<Props, State> {
               </thead>
               <tbody>
                 {songs.map((song, index) => (
-                  <tr key={song.sourceId} className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}>
+                  <tr
+                    key={song.sourceId}
+                    onClick={() => this.setState({ index })}
+                    className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
+                  >
                     <td>{song.meta.name || song.filename}</td>
                     <td>{humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>

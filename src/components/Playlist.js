@@ -21,26 +21,28 @@ type Props = {|
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
+  index: number,
   playlist: Object,
   songs: Array<Object>,
 |}
 
 class Playlist extends React.Component<Props, State> {
-  state = { playlist: {}, songs: [] }
+  state = { playlist: {}, songs: [], index: 0 }
 
   async componentDidMount() {
     const playlist = await db.playlists.get(this.props.route.id)
     this.setState({ playlist })
 
     this.fetchSongs(playlist)
+    document.addEventListener('dblclick', this.handleDblClick)
   }
 
   async componentWillReceiveProps(nextProps) {
     const oldPlaylist = this.props.route.id
     const newPlaylist = nextProps.route.id
 
+    const playlist = await db.playlists.get(newPlaylist)
     if (newPlaylist !== oldPlaylist) {
-      const playlist = await db.playlists.get(newPlaylist)
       this.setState({ playlist })
       this.setState({ songs: [] })
 
@@ -49,7 +51,7 @@ class Playlist extends React.Component<Props, State> {
     }
 
     if (nextProps.nonce !== this.props.nonce) {
-      this.fetchSongs(this.props.playlist)
+      this.fetchSongs(playlist)
       return
     }
   }
@@ -65,6 +67,15 @@ class Playlist extends React.Component<Props, State> {
         }
       })
     }
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('dblclick', this.handleDblClick)
+  }
+
+  handleDblClick = (e: MouseEvent) => {
+    e.preventDefault()
+    this.playAtIndex(this.state.index)
   }
 
   playAtIndex = (index: number) => {
@@ -105,7 +116,11 @@ class Playlist extends React.Component<Props, State> {
               </thead>
               <tbody>
                 {songs.map((song, index) => (
-                  <tr key={song.sourceId} className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}>
+                  <tr
+                    key={song.sourceId}
+                    onClick={() => this.setState({ index })}
+                    className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
+                  >
                     <td>{song.meta.name || song.filename}</td>
                     <td>{humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>
