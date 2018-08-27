@@ -25,9 +25,11 @@ export function getGenresFromSongs(songs: Array<File>): Array<string> {
   songs.forEach(function(song) {
     const { meta } = song
     if (meta) {
-      typeof meta.genre === 'undefined' || meta.genre[0] === ''
-        ? genres.add('Unknown')
-        : meta.genre.forEach(item => genres.add(item))
+      if (typeof meta.genre === 'undefined' || meta.genre[0] === '') {
+        genres.add('Unknown')
+      } else {
+        meta.genre.forEach(item => genres.add(item))
+      }
     }
   })
 
@@ -49,19 +51,31 @@ export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
 
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {
   const playlist = await db.playlists.get(playlistId)
-  const songs = playlist.songs
+  const localSongs = playlist.songs
   songsIds.forEach(id => {
-    if (!songs.includes(id)) {
-      songs.push(id)
+    if (!localSongs.includes(id)) {
+      localSongs.push(id)
     }
   })
-  await db.playlists.update(playlistId, { songs: songs })
-  return
+  await db.playlists.update(playlistId, { songs: localSongs })
 }
 
-export function deleteSongsFromLibrary(songsIds: Array<number>) {
+export function deleteSongFromPlaylist(playlist: Object, id: number) {
+  if (playlist.songs.includes(id)) {
+    const index = playlist.songs.indexOf(id)
+    playlist.songs.splice(index, 1)
+    db.playlists.update(playlist.id, {
+      songs: playlist.songs,
+    })
+  }
+}
+
+export function deleteSongsFromLibrary(songsIds: Array<number>, playlist?: Object) {
   songsIds.forEach(async id => {
     await db.songs.delete(id)
+    if (playlist) {
+      deleteSongFromPlaylist(playlist, id)
+    }
   })
 }
 
