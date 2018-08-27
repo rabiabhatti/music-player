@@ -8,7 +8,6 @@ import { showPopup } from '~/redux/popup'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
 import '~/css/sidebar.css'
-import Popup from './Popup'
 import Picker from './Picker'
 import Logout from './Logout'
 

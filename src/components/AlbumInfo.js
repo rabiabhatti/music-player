@@ -3,7 +3,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
@@ -32,7 +31,7 @@ class AlbumInfo extends React.Component<Props, State> {
 
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
 
-    let songsIdsArr = []
+    const songsIdsArr = []
     songs.forEach(song => {
       songsIdsArr.push(song.id)
     })

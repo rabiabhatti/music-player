@@ -10,12 +10,12 @@ import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
 import { playNext, playPrevious, songPlay, songPause } from '~/redux/songs'
 
+import '~/css/slider.css'
+import '~/css/player.css'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
 import PlayerControlDuration from './PlayerControlsDuration'
 
-import '~/css/slider.css'
-import '~/css/player.css'
 import cover from '../../static/img/album-cover.jpg'
 
 type Props = {|

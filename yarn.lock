@@ -2175,6 +2175,13 @@ eslint-plugin-prettier@^2.6.0:
     fast-diff "^1.1.1"
     jest-docblock "^21.0.0"
 
+eslint-plugin-prettier@^2.6.2:
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-prettier/-/eslint-plugin-prettier-2.6.2.tgz#71998c60aedfa2141f7bfcbf9d1c459bf98b4fad"
+  dependencies:
+    fast-diff "^1.1.1"
+    jest-docblock "^21.0.0"
+
 eslint-plugin-react@^7.6.1:
   version "7.7.0"
   resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.7.0.tgz#f606c719dbd8a1a2b3d25c16299813878cca0160"
@@ -3452,6 +3459,10 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
+node-murmurhash@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/node-murmurhash/-/node-murmurhash-2.1.0.tgz#26939a971056b77f8132e35715b316d6eeebc040"
+
 node-pre-gyp@^0.10.0:
   version "0.10.3"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.10.3.tgz#3070040716afdc778747b61b6887bf78880b80fc"
@@ -4153,65 +4164,67 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-pundle-api@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-api/-/pundle-api-3.0.0-beta6.tgz#eab3e8565a0e59ab00c3e083278930746511a274"
+pundle-api@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-api/-/pundle-api-3.0.0-beta8.tgz#cf7c7f4e179435e5e7fc6e128adef2cdc15b00b5"
   dependencies:
     globrex "^0.1.1"
-    imurmurhash "^0.1.4"
     merge-source-map "^1.1.0"
+    node-murmurhash "^2.1.0"
     p-map "^1.2.0"
     resolve-from "^4.0.0"
+    sb-fs "^3.0.0"
+    toposort "^2.0.2"
     yup "^0.26.2"
 
-pundle-chunk-generator-css@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-css/-/pundle-chunk-generator-css-3.0.0-beta6.tgz#cebd0520f2b767fdb929f391b9aa2646230514f3"
+pundle-chunk-generator-css@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-css/-/pundle-chunk-generator-css-3.0.0-beta8.tgz#0a02014de051af03924431aba8ad4909e489af25"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-chunk-generator-html@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-html/-/pundle-chunk-generator-html-3.0.0-beta6.tgz#2d23f576397d2af5d4cca5b6c5075cf5cf873b1a"
+pundle-chunk-generator-html@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-html/-/pundle-chunk-generator-html-3.0.0-beta8.tgz#012861d49ab020a2fb939f0079cb3ed55c6288c1"
   dependencies:
     globrex "^0.1.1"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
     toposort "^2.0.2"
 
-pundle-chunk-generator-js@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-js/-/pundle-chunk-generator-js-3.0.0-beta6.tgz#80a3489764c7518026dfaf82374d1f310358e4af"
+pundle-chunk-generator-js@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-js/-/pundle-chunk-generator-js-3.0.0-beta8.tgz#6db6bbcb407c113899b3a492a62a43968f6614ed"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
     sb-fs "^3.0.0"
     source-map "^0.7.2"
 
-pundle-chunk-generator-static@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-static/-/pundle-chunk-generator-static-3.0.0-beta6.tgz#d33554d8949673ed738cfa558e1d7b480f8f4a80"
+pundle-chunk-generator-static@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-chunk-generator-static/-/pundle-chunk-generator-static-3.0.0-beta8.tgz#e88dd04bdde80c9438425d24b4c6eb960caf9006"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-chunk-transformer-cssnano@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-transformer-cssnano/-/pundle-chunk-transformer-cssnano-3.0.0-beta6.tgz#c6f0920dace084a13f63b804829c4da3a70cb056"
+pundle-chunk-transformer-cssnano@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-chunk-transformer-cssnano/-/pundle-chunk-transformer-cssnano-3.0.0-beta8.tgz#7d063a2374f33249708bdabe8352bc419ed5b05d"
   dependencies:
     cssnano "^4.0.5"
     postcss "^7.0.2"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-chunk-transformer-uglify@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-chunk-transformer-uglify/-/pundle-chunk-transformer-uglify-3.0.0-beta6.tgz#d677cb3ad123719470d7b89918d78101cb5ae3e7"
+pundle-chunk-transformer-uglify@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-chunk-transformer-uglify/-/pundle-chunk-transformer-uglify-3.0.0-beta8.tgz#638cf23ec94af1e4965a2712b0eef81485768dee"
   dependencies:
     merge-source-map "^1.1.0"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
     terser "^3.8.1"
     uglify-es "^3.3.9"
 
-pundle-cli@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-cli/-/pundle-cli-3.0.0-beta6.tgz#02d97cabe36c843018878adb206abdbd58a0bc62"
+pundle-cli@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-cli/-/pundle-cli-3.0.0-beta8.tgz#4f80d97795a601bf0e646845441b8b11978e5cd2"
   dependencies:
     chalk "^2.4.1"
     cool-trim "^1.1.1"
@@ -4224,24 +4237,24 @@ pundle-cli@^3.0.0-beta6:
     mkdirp "^0.5.1"
     p-map "^1.2.0"
     pretty-bytes "^5.1.0"
-    pundle-api "^3.0.0-beta6"
-    pundle-core "^3.0.0-beta6"
-    pundle-dev-middleware "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
+    pundle-core "^3.0.0-beta8"
+    pundle-dev-middleware "^3.0.0-beta8"
     sb-fs "^3.0.0"
     strip-ansi "^4.0.0"
 
-pundle-core-load-config@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-core-load-config/-/pundle-core-load-config-3.0.0-beta6.tgz#c0322b2bfd905ac8cb787132bd740735c91c0642"
+pundle-core-load-config@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-core-load-config/-/pundle-core-load-config-3.0.0-beta8.tgz#a37726fdf2587c39433b2bc98c7ffecd7f97c7f6"
   dependencies:
     lodash "^4.17.10"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
     sb-callsite "^1.1.2"
     sb-fs "^3.0.0"
 
-pundle-core@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-core/-/pundle-core-3.0.0-beta6.tgz#71692ca3f147873796c72551a577e2d498c1786d"
+pundle-core@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-core/-/pundle-core-3.0.0-beta8.tgz#95d1eb5a4177f93c8d03c909c20cc6b0c5c5e035"
   dependencies:
     chokidar "^2.0.4"
     lodash "^4.17.10"
@@ -4249,72 +4262,72 @@ pundle-core@^3.0.0-beta6:
     mkdirp "^0.5.1"
     p-map "^1.2.0"
     promise.defer "^1.0.1"
-    pundle-api "^3.0.0-beta6"
-    pundle-core-load-config "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
+    pundle-core-load-config "^3.0.0-beta8"
     sb-communication "5"
     sb-fs "^3.0.0"
     sb-promise-queue "^1.0.1"
 
-pundle-dev-middleware@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-dev-middleware/-/pundle-dev-middleware-3.0.0-beta6.tgz#2c067072dab1dd6ea1f41cfc6500fc894a3e6ee3"
+pundle-dev-middleware@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-dev-middleware/-/pundle-dev-middleware-3.0.0-beta8.tgz#b51a13a5c1e04562b22d2d40281ceff5863dc6f7"
   dependencies:
     express "^4.16.3"
     lodash "^4.17.10"
     mime "^2.3.1"
     toposort "^2.0.2"
 
-pundle-job-transformer-js-common@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-job-transformer-js-common/-/pundle-job-transformer-js-common-3.0.0-beta6.tgz#b0417cc4a8081d80f67a5ce6a482c6af275734d8"
+pundle-job-transformer-js-common@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-job-transformer-js-common/-/pundle-job-transformer-js-common-3.0.0-beta8.tgz#f59302b930659a59e4d88e8d779309ddbe70041c"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-preset-default@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-preset-default/-/pundle-preset-default-3.0.0-beta6.tgz#b0a6b212d2faf4a5f26b6953cb33e939aa995c23"
+pundle-preset-default@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-preset-default/-/pundle-preset-default-3.0.0-beta8.tgz#188e9d855b80a792f9a9689cad741b613a8be535"
   dependencies:
-    pundle-api "^3.0.0-beta6"
-    pundle-chunk-generator-css "^3.0.0-beta6"
-    pundle-chunk-generator-html "^3.0.0-beta6"
-    pundle-chunk-generator-js "^3.0.0-beta6"
-    pundle-chunk-generator-static "^3.0.0-beta6"
-    pundle-chunk-transformer-cssnano "^3.0.0-beta6"
-    pundle-chunk-transformer-uglify "^3.0.0-beta6"
-    pundle-job-transformer-js-common "^3.0.0-beta6"
-    pundle-reporter-cli "^3.0.0-beta6"
-    pundle-resolver-default "^3.0.0-beta6"
-    pundle-transformer-babel "^3.0.0-beta6"
-    pundle-transformer-coffee "^3.0.0-beta6"
-    pundle-transformer-cson "^3.0.0-beta6"
-    pundle-transformer-css "^3.0.0-beta6"
-    pundle-transformer-graphql "^3.0.0-beta6"
-    pundle-transformer-js "^3.0.0-beta6"
-    pundle-transformer-json "^3.0.0-beta6"
-    pundle-transformer-json5 "^3.0.0-beta6"
-    pundle-transformer-less "^3.0.0-beta6"
-    pundle-transformer-postcss "^3.0.0-beta6"
-    pundle-transformer-sass "^3.0.0-beta6"
-    pundle-transformer-static "^3.0.0-beta6"
-    pundle-transformer-stylus "^3.0.0-beta6"
-    pundle-transformer-toml "^3.0.0-beta6"
-    pundle-transformer-typescript "^3.0.0-beta6"
-    pundle-transformer-yaml "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
+    pundle-chunk-generator-css "^3.0.0-beta8"
+    pundle-chunk-generator-html "^3.0.0-beta8"
+    pundle-chunk-generator-js "^3.0.0-beta8"
+    pundle-chunk-generator-static "^3.0.0-beta8"
+    pundle-chunk-transformer-cssnano "^3.0.0-beta8"
+    pundle-chunk-transformer-uglify "^3.0.0-beta8"
+    pundle-job-transformer-js-common "^3.0.0-beta8"
+    pundle-reporter-cli "^3.0.0-beta8"
+    pundle-resolver-default "^3.0.0-beta8"
+    pundle-transformer-babel "^3.0.0-beta8"
+    pundle-transformer-coffee "^3.0.0-beta8"
+    pundle-transformer-cson "^3.0.0-beta8"
+    pundle-transformer-css "^3.0.0-beta8"
+    pundle-transformer-graphql "^3.0.0-beta8"
+    pundle-transformer-js "^3.0.0-beta8"
+    pundle-transformer-json "^3.0.0-beta8"
+    pundle-transformer-json5 "^3.0.0-beta8"
+    pundle-transformer-less "^3.0.0-beta8"
+    pundle-transformer-postcss "^3.0.0-beta8"
+    pundle-transformer-sass "^3.0.0-beta8"
+    pundle-transformer-static "^3.0.0-beta8"
+    pundle-transformer-stylus "^3.0.0-beta8"
+    pundle-transformer-toml "^3.0.0-beta8"
+    pundle-transformer-typescript "^3.0.0-beta8"
+    pundle-transformer-yaml "^3.0.0-beta8"
 
-pundle-reporter-base@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-reporter-base/-/pundle-reporter-base-3.0.0-beta6.tgz#a0626b4205426a2b890d70b86b459c68ca339039"
+pundle-reporter-base@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-reporter-base/-/pundle-reporter-base-3.0.0-beta8.tgz#a2bbe752259687e853b796860cf6da79ea1dc333"
 
-pundle-reporter-cli@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-reporter-cli/-/pundle-reporter-cli-3.0.0-beta6.tgz#804f71ab7528fa1fb5e2d141efca54eca54ea003"
+pundle-reporter-cli@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-reporter-cli/-/pundle-reporter-cli-3.0.0-beta8.tgz#8344c0e70ca5c04cbd983ffa66fe3e9751e9e52e"
   dependencies:
-    pundle-api "^3.0.0-beta6"
-    pundle-reporter-base "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
+    pundle-reporter-base "^3.0.0-beta8"
 
-pundle-resolver-aliases-browser@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-resolver-aliases-browser/-/pundle-resolver-aliases-browser-3.0.0-beta6.tgz#77f8375479503514553c9f4b536a4e34abfdfd6f"
+pundle-resolver-aliases-browser@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-resolver-aliases-browser/-/pundle-resolver-aliases-browser-3.0.0-beta8.tgz#5decaafd85d61f31180d5b26374f00ad1a835cf5"
   dependencies:
     assert "^1.3.0"
     browserify-zlib "^0.2.0"
@@ -4340,124 +4353,125 @@ pundle-resolver-aliases-browser@^3.0.0-beta6:
     util "^0.11.0"
     vm-browserify "^1.1.0"
 
-pundle-resolver-default@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-resolver-default/-/pundle-resolver-default-3.0.0-beta6.tgz#b74bd32a42f90bbd90f80a8d4c4ea1790f23fc09"
+pundle-resolver-default@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-resolver-default/-/pundle-resolver-default-3.0.0-beta8.tgz#ada3e3d7278807d8471ca02eadf12c6ffec3b11f"
   dependencies:
     browser-resolve "^1.11.3"
     lodash "^4.17.10"
-    pundle-api "^3.0.0-beta6"
-    pundle-resolver-aliases-browser "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
+    pundle-resolver-aliases-browser "^3.0.0-beta8"
     resolve "^1.8.1"
+    sb-fs "^3.0.0"
 
-pundle-transformer-babel@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-babel/-/pundle-transformer-babel-3.0.0-beta6.tgz#c340b6cd26cf64193e725278a4c213f0d6ba33ea"
+pundle-transformer-babel@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-babel/-/pundle-transformer-babel-3.0.0-beta8.tgz#7dd5cd299c91b22608cbbc7abcebb4db762e0a94"
   dependencies:
     nanomatch "^1.2.13"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-coffee@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-coffee/-/pundle-transformer-coffee-3.0.0-beta6.tgz#becb764829b310a1fe3731ece44b88bb70bfaec7"
+pundle-transformer-coffee@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-coffee/-/pundle-transformer-coffee-3.0.0-beta8.tgz#29ea4238cffcbe8b18a0bc585fc635f8d155f94c"
   dependencies:
     nanomatch "^1.2.13"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-cson@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-cson/-/pundle-transformer-cson-3.0.0-beta6.tgz#476e618fc2c32b943ce8bf411beb89c45cd2668a"
+pundle-transformer-cson@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-cson/-/pundle-transformer-cson-3.0.0-beta8.tgz#630f190667906351bc743e336d4bf0846d7560ef"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-css@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-css/-/pundle-transformer-css-3.0.0-beta6.tgz#65b264f7dd285a5803fdb274e2fcfe9eb3bbf736"
+pundle-transformer-css@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-css/-/pundle-transformer-css-3.0.0-beta8.tgz#74feb6740a1133685e228d1ab351206551a18aca"
   dependencies:
     postcss "^7.0.2"
     postcss-modules "^1.3.2"
     postcss-value-parser "^3.3.0"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-graphql@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-graphql/-/pundle-transformer-graphql-3.0.0-beta6.tgz#b67190d2d05b0f78e31f9d21fc4d75a57f5a56f0"
+pundle-transformer-graphql@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-graphql/-/pundle-transformer-graphql-3.0.0-beta8.tgz#dfba40635ff12dd0cc07f9e5339b550287fdb13b"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-js@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-js/-/pundle-transformer-js-3.0.0-beta6.tgz#039bb50ed4dc94b3df88e783988d7c57f14777b1"
+pundle-transformer-js@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-js/-/pundle-transformer-js-3.0.0-beta8.tgz#c5a81e6b16513fe4114a527eabb1f04c7edf9ed0"
   dependencies:
     "@babel/core" "^7.0.0-rc.1"
     "@babel/generator" "^7.0.0-rc.1"
     "@babel/plugin-transform-modules-commonjs" "^7.0.0-rc.1"
     "@babel/traverse" "^7.0.0-rc.1"
     "@babel/types" "^7.0.0-rc.1"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-json5@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-json5/-/pundle-transformer-json5-3.0.0-beta6.tgz#c19c495001bcd2a3db7751d4afc3764881e2534d"
+pundle-transformer-json5@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-json5/-/pundle-transformer-json5-3.0.0-beta8.tgz#9bf11528c6e7210f37259cd47497ac06dfcb93c5"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-json@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-json/-/pundle-transformer-json-3.0.0-beta6.tgz#9bed0b109b8b01d967aa365d4fbd0cb43243e068"
+pundle-transformer-json@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-json/-/pundle-transformer-json-3.0.0-beta8.tgz#8e158a5bdcbcbdfaca1ce7654e950d09d8fb92e3"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-less@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-less/-/pundle-transformer-less-3.0.0-beta6.tgz#588b6ac1bf35ad1dca7fb5a3bc6065b3d84b8914"
+pundle-transformer-less@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-less/-/pundle-transformer-less-3.0.0-beta8.tgz#7ca30e77af211c5c036154806046ff3b1f5921fb"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-postcss@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-postcss/-/pundle-transformer-postcss-3.0.0-beta6.tgz#3dc551d4bf985f6393a90f85d25e4ad09f110766"
+pundle-transformer-postcss@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-postcss/-/pundle-transformer-postcss-3.0.0-beta8.tgz#85bc83f64d773966ea42f1c0f6ca2b282926c301"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-sass@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-sass/-/pundle-transformer-sass-3.0.0-beta6.tgz#cdc9eb283bdfaadee04efabe87690434ef94e428"
+pundle-transformer-sass@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-sass/-/pundle-transformer-sass-3.0.0-beta8.tgz#ca52115cf5b63c61bb2e7774949b3f4e48e3965e"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-static@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-static/-/pundle-transformer-static-3.0.0-beta6.tgz#b17f73f0a95fc50241682f5ad94701b305ef2e01"
+pundle-transformer-static@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-static/-/pundle-transformer-static-3.0.0-beta8.tgz#2d13e5fc1fe81c60cf86112ac29888bae3bee488"
   dependencies:
     mime "^2.3.1"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-stylus@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-stylus/-/pundle-transformer-stylus-3.0.0-beta6.tgz#838ea9d170d520682311f3559a2c19230668fca9"
+pundle-transformer-stylus@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-stylus/-/pundle-transformer-stylus-3.0.0-beta8.tgz#81f84d16a6dc97aa6a870173aa38040e1838d961"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-toml@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-toml/-/pundle-transformer-toml-3.0.0-beta6.tgz#f4bf3f0756a36e9283147c1ee535bc3552274c7e"
+pundle-transformer-toml@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-toml/-/pundle-transformer-toml-3.0.0-beta8.tgz#d74b449a34d6517ee0bbc046455ae45822bd7e57"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
     serialize-to-js "^1.2.1"
 
-pundle-transformer-typescript@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-typescript/-/pundle-transformer-typescript-3.0.0-beta6.tgz#d1220c41a25f57ef6c8a1715b1031cb5851c8a75"
+pundle-transformer-typescript@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-typescript/-/pundle-transformer-typescript-3.0.0-beta8.tgz#827935d53474611b602b72cf36c45f7471441fc4"
   dependencies:
     nanomatch "^1.2.13"
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
 
-pundle-transformer-yaml@^3.0.0-beta6:
-  version "3.0.0-beta6"
-  resolved "https://registry.yarnpkg.com/pundle-transformer-yaml/-/pundle-transformer-yaml-3.0.0-beta6.tgz#c5d645bc91c73117658ee2bbf41bc6056ec67555"
+pundle-transformer-yaml@^3.0.0-beta8:
+  version "3.0.0-beta8"
+  resolved "https://registry.yarnpkg.com/pundle-transformer-yaml/-/pundle-transformer-yaml-3.0.0-beta8.tgz#f990ffefd3e1cb1a5e6b73e4db787f696dc301aa"
   dependencies:
-    pundle-api "^3.0.0-beta6"
+    pundle-api "^3.0.0-beta8"
     serialize-to-js "^1.2.1"
 
 punycode@1.3.2:

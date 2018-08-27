@@ -24,9 +24,6 @@ type State = {|
   value: string,
 |}
 class Popup extends React.Component<Props, State> {
-  ref: ?HTMLDivElement = null
-  timeout: TimeoutID
-
   static defaultProps = {
     duration: DEFAULT_DURATION,
   }
@@ -49,6 +46,9 @@ class Popup extends React.Component<Props, State> {
     document.removeEventListener('keydown', this.handleKeyPress)
   }
 
+  timeout: TimeoutID
+  ref: ?HTMLDivElement = null
+
   handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && !this.state.hidden) {
       this.close()
@@ -66,11 +66,11 @@ class Popup extends React.Component<Props, State> {
       return
     }
 
-    const hidden = this.state.hidden
+    const localHidden = this.state.hidden
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!hidden && !firedOnSelf) {
+    if (!localHidden && !firedOnSelf) {
       this.setState({
-        hidden: !hidden,
+        hidden: !localHidden,
       })
       this.props.showPopup({ show: false, songsIds: [] })
     }

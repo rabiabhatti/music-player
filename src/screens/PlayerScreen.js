@@ -3,7 +3,7 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import { type Popup, showPopup } from '~/redux/popup'
+import { type Popup } from '~/redux/popup'
 import type { RouteName, RouterRoute } from '~/redux/router'
 
 import '~/css/general.css'
@@ -31,7 +31,6 @@ const ROUTES: { [RouteName]: $FlowFixMe } = {
 type Props = {|
   popup: Popup,
   route: RouterRoute,
-  showPopup: showPopup,
 |}
 type State = {|
   showPlaylistPopup: number | null,
@@ -70,10 +69,7 @@ class PlayerScreen extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ router, popup, songs }) =>
-    console.log(songs.playlist) || {
-      route: router.route,
-      popup: popup.popup,
-    },
-)(PlayerScreen)
+export default connect(({ router, popup }) => ({
+  route: router.route,
+  popup: popup.popup,
+}))(PlayerScreen)

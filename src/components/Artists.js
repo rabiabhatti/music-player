@@ -6,14 +6,8 @@ import db from '~/db'
 import { getArtistsFromSongs } from '~/common/songs'
 import type { File } from '~/types'
 
-import ContentCard from './ContentCard'
-import AlbumInfo from './AlbumInfo'
-
 import '~/css/artists.css'
-
-import cover from '../static/img/album-cover.jpg'
-import cover3 from '../static/img/album-cover-3.png'
-import cover4 from '../static/img/album-cover-4.jpg'
+import ContentCard from './ContentCard'
 
 type Props = {||}
 type State = {|
@@ -30,7 +24,11 @@ export default class Artists extends React.Component<Props, State> {
     selected: null,
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.fetchSongs()
+  }
+
+  fetchSongs = async () => {
     const dbSongs = await db.songs.toArray()
     this.setState({ songs: dbSongs })
   }

@@ -8,7 +8,7 @@ import '~/css/table.css'
 
 import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
-import { humanizeDuration, addSongsToPlaylist } from '~/common/songs'
+import { humanizeDuration } from '~/common/songs'
 
 import Dropdown from './Dropdown'
 
@@ -66,7 +66,7 @@ class Songs extends React.Component<Props, State> {
     const { activeSong } = this.props
     const { songs } = this.state
 
-    let songsIdsArr = []
+    const songsIdsArr = []
     songs.forEach(song => {
       songsIdsArr.push(song.id)
     })

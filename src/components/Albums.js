@@ -1,15 +1,14 @@
 // @flow
 
 import * as React from 'react'
-import groupBy from 'lodash/groupBy'
 
 import db from '~/db'
 import { getAlbumsFromSongs } from '~/common/songs'
 import type { File } from '~/types'
 
+import '~/css/albums.css'
 import AlbumInfo from './AlbumInfo'
 
-import '~/css/albums.css'
 import cover from '../static/img/album-cover.jpg'
 
 type Props = {||}
@@ -27,10 +26,15 @@ export default class Albums extends React.Component<Props, State> {
     selected: null,
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.fetchSongs()
+  }
+
+  fetchSongs = async () => {
     const dbSongs = await db.songs.toArray()
     this.setState({ songs: dbSongs })
   }
+
   render() {
     const { songs, selected } = this.state
     const albums = getAlbumsFromSongs(songs)

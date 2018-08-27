@@ -1,20 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
 
 import db from '~/db'
 import type { File } from '~/types'
 import { getGenresFromSongs } from '~/common/songs'
 
-import AlbumInfo from './AlbumInfo'
-import ContentCard from './ContentCard'
-
 import '~/css/artists.css'
-
-import cover from '../static/img/album-cover.jpg'
-import cover3 from '../static/img/album-cover-3.png'
-import cover4 from '../static/img/album-cover-4.jpg'
+import ContentCard from './ContentCard'
 
 type Props = {||}
 type State = {|
@@ -31,7 +24,11 @@ export default class Genres extends React.Component<Props, State> {
     selected: null,
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.fetchSongs()
+  }
+
+  fetchSongs = async () => {
     const dbSongs = await db.songs.toArray()
     this.setState({ songs: dbSongs })
   }
