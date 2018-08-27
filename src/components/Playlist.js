@@ -14,10 +14,9 @@ import Dropdown from './Dropdown'
 
 type Props = {|
   nonce: number,
-  playlist: Object,
   route: RouterRoute,
   activeSong: number | null,
-  incrementNonce: () => void,
+  // incrementNonce: () => void,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
@@ -29,58 +28,45 @@ type State = {|
 class Playlist extends React.Component<Props, State> {
   state = { playlist: {}, songs: [], index: 0 }
 
-  async componentDidMount() {
-    const playlist = await db.playlists.get(this.props.route.id)
-    this.setState({ playlist })
-
-    this.fetchSongs(playlist)
-    document.addEventListener('dblclick', this.handleDblClick)
+  componentDidMount() {
+    this.getPlaylist(this.props.route.id)
+    document.addEventListener('dblclick', this.handleDoubleClick)
   }
 
   async componentWillReceiveProps(nextProps) {
     const oldPlaylist = this.props.route.id
     const newPlaylist = nextProps.route.id
-    // console.log('should called nounce', nextProps.nonce, this.props.nonce)
-
-    const playlist = await db.playlists.get(newPlaylist)
-    if (nextProps.nonce !== this.props.nonce) {
-      console.log('m called')
-      this.fetchSongs(playlist)
-    }
 
     if (newPlaylist !== oldPlaylist) {
-      this.setState({ playlist })
-      this.setState({ songs: [] })
-      this.fetchSongs(playlist)
+      this.getPlaylist(newPlaylist)
     }
 
-    // console.log('end nonce')
-  }
-
-  fetchSongs = (playlist: Object) => {
-    db.playlists.get(playlist.id).then(dbplaylist => {
-      // console.log(dbplaylist)
-      // // dbplaylist.songs.forEach(song => {
-      // //   this.setState({ songs: song })
-      // // })
-      if (dbplaylist.songs.length) {
-        dbplaylist.songs.forEach(async songsId => {
-          const song = await db.songs.get(songsId)
-          if (song) {
-            this.setState(prevState => ({
-              songs: [...prevState.songs, song],
-            }))
-          }
-        })
-      }
-    })
+    if (nextProps.nonce !== this.props.nonce) {
+      this.getPlaylist(this.props.route.id)
+    }
   }
 
   componentWillUnmount() {
-    document.removeEventListener('dblclick', this.handleDblClick)
+    document.removeEventListener('dblclick', this.handleDoubleClick)
   }
 
-  handleDblClick = (e: MouseEvent) => {
+  getPlaylist = async (playlistId: number) => {
+    this.setState({ songs: [] })
+    const playlist = await db.playlists.get(playlistId)
+    if (playlist.songs.length) {
+      playlist.songs.forEach(async id => {
+        const song = await db.songs.get(id)
+        if (song) {
+          this.setState(prevState => ({
+            playlist,
+            songs: [...prevState.songs, song],
+          }))
+        }
+      })
+    }
+  }
+
+  handleDoubleClick = (e: MouseEvent) => {
     e.preventDefault()
     this.playAtIndex(this.state.index)
   }
@@ -137,7 +123,7 @@ class Playlist extends React.Component<Props, State> {
                       <button onClick={() => this.playAtIndex(index)}>
                         <i className="material-icons song-play-btn btn-blue">play_arrow</i>
                       </button>
-                      <Dropdown songsIds={[song.id]} />
+                      <Dropdown songsIds={[song.id]} playlist={playlist} />
                     </td>
                   </tr>
                 ))}

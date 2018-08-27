@@ -7,20 +7,20 @@ import { connect } from 'react-redux'
 import db from '~/db'
 import { showPopup } from '~/redux/popup'
 import getEventPath from '~/common/getEventPath'
-import { setSongPlaylist, incrementNonce, playNext, playLater } from '~/redux/songs'
-import { addSongsToPlaylist, deleteSongsFromLibrary } from '~/common/songs'
+import { incrementNonce, playNext, playLater } from '~/redux/songs'
+import { addSongsToPlaylist, deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 
 import '~/css/dropdown.css'
 
 type Props = {|
+  nonce: number,
+  playlist?: Object,
   activeSong: number,
   showPopup: showPopup,
-  playlist: Array<number>,
   songsIds: Array<number>,
   playNext: typeof playNext,
   incrementNonce: () => void,
   playLater: typeof playLater,
-  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   opened: boolean,
@@ -30,27 +30,36 @@ type State = {|
 class Dropdown extends React.Component<Props, State> {
   state = { opened: false, playlists: null }
 
-  async componentDidMount() {
-    const playlists = await db.playlists.toArray()
-    this.setState({ playlists: playlists })
+  componentDidMount() {
+    this.fetchPlaylists()
     document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleBodyKeypress)
   }
+
+  async componentWillReceiveProps(nextProps) {
+    if (nextProps.nonce !== this.props.nonce) {
+      this.setState({ playlists: null })
+      this.fetchPlaylists()
+    }
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleBodyClick)
     document.removeEventListener('keydown', this.handleBodyKeypress)
   }
+
   ref: ?HTMLDivElement = null
+
   handleBodyClick = (e: MouseEvent) => {
     if (e.defaultPrevented) {
       return
     }
 
-    const opened = this.state.opened
+    const localOpened = this.state.opened
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (opened || firedOnSelf) {
+    if (localOpened || firedOnSelf) {
       this.setState({
-        opened: !opened,
+        opened: !localOpened,
       })
     }
   }
@@ -60,19 +69,29 @@ class Dropdown extends React.Component<Props, State> {
     }
   }
 
-  deleteSongs = (e: SyntheticEvent<HTMLButtonElement>) => {
+  fetchPlaylists = async () => {
+    const playlists = await db.playlists.toArray()
+    this.setState({ playlists })
+  }
+
+  deleteSong = (e: SyntheticEvent<HTMLButtonElement>, type: string) => {
     e.preventDefault()
-    const { songsIds } = this.props
+    const { songsIds, playlist } = this.props
     if (songsIds.includes(this.props.activeSong)) {
       this.props.playNext()
     }
-    deleteSongsFromLibrary(songsIds)
+    if (type === 'playlist' && playlist) {
+      deleteSongFromPlaylist(playlist, songsIds[0])
+    } else {
+      deleteSongsFromLibrary(songsIds, playlist)
+    }
+
     this.props.incrementNonce()
   }
 
   render() {
     const { playlists } = this.state
-    const { songsIds } = this.props
+    const { songsIds, playlist } = this.props
 
     return (
       <div
@@ -100,24 +119,30 @@ class Dropdown extends React.Component<Props, State> {
                   New Playlist
                 </button>
                 {playlists &&
-                  playlists.map(playlist => (
+                  playlists.map(localPlaylist => (
                     <button
-                      key={playlist.id}
+                      key={localPlaylist.id}
                       className="dropdown-option"
-                      onClick={() => addSongsToPlaylist(songsIds, playlist.id)}
+                      onClick={() => addSongsToPlaylist(songsIds, localPlaylist.id)}
                     >
-                      {playlist.name}
+                      {localPlaylist.name}
                     </button>
                   ))}
               </div>
             </React.Fragment>
           </div>
           <button className="dropdown-option">Edit</button>
-          <button className="dropdown-option" onClick={this.deleteSongs}>
-            Delete
-          </button>
           <button className="dropdown-option" onClick={() => this.props.playLater({ ids: songsIds })}>
             Play Later
+          </button>
+          {playlist && (
+            <button className="dropdown-option" onClick={e => this.deleteSong(e, 'playlist')}>
+              Delete from Playlist
+            </button>
+          )}
+
+          <button className="dropdown-option" onClick={e => this.deleteSong(e, 'library')}>
+            Delete from Library
           </button>
         </div>
       </div>
@@ -126,6 +151,6 @@ class Dropdown extends React.Component<Props, State> {
 }
 
 export default connect(
-  ({ songs }) => ({ activeSong: songs.playlist[songs.songIndex], playlist: songs.playlist }),
-  { setSongPlaylist, showPopup, incrementNonce, playNext, playLater },
+  ({ songs }) => ({ activeSong: songs.playlist[songs.songIndex], nonce: songs.nonce }),
+  { showPopup, incrementNonce, playNext, playLater },
 )(Dropdown)
