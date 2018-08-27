@@ -107,7 +107,7 @@ class Songs extends React.Component<Props, State> {
                       <button onClick={() => this.playAtIndex(index)}>
                         <i className="material-icons song-play-btn btn-blue">play_arrow</i>
                       </button>
-                      <Dropdown songsIds={song.id} />
+                      <Dropdown songsIds={[song.id]} />
                     </td>
                   </tr>
                 ))}

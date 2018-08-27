@@ -97,7 +97,7 @@ class Downloader extends React.Component<Props, State> {
   }
 
   render() {
-    return <div />
+    return null
   }
 }
 

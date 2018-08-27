@@ -1,6 +1,6 @@
 // @flow
 
-import React from 'react'
+import * as React from 'react'
 import connect from '~/common/connect'
 
 import { type Popup, showPopup } from '~/redux/popup'
@@ -55,7 +55,7 @@ class PlayerScreen extends React.Component<Props, State> {
     const { showPlaylistPopup } = this.state
 
     return (
-      <div>
+      <React.Fragment>
         {showPlaylistPopup !== null && (
           <PopupComponent hash={showPlaylistPopup.toString()} songsIds={this.props.popup.songsIds} />
         )}
@@ -65,12 +65,15 @@ class PlayerScreen extends React.Component<Props, State> {
           <Sidebar />
           <ActiveRoute />
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }
 
-export default connect(({ router, popup }) => ({
-  route: router.route,
-  popup: popup.popup,
-}))(PlayerScreen)
+export default connect(
+  ({ router, popup, songs }) =>
+    console.log(songs.playlist) || {
+      route: router.route,
+      popup: popup.popup,
+    },
+)(PlayerScreen)

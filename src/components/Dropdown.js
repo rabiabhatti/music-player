@@ -7,14 +7,19 @@ import { connect } from 'react-redux'
 import db from '~/db'
 import { showPopup } from '~/redux/popup'
 import getEventPath from '~/common/getEventPath'
-import { addSongsToPlaylist } from '~/common/songs'
-import { setSongPlaylist } from '~/redux/songs'
+import { setSongPlaylist, incrementNonce, playNext, playLater } from '~/redux/songs'
+import { addSongsToPlaylist, deleteSongsFromLibrary } from '~/common/songs'
 
 import '~/css/dropdown.css'
 
 type Props = {|
+  activeSong: number,
   showPopup: showPopup,
+  playlist: Array<number>,
   songsIds: Array<number>,
+  playNext: typeof playNext,
+  incrementNonce: () => void,
+  playLater: typeof playLater,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
@@ -55,6 +60,16 @@ class Dropdown extends React.Component<Props, State> {
     }
   }
 
+  deleteSongs = (e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const { songsIds } = this.props
+    if (songsIds.includes(this.props.activeSong)) {
+      this.props.playNext()
+    }
+    deleteSongsFromLibrary(songsIds)
+    this.props.incrementNonce()
+  }
+
   render() {
     const { playlists } = this.state
     const { songsIds } = this.props
@@ -70,7 +85,7 @@ class Dropdown extends React.Component<Props, State> {
         <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
           <div className="align-center space-between sub-dropdown-trigger">
             <button className="btn-dull">Add to Playlist</button>
-            <i className="material-icons">play_arrow</i>
+            <i className="material-icons">arrow_right</i>
             <React.Fragment>
               <div className="sub-dropdown-content dropdown-content hidden">
                 <button
@@ -98,9 +113,12 @@ class Dropdown extends React.Component<Props, State> {
             </React.Fragment>
           </div>
           <button className="dropdown-option">Edit</button>
-          <button className="dropdown-option">Play Later</button>
-          <button className="dropdown-option">Play Later</button>
-          <button className="dropdown-option">Delete from Library</button>
+          <button className="dropdown-option" onClick={this.deleteSongs}>
+            Delete
+          </button>
+          <button className="dropdown-option" onClick={() => this.props.playLater({ ids: songsIds })}>
+            Play Later
+          </button>
         </div>
       </div>
     )
@@ -108,6 +126,6 @@ class Dropdown extends React.Component<Props, State> {
 }
 
 export default connect(
-  null,
-  { setSongPlaylist, showPopup },
+  ({ songs }) => ({ activeSong: songs.playlist[songs.songIndex], playlist: songs.playlist }),
+  { setSongPlaylist, showPopup, incrementNonce, playNext, playLater },
 )(Dropdown)

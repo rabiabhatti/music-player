@@ -10,6 +10,7 @@ const SET_SONG_VOLUME = 'SONGS/SET_SONG_VOLUME'
 const SET_SONG_MUTE = 'SONGS/SET_SONG_MUTE'
 
 const PLAY_NEXT = 'SONGS/PLAY_NEXT'
+const PLAY_LATER = 'SONGS/PLAY_LATER'
 const PLAY_PREVIOUS = 'SONGS/PLAY_PREVIOUS'
 
 const SONG_PLAY = 'SONGS/SONG_PLAY'
@@ -24,6 +25,7 @@ export const setSongVolume = createAction(SET_SONG_VOLUME)
 export const setSongMute = createAction(SET_SONG_MUTE)
 
 export const playNext = createAction(PLAY_NEXT)
+export const playLater = createAction(PLAY_LATER)
 export const playPrevious = createAction(PLAY_PREVIOUS)
 
 export const songPlay = createAction(SONG_PLAY)
@@ -71,6 +73,14 @@ export default handleActions(
       state.merge({
         songIndex: (state.songIndex + 1) % state.playlist.length,
       }),
+    [PLAY_LATER]: (state: SongsState, { payload }) => {
+      let playlist = state.playlist
+      playlist.splice(state.songIndex + 1, 0, payload.ids)
+      console.log(playlist)
+      state.merge({
+        playlist,
+      })
+    },
     [PLAY_PREVIOUS]: (state: SongsState) => {
       let newIndex = state.songIndex - 1
       if (newIndex < 0) {

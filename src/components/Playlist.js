@@ -40,33 +40,40 @@ class Playlist extends React.Component<Props, State> {
   async componentWillReceiveProps(nextProps) {
     const oldPlaylist = this.props.route.id
     const newPlaylist = nextProps.route.id
+    // console.log('should called nounce', nextProps.nonce, this.props.nonce)
 
     const playlist = await db.playlists.get(newPlaylist)
+    if (nextProps.nonce !== this.props.nonce) {
+      console.log('m called')
+      this.fetchSongs(playlist)
+    }
+
     if (newPlaylist !== oldPlaylist) {
       this.setState({ playlist })
       this.setState({ songs: [] })
-
       this.fetchSongs(playlist)
-      return
     }
 
-    if (nextProps.nonce !== this.props.nonce) {
-      this.fetchSongs(playlist)
-      return
-    }
+    // console.log('end nonce')
   }
 
   fetchSongs = (playlist: Object) => {
-    if (playlist.songs.length) {
-      playlist.songs.forEach(async songsId => {
-        const song = await db.songs.get(songsId)
-        if (song) {
-          this.setState(prevState => ({
-            songs: [...prevState.songs, song],
-          }))
-        }
-      })
-    }
+    db.playlists.get(playlist.id).then(dbplaylist => {
+      // console.log(dbplaylist)
+      // // dbplaylist.songs.forEach(song => {
+      // //   this.setState({ songs: song })
+      // // })
+      if (dbplaylist.songs.length) {
+        dbplaylist.songs.forEach(async songsId => {
+          const song = await db.songs.get(songsId)
+          if (song) {
+            this.setState(prevState => ({
+              songs: [...prevState.songs, song],
+            }))
+          }
+        })
+      }
+    })
   }
 
   componentWillUnmount() {
@@ -130,7 +137,7 @@ class Playlist extends React.Component<Props, State> {
                       <button onClick={() => this.playAtIndex(index)}>
                         <i className="material-icons song-play-btn btn-blue">play_arrow</i>
                       </button>
-                      <Dropdown songsIds={song.id} />
+                      <Dropdown songsIds={[song.id]} />
                     </td>
                   </tr>
                 ))}
