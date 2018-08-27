@@ -165,8 +165,8 @@ class Player extends React.Component<Props, State> {
         <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
-              <h1 className="song-title">{activeSong ? songName : 'Empty'}</h1>
-              <h4 className="song-artist">{activeSong ? songArtist : 'Empty'}</h4>
+              <h1 className="song-title">{activeSong ? songName : ''}</h1>
+              <h4 className="song-artist">{activeSong ? songArtist : ''}</h4>
             </div>
           </div>
           <div className="section-player-controls align-center space-between">
