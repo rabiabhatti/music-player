@@ -5,7 +5,6 @@
   height: auto;
   z-index: 50;
   position: fixed;
-  padding-top: 1rem;
   max-height: 12.5rem;
   color: #ffffff !important;
 }
