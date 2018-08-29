@@ -12,8 +12,10 @@ sketchy-null-string=warn
 unclear-type=warn
 untyped-import=off
 
+
 [options]
 module.system=node
+esproposal.optional_chaining=enable
 module.name_mapper='^~/\(.*\)$' -> '<PROJECT_ROOT>/src/\1'
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
 suppress_comment= \\(.\\|\n\\)*\\$FlowIgnore
