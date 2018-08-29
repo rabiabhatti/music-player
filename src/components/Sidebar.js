@@ -4,9 +4,9 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
-import { showPopup } from '~/redux/popup'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
+import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 import '~/css/sidebar.css'
 import Picker from './Picker'
 import Logout from './Logout'
@@ -14,16 +14,17 @@ import Logout from './Logout'
 type Props = {|
   nonce: number,
   route: RouterRoute,
-  showPopup: showPopup,
   navigateTo: navigateTo,
 |}
 type State = {|
   playlists: Array<Object>,
+  showCreatePlaylistModal: boolean,
 |}
 
 class Sidebar extends React.Component<Props, State> {
   state = {
     playlists: [],
+    showCreatePlaylistModal: false,
   }
 
   componentDidMount() {
@@ -40,6 +41,13 @@ class Sidebar extends React.Component<Props, State> {
     })
   }
 
+  showCreatePlaylistModal = () => {
+    this.setState({ showCreatePlaylistModal: true })
+  }
+  hideCreatePlaylistModal = () => {
+    this.setState({ showCreatePlaylistModal: false })
+  }
+
   renderNavigationItem(icon: string, routeName: RouteName, name: string = routeName, id: number | null = null) {
     const { route } = this.props
 
@@ -48,9 +56,7 @@ class Sidebar extends React.Component<Props, State> {
         key={`route-${name}-${id !== null ? id : 'none'}`}
         className={`content-row align-center btn-dull ${route.name === routeName && route.id === id ? 'active' : ''}`}
         onClick={() =>
-          routeName === 'NewPlaylist'
-            ? this.props.showPopup({ show: true, songsIds: [] })
-            : this.props.navigateTo({ name: routeName, id })
+          routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.props.navigateTo({ name: routeName, id })
         }
       >
         <i className="material-icons row-icon">{icon}</i>
@@ -60,10 +66,11 @@ class Sidebar extends React.Component<Props, State> {
   }
 
   render() {
-    const { playlists } = this.state
+    const { playlists, showCreatePlaylistModal } = this.state
 
     return (
       <div className="section-sidebar">
+        {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} />}
         <div className="flex-column">
           <input id="sidebar-search-input" type="text" placeholder="Search" />
           <div className="sidebar-content flex-column">
@@ -91,6 +98,5 @@ export default connect(
   ({ router, songs }) => ({ route: router.route, nonce: songs.nonce }),
   {
     navigateTo,
-    showPopup,
   },
 )(Sidebar)

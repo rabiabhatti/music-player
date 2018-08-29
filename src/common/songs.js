@@ -70,12 +70,17 @@ export function deleteSongFromPlaylist(playlist: Object, id: number) {
   }
 }
 
-export function deleteSongsFromLibrary(songsIds: Array<number>, playlist?: Object) {
+export function deleteSongsFromLibrary(songsIds: Array<number>) {
   songsIds.forEach(async id => {
     await db.songs.delete(id)
-    if (playlist) {
+    const dbPlaylists = await db.playlists
+      .where('songs')
+      .equals(id)
+      .distinct()
+      .toArray()
+    dbPlaylists.forEach(playlist => {
       deleteSongFromPlaylist(playlist, id)
-    }
+    })
   })
 }
 

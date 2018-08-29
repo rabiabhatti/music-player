@@ -3,12 +3,10 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import { type Popup } from '~/redux/popup'
 import type { RouteName, RouterRoute } from '~/redux/router'
 
 import '~/css/general.css'
 
-import PopupComponent from '~/components/Popup'
 import Albums from '~/components/Albums'
 import Player from '~/components/Player'
 import Sidebar from '~/components/Sidebar'
@@ -29,47 +27,24 @@ const ROUTES: { [RouteName]: $FlowFixMe } = {
 }
 
 type Props = {|
-  popup: Popup,
   route: RouterRoute,
 |}
-type State = {|
-  showPlaylistPopup: number | null,
-|}
 
-class PlayerScreen extends React.Component<Props, State> {
-  state = {
-    showPlaylistPopup: null,
-  }
+function PlayerScreen(props: Props) {
+  const ActiveRoute = ROUTES[props.route.name]
 
-  componentWillReceiveProps({ popup }) {
-    if (popup.show) {
-      this.setState({ showPlaylistPopup: Date.now() })
-    } else {
-      this.setState({ showPlaylistPopup: null })
-    }
-  }
-
-  render() {
-    const ActiveRoute = ROUTES[this.props.route.name]
-    const { showPlaylistPopup } = this.state
-
-    return (
-      <React.Fragment>
-        {showPlaylistPopup !== null && (
-          <PopupComponent hash={showPlaylistPopup.toString()} songsIds={this.props.popup.songsIds} />
-        )}
-        <Downloader />
-        <Player />
-        <div className="app-wrapper space-between">
-          <Sidebar />
-          <ActiveRoute />
-        </div>
-      </React.Fragment>
-    )
-  }
+  return (
+    <React.Fragment>
+      <Downloader />
+      <Player />
+      <div className="app-wrapper space-between">
+        <Sidebar />
+        <ActiveRoute />
+      </div>
+    </React.Fragment>
+  )
 }
 
-export default connect(({ router, popup }) => ({
+export default connect(({ router }) => ({
   route: router.route,
-  popup: popup.popup,
 }))(PlayerScreen)

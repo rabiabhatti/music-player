@@ -25,3 +25,7 @@
   font-size: 1.6rem;
   margin-bottom: 0.5rem;
 }
+.popup-content input[type='text'] {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.5rem !important;
+}

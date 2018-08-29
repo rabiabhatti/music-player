@@ -153,6 +153,10 @@ input[type='text']:focus {
   font-size: 3.3rem;
   text-shadow: 2px 2px 1px #bdbdbd;
 }
+
+.error {
+  border: 1px solid #ef9a9a !important;
+}
 @media screen and (max-width: 768px) {
   html {
     font-size: 14px;

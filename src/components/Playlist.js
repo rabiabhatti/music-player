@@ -123,7 +123,7 @@ class Playlist extends React.Component<Props, State> {
                       <button onClick={() => this.playAtIndex(index)}>
                         <i className="material-icons song-play-btn btn-blue">play_arrow</i>
                       </button>
-                      <Dropdown songsIds={[song.id]} playlist={playlist} />
+                      <Dropdown songsIds={[song.id]} playlist={playlist} song={song} />
                     </td>
                   </tr>
                 ))}
