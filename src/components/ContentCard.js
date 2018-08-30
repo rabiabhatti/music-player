@@ -12,40 +12,30 @@ type Props = {|
   songs: Array<Object>,
   selected: Object,
 |}
-type State = {|
-  hidden: boolean,
-|}
 
-export default class ContentCard extends React.Component<Props, State> {
-  state = {
-    hidden: true,
-  }
+export default function ContentCard(props: Props) {
+  const { songs, selected } = props
+  const songsByAlbums = groupBy(songs, 'meta.album')
 
-  render() {
-    const { hidden } = this.state
-    const { songs, selected } = this.props
-    const songsByAlbums = groupBy(songs, 'meta.album')
+  const songsIdsArr = []
+  songs.forEach(song => {
+    songsIdsArr.push(song.id)
+  })
 
-    const songsIdsArr = []
-    songs.forEach(song => {
-      songsIdsArr.push(song.id)
-    })
-
-    return (
-      <div className={`section-artist ${selected ? 'show' : 'hidden'}`}>
-        <div className="space-between section-artist-header">
-          <div>
-            <h2>{selected.identifier === 'all' ? `All ${selected.type}s` : selected.identifier}</h2>
-            <p>
-              {Object.keys(songsByAlbums).length} albums, {songs.length} songs
-            </p>
-          </div>
-          <Dropdown songsIds={songsIdsArr} />
+  return (
+    <div className={`section-artist ${selected ? 'show' : 'hidden'}`}>
+      <div className="space-between section-artist-header">
+        <div>
+          <h2>{selected.identifier === 'all' ? `All ${selected.type}s` : selected.identifier}</h2>
+          <p>
+            {Object.keys(songsByAlbums).length} albums, {songs.length} songs
+          </p>
         </div>
-        {Object.keys(songsByAlbums).map(albumName => (
-          <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
-        ))}
+        <Dropdown songsIds={songsIdsArr} />
       </div>
-    )
-  }
+      {Object.keys(songsByAlbums).map(albumName => (
+        <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
+      ))}
+    </div>
+  )
 }
