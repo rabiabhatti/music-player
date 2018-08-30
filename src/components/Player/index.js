@@ -8,7 +8,7 @@ import services from '~/services'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
-import { playNext, playPrevious, songPlay, songPause } from '~/redux/songs'
+import { playNext, playPrevious, songPlay, songPause, incrementNonce } from '~/redux/songs'
 
 import '~/css/slider.css'
 import '~/css/player.css'
@@ -33,6 +33,9 @@ class Player extends React.Component<Props, State> {
     super(props, context)
     this.audioElement = document.createElement('audio')
     this.audioElement.addEventListener('ended', this.handleEnded)
+    this.audioElement.addEventListener('canplay', () => {
+      this.updateDuration()
+    })
   }
 
   state = {
@@ -138,6 +141,17 @@ class Player extends React.Component<Props, State> {
       this.internalPlay()
     }
   }
+
+  updateDuration = () => {
+    const song = this.state.activeSong
+    if (song && !song.duration) {
+      db.songs.update(song.id, {
+        duration: this.audioElement.duration,
+      })
+      this.props.dispatch(incrementNonce())
+    }
+  }
+
   internalPause() {
     this.audioElement.pause()
   }
@@ -150,7 +164,7 @@ class Player extends React.Component<Props, State> {
     const { activeSong } = this.state
 
     let songName = activeSong ? activeSong.filename : ''
-    let coverImg = activeSong?.artwork?.album?.uri ? activeSong.artwork.album.uri : cover
+    let coverImg
     let songArtist = activeSong ? 'Unknown' : ''
     if (activeSong) {
       if (activeSong.meta && activeSong.meta.name) {
@@ -158,6 +172,12 @@ class Player extends React.Component<Props, State> {
       }
       if (activeSong.meta && activeSong.meta.artists_original) {
         songArtist = activeSong.meta.artists_original
+      }
+
+      if (activeSong.artwork && activeSong.artwork.album && activeSong.artwork.album.uri !== null) {
+        coverImg = activeSong.artwork.album.uri
+      } else {
+        coverImg = cover
       }
     }
 
