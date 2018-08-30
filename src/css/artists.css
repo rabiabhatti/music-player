@@ -7,11 +7,12 @@
   position: fixed;
   min-width: 19.4%;
   overflow-y: auto;
-  max-height: calc(100vh - 12.5rem);
+  max-height: calc(100vh - 11.5rem);
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 }
 .artists-bar-row {
   padding: 0.6rem;
+  min-width: 100%;
   font-size: 0.8rem;
   transition: all 0.1s ease-in-out;
 }
@@ -19,11 +20,6 @@
 .active {
   color: #757575 !important;
   background-color: rgba(0, 0, 0, 0.07);
-}
-.section-artists-info {
-  left: 24.4%;
-  width: 75.6%;
-  position: relative;
 }
 @media screen and (max-width: 480px) {
   .artists-bar {

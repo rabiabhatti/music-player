@@ -10,40 +10,42 @@ import AlbumInfo from './AlbumInfo'
 
 type Props = {|
   songs: Array<Object>,
-  selected: ?Object,
+  selected: Object,
+|}
+type State = {|
+  hidden: boolean,
 |}
 
-export default (props: Props) => {
-  const { songs, selected } = props
-  let songsToShow = songs
-  if (selected) {
-    if (selected.type === 'artist') {
-      songsToShow = songs.filter(item => item.meta && item.meta.artists.includes(selected.identifier))
-    } else if (selected.type === 'genre') {
-      songsToShow = songs.filter(item => item.meta && item.meta.genre && item.meta.genre.includes(selected.identifier))
-    }
+export default class ContentCard extends React.Component<Props, State> {
+  state = {
+    hidden: true,
   }
-  const songsByAlbums = groupBy(songsToShow, 'meta.album')
 
-  const songsIdsArr = []
-  songsToShow.forEach(song => {
-    songsIdsArr.push(song.id)
-  })
+  render() {
+    const { hidden } = this.state
+    const { songs, selected } = this.props
+    const songsByAlbums = groupBy(songs, 'meta.album')
 
-  return (
-    <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
-      <div className="space-between section-artist-header">
-        <div>
-          <h2>{selected ? selected.identifier : 'All Artists'}</h2>
-          <p>
-            {Object.keys(songsByAlbums).length} albums, {songsToShow.length} songs
-          </p>
+    const songsIdsArr = []
+    songs.forEach(song => {
+      songsIdsArr.push(song.id)
+    })
+
+    return (
+      <div className={`section-artist ${selected ? 'show' : 'hidden'}`}>
+        <div className="space-between section-artist-header">
+          <div>
+            <h2>{selected.identifier === 'all' ? `All ${selected.type}s` : selected.identifier}</h2>
+            <p>
+              {Object.keys(songsByAlbums).length} albums, {songs.length} songs
+            </p>
+          </div>
+          <Dropdown songsIds={songsIdsArr} />
         </div>
-        <Dropdown songsIds={songsIdsArr} />
+        {Object.keys(songsByAlbums).map(albumName => (
+          <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
+        ))}
       </div>
-      {Object.keys(songsByAlbums).map(albumName => (
-        <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
-      ))}
-    </div>
-  )
+    )
+  }
 }

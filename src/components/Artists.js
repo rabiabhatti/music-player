@@ -12,16 +12,23 @@ import ContentCard from './ContentCard'
 type Props = {||}
 type State = {|
   songs: Array<File>,
-  selected: ?{|
+  selected: {|
     type: string,
     identifier: string,
   |},
+  songsByArtist: Array<File>,
 |}
+
+const DEFAULT_SELETED = {
+  type: 'artist',
+  identifier: 'all',
+}
 
 export default class Artists extends React.Component<Props, State> {
   state = {
     songs: [],
-    selected: null,
+    selected: DEFAULT_SELETED,
+    songsByArtist: [],
   }
 
   componentDidMount() {
@@ -34,44 +41,45 @@ export default class Artists extends React.Component<Props, State> {
   }
 
   render() {
-    const { songs, selected } = this.state
+    const { songs, selected, songsByArtist } = this.state
     const artists = getArtistsFromSongs(songs)
 
     return (
       <React.Fragment>
-        {this.state.songs.length ? (
+        {songs.length ? (
           <div className="section-artists bound">
             <div className="artists-bar">
-              <a
-                className={`align-center artists-bar-row ${selected && selected.type === 'artist' ? '' : 'active'}`}
-                href="#allArtists"
-                onClick={() => this.setState({ selected: null })}
+              <button
+                className={`align-center btn-dull artists-bar-row ${
+                  selected && selected.type === 'artist' && selected.identifier === 'all' ? 'active' : ''
+                }`}
+                onClick={() => this.setState({ selected: { type: 'artist', identifier: 'all' } })}
               >
                 <i className="material-icons artists-bar-row-icon">mic</i>
                 <span>All Artists</span>
-              </a>
-              {artists.map(artist => (
-                <a
-                  className={`align-center artists-bar-row ${
-                    selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
-                  }`}
-                  key={artist}
-                  href={`#${artist}`}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                    this.setState({
-                      selected: { type: 'artist', identifier: artist },
-                    })
-                  }
-                >
-                  <i className="material-icons artists-bar-row-icon">person</i>
-                  <span>{artist}</span>
-                </a>
-              ))}
+              </button>
+              {Object.keys(artists).map(artist => {
+                const songsByArtist = artists[artist]
+                return (
+                  <button
+                    key={artist}
+                    className={`align-center btn-dull artists-bar-row ${
+                      selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
+                    }`}
+                    onClick={() =>
+                      this.setState({
+                        selected: { type: 'artist', identifier: artist },
+                        songsByArtist,
+                      })
+                    }
+                  >
+                    <i className="material-icons artists-bar-row-icon">person</i>
+                    <span>{artist}</span>
+                  </button>
+                )
+              })}
             </div>
-            <div className="section-artists-info">
-              <ContentCard songs={songs} selected={selected && selected.type === 'artist' ? selected : null} />
-            </div>
+            <ContentCard songs={songsByArtist} selected={selected} />
           </div>
         ) : (
           <div className="align-center justify-center bound" style={{ height: 300 }}>

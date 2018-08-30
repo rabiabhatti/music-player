@@ -87,7 +87,7 @@ class Albums extends React.Component<Props, State> {
                       >
                         <h4 className="album-name">{album}</h4>
                         <p className="album-artist">
-                          {album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.album_artists : 'Unknown'}
+                          {album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}
                         </p>
                       </button>
                     </div>

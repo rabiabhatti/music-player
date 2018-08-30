@@ -3,39 +3,6 @@
 import db from '~/db'
 import type { File } from '~/types'
 
-export function getArtistsFromSongs(songs: Array<File>): Array<string> {
-  const artists = new Set()
-
-  songs.forEach(function(song) {
-    const { meta } = song
-    if (meta) {
-      if (meta.artists.length === 0) {
-        artists.add('Unknown')
-      }
-      meta.artists.forEach(item => artists.add(item))
-    }
-  })
-
-  return Array.from(artists)
-}
-
-export function getGenresFromSongs(songs: Array<File>): Array<string> {
-  const genres = new Set()
-
-  songs.forEach(function(song) {
-    const { meta } = song
-    if (meta) {
-      if (typeof meta.genre === 'undefined' || meta.genre[0] === '') {
-        genres.add('Unknown')
-      } else {
-        meta.genre.forEach(item => genres.add(item))
-      }
-    }
-  })
-
-  return Array.from(genres)
-}
-
 export function getAlbumsFromSongs(songs: Array<File>): { [string]: Array<File> } {
   const albums = {}
 
@@ -53,6 +20,62 @@ export function getAlbumsFromSongs(songs: Array<File>): { [string]: Array<File> 
   })
 
   return albums
+}
+
+export function getArtistsFromSongs(songs: Array<File>): { [string]: Array<File> } {
+  const artists = {}
+
+  songs.forEach(function(song) {
+    const { meta } = song
+    const artistsArr = []
+    if (meta && meta.album_artists.length) {
+      meta.album_artists.forEach(artist => {
+        artistsArr.push(artist)
+      })
+    } else {
+      artistsArr.push('Unknown')
+    }
+
+    artistsArr.forEach(artistName => {
+      let artistsSongs = artists[artistName]
+      if (!artistsSongs) {
+        artistsSongs = []
+        artists[artistName] = artistsSongs
+      }
+
+      artistsSongs.push(song)
+    })
+  })
+
+  return artists
+}
+
+export function getGenresFromSongs(songs: Array<File>): { [string]: Array<File> } {
+  const genres = {}
+
+  songs.forEach(function(song) {
+    const { meta } = song
+    const genresArr = []
+    if (meta && meta.genre && meta.genre.length) {
+      meta.genre.forEach(genre => {
+        genresArr.push(genre)
+      })
+    } else {
+      genresArr.push('Unknown')
+    }
+
+    genresArr.forEach(genre => {
+      let genresSongs = genres[genre]
+      if (!genresSongs) {
+        genresSongs = []
+        genres[genre] = genresSongs
+      }
+
+      genresSongs.push(song)
+    })
+  })
+
+  return genres
 }
 
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {

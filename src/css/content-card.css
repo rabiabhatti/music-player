@@ -1,13 +1,10 @@
 .section-artist {
-  height: 100vh;
+  left: 24.4%;
+  width: 75.6%;
+  position: relative;
   background-color: #f8f8f6;
-  max-height: calc(100vh - 12.5rem);
-}
-.section-artists-info .section-artist {
-  display: none;
-}
-.section-artists-info .section-artist:target {
-  display: block;
+  height: calc(100vh - 11.5rem);
+  max-height: calc(100vh - 11.5rem);
 }
 .section-artist-header {
   position: relative;
