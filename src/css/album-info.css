@@ -82,7 +82,7 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.13);
 }
 .song-info p:nth-child(2) {
-  width: 80%;
+  width: 82%;
 }
 .song-info p {
   transition: opacity 0.1s ease-in-out;

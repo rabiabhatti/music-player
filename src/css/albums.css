@@ -18,10 +18,14 @@
 }
 .album-artist {
   margin: 0;
+  color: #757575;
   overflow: hidden;
   font-size: 0.8rem;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.album-infomation {
+  align-items: flex-start !important;
 }
 @media screen and (max-width: 480px) {
   .album-content {

@@ -150,6 +150,7 @@ class Player extends React.Component<Props, State> {
     const { activeSong } = this.state
 
     let songName = activeSong ? activeSong.filename : ''
+    let coverImg = activeSong?.artwork?.album?.uri ? activeSong.artwork.album.uri : cover
     let songArtist = activeSong ? 'Unknown' : ''
     if (activeSong) {
       if (activeSong.meta && activeSong.meta.name) {
@@ -162,7 +163,7 @@ class Player extends React.Component<Props, State> {
 
     return (
       <div className="section-player">
-        <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
+        <div className="section-player-cover" style={{ backgroundImage: `url(${coverImg})` }}>
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
               <h1 className="song-title">{activeSong ? songName : ''}</h1>

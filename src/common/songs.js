@@ -36,17 +36,23 @@ export function getGenresFromSongs(songs: Array<File>): Array<string> {
   return Array.from(genres)
 }
 
-export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
-  const albums = new Set()
+export function getAlbumsFromSongs(songs: Array<File>): { [string]: Array<File> } {
+  const albums = {}
 
   songs.forEach(function(song) {
     const { meta } = song
-    if (meta) {
-      albums.add(meta.album || 'Unknown')
+    const albumName = meta && meta.album ? meta.album : 'Unknown'
+
+    let albumSongs = albums[albumName]
+    if (!albumSongs) {
+      albumSongs = []
+      albums[albumName] = albumSongs
     }
+
+    albumSongs.push(song)
   })
 
-  return Array.from(albums)
+  return albums
 }
 
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {

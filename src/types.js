@@ -2,12 +2,14 @@
 
 export type ServiceName = 'GoogleDrive'
 
-export type ArtWork = {
-  source: ServiceName,
-  sourceId: string,
-  sourceUid: string,
-  filename: string,
-}
+export type ArtWork =
+  | {
+      source: ServiceName,
+      sourceId: string,
+      sourceUid: string,
+      filename: string,
+    }
+  | { uri: ?string }
 
 export type FileMeta = {|
   name: string,
@@ -24,7 +26,7 @@ export type FileMeta = {|
 
 export type FileArtwork = {|
   album: ?ArtWork,
-  artwork: ?ArtWork,
+  artwork?: ?ArtWork,
 |}
 
 export type File = {

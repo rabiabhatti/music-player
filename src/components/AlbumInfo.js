@@ -42,7 +42,7 @@ class AlbumInfo extends React.Component<Props, State> {
           <div className="album-title flex-column">
             <div className="album-cover">
               <div className="album-cover-filter" />
-              <img alt="album-cover" className="album-cover-img" src={null} />
+              <img alt="album-cover" className="album-cover-img" src={songs[0].artwork.album.uri} />
               <button className="album-cover-icon align-center">
                 <i className="material-icons album-play-btn">play_circle_outline</i>
               </button>

@@ -6,11 +6,15 @@ import connect from '~/common/connect'
 
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
+import { normalizeArtist } from '~/parser'
 
 import Popup from './Popup'
 
 function validateField(field: string, fields: Object, song: Object) {
-  return fields[field] === '' || (fields[field].replace(/\s/g, '') === '' && song.meta[field] === undefined)
+  if (field === 'artists') {
+    return (fields[field] === '' || fields[field].replace(/\s/g, '') === '') && song.meta.artists_original === undefined
+  }
+  return (fields[field] === '' || fields[field].replace(/\s/g, '') === '') && song.meta[field] === undefined
 }
 
 function validate(fields: Object, song: Object) {
@@ -74,14 +78,16 @@ class EditSong extends React.Component<Props, State> {
     const info = this.state.fields
     const localGenre = info.genre.split(',')
     const localArtists = info.artists.split(',')
+    const localSong = this.props.song.meta
+
     db.songs.update(this.props.song.id, {
-      album: info.album,
-      'meta.name': info.name,
-      'meta.album': info.album,
-      'meta.genre': localGenre,
-      'meta.artists': localArtists,
-      album_artists: localArtists,
-      'meta.artists_original': localArtists,
+      'meta.name': info.name !== '' ? info.name : localSong.name,
+      'meta.album': info.album !== '' ? info.album : localSong.album,
+      'meta.genre': info.genre !== '' ? localGenre : localSong.genre,
+      'meta.artists': info.artists !== '' ? normalizeArtist(localArtists) : localSong.artists,
+      'meta.artists_original': info.artists !== '' ? localArtists : localSong.artists_original,
+      'meta.album_artists': info.artists !== '' ? normalizeArtist(localArtists) : localSong.album_artists,
+      'meta.album_artists_original': info.artists !== '' ? localArtists : localSong.album_artists_original,
     })
     this.props.incrementNonce()
     this.props.handleClose()
@@ -137,7 +143,7 @@ class EditSong extends React.Component<Props, State> {
           onChange={this.handleChange}
           onBlur={this.handleBlur('artists')}
           className={shouldMarkError('artists') ? 'error' : ''}
-          placeholder={song.meta && song.meta.artists ? song.meta.artists : 'Artists'}
+          placeholder={song.meta && song.meta.artists_original ? song.meta.artists_original : 'Artists'}
         />
         <button className="btn-blue-border" onClick={this.saveSongInfo} disabled={isDisabled}>
           Save
