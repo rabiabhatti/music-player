@@ -25,6 +25,7 @@
   text-overflow: ellipsis;
 }
 .album-infomation {
+  width: 100%;
   align-items: flex-start !important;
 }
 @media screen and (max-width: 480px) {

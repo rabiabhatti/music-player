@@ -4,9 +4,8 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
-import type { RouterRoute } from '~/redux/router'
 import { humanizeDuration } from '~/common/songs'
-import { setSongPlaylist, incrementNonce } from '~/redux/songs'
+import { setSongPlaylist } from '~/redux/songs'
 
 import '~/css/songs.css'
 import '~/css/table.css'
@@ -14,9 +13,11 @@ import Dropdown from './Dropdown'
 
 type Props = {|
   nonce: number,
-  route: RouterRoute,
+  route: {|
+    name: string,
+    id: number,
+  |},
   activeSong: number | null,
-  // incrementNonce: () => void,
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
@@ -115,13 +116,13 @@ class Playlist extends React.Component<Props, State> {
                     className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
                   >
                     <td>{song.meta.name || song.filename}</td>
-                    <td>{humanizeDuration(song.duration)}</td>
+                    <td>{!song.duration ? '' : humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>
                     <td>{song.meta.album || 'Unknown'}</td>
                     <td>{song.meta.genre || 'Unknown'} </td>
                     <td className="song-wrapper-btns space-between">
                       <button onClick={() => this.playAtIndex(index)}>
-                        <i className="material-icons song-play-btn btn-blue">play_arrow</i>
+                        <i className="material-icons btn-blue">play_arrow</i>
                       </button>
                       <Dropdown songsIds={[song.id]} playlist={playlist} song={song} />
                     </td>
@@ -146,5 +147,5 @@ export default connect(
     nonce: songs.nonce,
     activeSong: songs.playlist[songs.songIndex] || null,
   }),
-  { setSongPlaylist, incrementNonce },
+  { setSongPlaylist },
 )(Playlist)

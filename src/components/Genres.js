@@ -12,7 +12,7 @@ import ContentCard from './ContentCard'
 type Props = {||}
 type State = {|
   songs: Array<File>,
-  selected: ?{|
+  selected: {|
     type: string,
     identifier: string,
   |},
@@ -60,7 +60,7 @@ export default class Genres extends React.Component<Props, State> {
               </button>
 
               {Object.keys(genres).map(genre => {
-                const genresSongs = genres[genre]
+                const SongsByGenre = genres[genre]
                 return (
                   <button
                     key={genre}
@@ -70,7 +70,7 @@ export default class Genres extends React.Component<Props, State> {
                     onClick={() =>
                       this.setState({
                         selected: { type: 'artist', identifier: genre },
-                        genresSongs,
+                        genresSongs: SongsByGenre,
                       })
                     }
                   >

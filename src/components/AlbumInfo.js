@@ -81,7 +81,7 @@ class AlbumInfo extends React.Component<Props, State> {
                 <p>
                   {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
                 </p>
-                <p>{humanizeDuration(song.duration)}</p>
+                <p>{!song.duration ? '' : humanizeDuration(song.duration)}</p>
                 <div className="song-btns space-between">
                   <button onClick={() => this.playAtIndex(index)}>
                     <i className="material-icons song-play-btn btn-blue">play_arrow</i>

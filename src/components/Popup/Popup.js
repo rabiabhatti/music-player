@@ -32,7 +32,7 @@ export default class Popup extends React.Component<Props> {
 
   handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      this.close()
+      this.props.handleClose()
     }
   }
 
@@ -43,11 +43,8 @@ export default class Popup extends React.Component<Props> {
 
     const firedOnSelf = getEventPath(e).includes(this.ref)
     if (!firedOnSelf) {
-      this.close()
+      this.props.handleClose()
     }
-  }
-  close = () => {
-    this.element.remove()
   }
 
   render() {

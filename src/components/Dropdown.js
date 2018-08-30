@@ -112,14 +112,14 @@ class Dropdown extends React.Component<Props, State> {
 
     return (
       <div
-        className="section-dropdown"
+        className="section-dropdown align-center"
         ref={element => {
           this.ref = element
         }}
       >
         {showEditModal && <EditSong handleClose={this.hideEditModal} song={song} />}
         {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} songsIds={songsIds} />}
-        <i className="material-icons song-dropdown">more_horiz</i>
+        <i className="material-icons btn-blue">more_horiz</i>
         <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
           <div className="align-center space-between sub-dropdown-trigger">
             <button className="btn-dull">Add to Playlist</button>

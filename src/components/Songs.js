@@ -99,13 +99,13 @@ class Songs extends React.Component<Props, State> {
                     className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
                   >
                     <td>{song.meta.name || song.filename}</td>
-                    <td>{humanizeDuration(song.duration)}</td>
+                    <td>{!song.duration ? '' : humanizeDuration(song.duration)}</td>
                     <td>{song.meta.artists_original || 'Unknown'}</td>
                     <td>{song.meta.album || 'Unknown'}</td>
                     <td>{song.meta.genre || 'Unknown'} </td>
                     <td className="song-wrapper-btns space-between">
                       <button onClick={() => this.playAtIndex(index)}>
-                        <i className="material-icons song-play-btn btn-blue">play_arrow</i>
+                        <i className="material-icons btn-blue">play_arrow</i>
                       </button>
                       <Dropdown songsIds={[song.id]} song={song} />
                     </td>

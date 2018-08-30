@@ -25,6 +25,7 @@
 }
 .album-info-artist {
   color: #2f75ff;
+  text-align: left;
   font-size: 1.5rem;
 }
 .album-play-btn {
@@ -82,7 +83,7 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.13);
 }
 .song-info p:nth-child(2) {
-  width: 82%;
+  width: 87%;
 }
 .song-info p {
   transition: opacity 0.1s ease-in-out;
@@ -103,10 +104,6 @@
 }
 .song-info:hover .song-btns {
   opacity: 1;
-}
-.song-dropdown {
-  color: #2f75ff;
-  margin-top: 0.5rem;
 }
 
 @media screen and (max-width: 768px) {

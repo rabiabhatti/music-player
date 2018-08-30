@@ -44,10 +44,12 @@ tbody tr {
 }
 .song-wrapper-btns {
   left: 0;
+  top: 0;
+  bottom: 0;
   border: 0;
   opacity: 0;
+  padding: 0;
   width: 100%;
-  top: -0.7rem;
   position: absolute;
   transition: opacity 0.1s ease-in-out;
 }
@@ -56,8 +58,5 @@ tbody tr {
 }
 td:first-child,
 th:first-child {
-  overflow: hidden;
   padding-left: 2rem;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }

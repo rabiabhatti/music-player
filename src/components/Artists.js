@@ -59,7 +59,7 @@ export default class Artists extends React.Component<Props, State> {
                 <span>All Artists</span>
               </button>
               {Object.keys(artists).map(artist => {
-                const songsByArtist = artists[artist]
+                const artistsSongs = artists[artist]
                 return (
                   <button
                     key={artist}
@@ -69,7 +69,7 @@ export default class Artists extends React.Component<Props, State> {
                     onClick={() =>
                       this.setState({
                         selected: { type: 'artist', identifier: artist },
-                        songsByArtist,
+                        songsByArtist: artistsSongs,
                       })
                     }
                   >
