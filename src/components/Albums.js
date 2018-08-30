@@ -1,9 +1,10 @@
 // @flow
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 
 import db from '~/db'
-import type { File } from '~/types'
+import { setSongPlaylist } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'
 
 import '~/css/albums.css'
@@ -11,16 +12,18 @@ import AlbumInfo from './AlbumInfo'
 
 import cover from '../static/img/album-cover.jpg'
 
-type Props = {||}
+type Props = {|
+  setSongPlaylist: setSongPlaylist,
+|}
 type State = {|
-  songs: Array<File>,
+  songs: Array<Object>,
   selected: ?{|
     type: string,
     identifier: string,
   |},
 |}
 
-export default class Albums extends React.Component<Props, State> {
+class Albums extends React.Component<Props, State> {
   state = {
     songs: [],
     selected: null,
@@ -33,6 +36,13 @@ export default class Albums extends React.Component<Props, State> {
   fetchSongs = async () => {
     const dbSongs = await db.songs.toArray()
     this.setState({ songs: dbSongs })
+  }
+
+  playAtIndex = (songs: Array<Object>, index: number) => {
+    this.props.setSongPlaylist({
+      songs: songs.map(song => song.id),
+      index,
+    })
   }
 
   render() {
@@ -63,7 +73,7 @@ export default class Albums extends React.Component<Props, State> {
                           className="album-cover-img"
                           src={albumSongs[0].artwork?.album?.uri ? albumSongs[0].artwork.album.uri : cover}
                         />
-                        <button className="album-cover-icon">
+                        <button className="album-cover-icon" onClick={() => this.playAtIndex(albumSongs, 0)}>
                           <i className="material-icons">play_circle_outline</i>
                         </button>
                       </div>
@@ -81,9 +91,9 @@ export default class Albums extends React.Component<Props, State> {
                         </p>
                       </button>
                     </div>
-                    {selected && selected.type === 'album' && selected.identifier === album ? (
-                      <AlbumInfo name={album} songs={songsToShow} />
-                    ) : null}
+                    {selected &&
+                      selected.type === 'album' &&
+                      selected.identifier === album && <AlbumInfo name={album} songs={songsToShow} />}
                   </React.Fragment>
                 )
               })}
@@ -98,3 +108,8 @@ export default class Albums extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(
+  null,
+  { setSongPlaylist },
+)(Albums)

@@ -9,6 +9,7 @@ import { humanizeDuration } from '~/common/songs'
 import '~/css/album-info.css'
 
 import Dropdown from './Dropdown'
+import cover from '../static/img/album-cover.jpg'
 
 type Props = {|
   name: string,
@@ -42,8 +43,12 @@ class AlbumInfo extends React.Component<Props, State> {
           <div className="album-title flex-column">
             <div className="album-cover">
               <div className="album-cover-filter" />
-              <img alt="album-cover" className="album-cover-img" src={songs[0].artwork.album.uri} />
-              <button className="album-cover-icon align-center">
+              <img
+                alt="album-cover"
+                className="album-cover-img"
+                src={songs[0].artwork.album.uri ? songs[0].artwork.album.uri : cover}
+              />
+              <button className="album-cover-icon align-center" onClick={() => this.playAtIndex(0)}>
                 <i className="material-icons album-play-btn">play_circle_outline</i>
               </button>
             </div>
