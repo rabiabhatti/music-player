@@ -13,7 +13,6 @@ import { playNext, playPrevious, songPlay, songPause, incrementNonce } from '~/r
 
 import '~/css/slider.css'
 import '~/css/player.css'
-import mcover from '~/static/img/grey.jpg'
 import cover from '~/static/img/alter-img.png'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
