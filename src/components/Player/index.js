@@ -8,6 +8,7 @@ import services from '~/services'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
+import { deleteSongsFromLibrary } from '~/common/songs'
 import { playNext, playPrevious, songPlay, songPause, incrementNonce } from '~/redux/songs'
 
 import '~/css/slider.css'
@@ -159,6 +160,15 @@ class Player extends React.Component<Props, State> {
     this.audioElement.play()
   }
 
+  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    if (this.state.activeSong) {
+      deleteSongsFromLibrary([this.state.activeSong.id])
+      this.props.dispatch(playNext())
+      this.props.dispatch(incrementNonce())
+    }
+  }
+
   render() {
     const { songs } = this.props
     const { activeSong } = this.state
@@ -182,15 +192,20 @@ class Player extends React.Component<Props, State> {
     }
 
     return (
-      <div className="section-player flex-column" style={{ backgroundImage: `url(${mcover})` }}>
-        <div className="flex-row section-cover">
-          <img className="cover-img" src={coverImg} alt={cover} />
-          <div className="section-song-description flex-row space-between">
+      <div className="section-player flex-column">
+        <div className="flex-row section-cover space-between">
+          <div className="flex-row section-player-cover">
+            <img className="cover-img" src={coverImg} alt={cover} />
             <div className="song-details">
               <h1 className="song-title">{activeSong ? songName : ''}</h1>
-              <h4 className="song-artist">{activeSong ? songArtist : ''}</h4>
+              <h3 className="song-artist">{activeSong ? songArtist : ''}</h3>
             </div>
           </div>
+          <button onClick={this.deleteSong} className="player-delete-song">
+            <i title="Delete from Library" className="material-icons player-material-icons">
+              delete
+            </i>
+          </button>
         </div>
         <div className="section-player-controls align-center space-between">
           <div className="section-player-btns align-center">
