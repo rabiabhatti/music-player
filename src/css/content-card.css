@@ -1,10 +1,10 @@
 .section-artist {
-  left: 24.4%;
-  width: 75.6%;
+  left: 19%;
+  width: 81%;
   position: relative;
   background-color: #f8f8f6;
-  height: calc(100vh - 11.5rem);
-  max-height: calc(100vh - 11.5rem);
+  height: calc(100vh - 8rem);
+  max-height: calc(100vh - 8rem);
 }
 .section-artist-header {
   position: relative;

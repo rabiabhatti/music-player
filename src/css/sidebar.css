@@ -1,13 +1,13 @@
 .section-sidebar {
   left: 0;
+  top: 8rem;
+  width: 16%;
   z-index: 51;
-  top: 11.5rem;
-  width: 19.58%;
   height: 100vh;
   position: fixed;
   overflow-y: auto;
   background-color: #f8f8f6;
-  max-height: calc(100vh - 11.5rem);
+  max-height: calc(100vh - 8rem);
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 }
 .sidebar-content {

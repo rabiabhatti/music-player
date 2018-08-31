@@ -22,9 +22,9 @@ body {
   font-variant-numeric: proportional-nums;
 }
 .bound {
-  top: 11.5rem;
-  left: 19.61%;
-  width: 80.35%;
+  top: 8rem;
+  left: 16%;
+  width: 84%;
   position: relative;
 }
 a {
@@ -44,6 +44,7 @@ h2 {
 }
 img {
   max-width: 100%;
+  background: linear-gradient(45deg, #f4b8b9, #b8d0ff);
 }
 p {
   font-size: 0.85rem;

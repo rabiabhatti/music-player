@@ -10,7 +10,7 @@ import { getAlbumsFromSongs } from '~/common/songs'
 import '~/css/albums.css'
 import AlbumInfo from './AlbumInfo'
 
-import cover from '../static/img/album-cover.jpg'
+import cover from '../static/img/alter-img.png'
 
 type Props = {|
   nonce: number,

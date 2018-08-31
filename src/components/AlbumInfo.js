@@ -7,9 +7,9 @@ import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
 import '~/css/album-info.css'
+import cover from '~/static/img/alter-img.png'
 
 import Dropdown from './Dropdown'
-import cover from '../static/img/album-cover.jpg'
 
 type Props = {|
   name: string,

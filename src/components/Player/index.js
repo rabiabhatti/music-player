@@ -12,11 +12,11 @@ import { playNext, playPrevious, songPlay, songPause, incrementNonce } from '~/r
 
 import '~/css/slider.css'
 import '~/css/player.css'
+import mcover from '~/static/img/grey.jpg'
+import cover from '~/static/img/alter-img.png'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
 import PlayerControlDuration from './PlayerControlsDuration'
-
-import cover from '../../static/img/album-cover.jpg'
 
 type Props = {|
   songs: SongsStateFields,
@@ -182,42 +182,43 @@ class Player extends React.Component<Props, State> {
     }
 
     return (
-      <div className="section-player">
-        <div className="section-player-cover" style={{ backgroundImage: `url(${coverImg})` }}>
+      <div className="section-player flex-column" style={{ backgroundImage: `url(${mcover})` }}>
+        <div className="flex-row section-cover">
+          <img className="cover-img" src={coverImg} alt={cover} />
           <div className="section-song-description flex-row space-between">
             <div className="song-details">
               <h1 className="song-title">{activeSong ? songName : ''}</h1>
               <h4 className="song-artist">{activeSong ? songArtist : ''}</h4>
             </div>
           </div>
-          <div className="section-player-controls align-center space-between">
-            <div className="section-player-btns align-center">
-              <button onClick={this.playPrevious}>
-                <i title="Previous" className="material-icons player-material-icons">
-                  fast_rewind
-                </i>
-              </button>
-              <button onClick={this.playPause}>
-                <i
-                  title={songs.songState === 'playing' ? 'Pause' : 'Play'}
-                  className="material-icons player-material-icons play-btn"
-                >
-                  {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
-                </i>
-              </button>
-              <button onClick={this.playNext}>
-                <i title="Previous" className="material-icons player-material-icons">
-                  fast_forward
-                </i>
-              </button>
-            </div>
-            <div className="section-progress align-center space-between">
-              <PlayerControlDuration audioElement={this.audioElement} />
-            </div>
-            <div className="section-volume align-center">
-              <PlayerControlsVolume audioElement={this.audioElement} />
-              <PlayerControlsRepeat />
-            </div>
+        </div>
+        <div className="section-player-controls align-center space-between">
+          <div className="section-player-btns align-center">
+            <button onClick={this.playPrevious}>
+              <i title="Previous" className="material-icons player-material-icons">
+                fast_rewind
+              </i>
+            </button>
+            <button onClick={this.playPause}>
+              <i
+                title={songs.songState === 'playing' ? 'Pause' : 'Play'}
+                className="material-icons player-material-icons play-btn"
+              >
+                {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
+              </i>
+            </button>
+            <button onClick={this.playNext}>
+              <i title="Previous" className="material-icons player-material-icons">
+                fast_forward
+              </i>
+            </button>
+          </div>
+          <div className="section-progress align-center space-between">
+            <PlayerControlDuration audioElement={this.audioElement} />
+          </div>
+          <div className="section-volume align-center">
+            <PlayerControlsVolume audioElement={this.audioElement} />
+            <PlayerControlsRepeat />
           </div>
         </div>
       </div>

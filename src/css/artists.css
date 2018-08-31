@@ -2,17 +2,18 @@
   display: flex;
 }
 .artists-bar {
-  width: 19.6%;
+  width: 16%;
   height: 100vh;
   position: fixed;
-  min-width: 19.4%;
+  min-width: 16%;
   overflow-y: auto;
-  max-height: calc(100vh - 11.5rem);
+  max-height: calc(100vh - 8rem);
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 }
 .artists-bar-row {
   padding: 0.6rem;
   min-width: 100%;
+  text-align: left;
   font-size: 0.8rem;
   transition: all 0.1s ease-in-out;
 }
