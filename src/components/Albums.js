@@ -13,6 +13,7 @@ import AlbumInfo from './AlbumInfo'
 import cover from '../static/img/album-cover.jpg'
 
 type Props = {|
+  nonce: number,
   setSongPlaylist: setSongPlaylist,
 |}
 type State = {|
@@ -31,6 +32,12 @@ class Albums extends React.Component<Props, State> {
 
   componentDidMount() {
     this.fetchSongs()
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.nonce !== this.props.nonce) {
+      this.fetchSongs()
+    }
   }
 
   fetchSongs = async () => {
@@ -110,6 +117,6 @@ class Albums extends React.Component<Props, State> {
 }
 
 export default connect(
-  null,
+  ({ songs }) => ({ nonce: songs.nonce }),
   { setSongPlaylist },
 )(Albums)

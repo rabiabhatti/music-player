@@ -1,6 +1,7 @@
 // @flow
 
 import * as React from 'react'
+import { connect } from 'react-redux'
 
 import db from '~/db'
 import { getArtistsFromSongs } from '~/common/songs'
@@ -9,7 +10,9 @@ import type { File } from '~/types'
 import '~/css/artists.css'
 import ContentCard from './ContentCard'
 
-type Props = {||}
+type Props = {|
+  nonce: number,
+|}
 type State = {|
   songs: Array<File>,
   selected: {|
@@ -24,7 +27,7 @@ const DEFAULT_SELETED = {
   identifier: 'all',
 }
 
-export default class Artists extends React.Component<Props, State> {
+class Artists extends React.Component<Props, State> {
   state = {
     songs: [],
     selected: DEFAULT_SELETED,
@@ -33,6 +36,12 @@ export default class Artists extends React.Component<Props, State> {
 
   componentDidMount() {
     this.fetchSongs()
+  }
+
+  componentWillReceiveProps(newProps) {
+    if (newProps.nonce !== this.props.nonce) {
+      this.fetchSongs()
+    }
   }
 
   fetchSongs = async () => {
@@ -90,3 +99,8 @@ export default class Artists extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(Artists)
