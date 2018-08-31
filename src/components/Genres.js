@@ -83,7 +83,6 @@ class Genres extends React.Component<Props, State> {
                       })
                     }
                   >
-                    <i className="material-icons artists-bar-row-icon">queue_music</i>
                     <span>{genre}</span>
                   </button>
                 )

@@ -72,7 +72,7 @@ class AlbumInfo extends React.Component<Props, State> {
                 {songs[0].meta && songs[0].meta.year ? songs[0].meta.year : 'Unkown'}
               </p>
             </div>
-            <Dropdown songsIds={songsIdsArr} />
+            <Dropdown songsIds={songsIdsArr} album={name} />
           </div>
           <div className="section-album-songs-table flex-column">
             {songs.map((song, index) => (
@@ -86,7 +86,7 @@ class AlbumInfo extends React.Component<Props, State> {
                   <button onClick={() => this.playAtIndex(index)}>
                     <i className="material-icons song-play-btn btn-blue">play_arrow</i>
                   </button>
-                  <Dropdown songsIds={[song.id]} />
+                  <Dropdown songsIds={[song.id]} song={song} />
                 </div>
               </div>
             ))}

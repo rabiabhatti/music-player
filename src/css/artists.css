@@ -11,11 +11,14 @@
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 }
 .artists-bar-row {
-  padding: 0.6rem;
   min-width: 100%;
   text-align: left;
-  font-size: 0.8rem;
-  transition: all 0.1s ease-in-out;
+  font-size: 0.84rem;
+  transition: all 0.2s ease-in;
+  padding: 0.88rem 0 0.88rem 0.88rem;
+}
+.artists-bar-row:first-child {
+  padding: 0.6rem 0 0.6rem 1.8rem !important;
 }
 .artists-bar-row:hover,
 .active {

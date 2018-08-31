@@ -82,7 +82,6 @@ class Artists extends React.Component<Props, State> {
                       })
                     }
                   >
-                    <i className="material-icons artists-bar-row-icon">person</i>
                     <span>{artist}</span>
                   </button>
                 )

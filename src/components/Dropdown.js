@@ -10,6 +10,7 @@ import { incrementNonce, playNext, playLater } from '~/redux/songs'
 import { addSongsToPlaylist, deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 
 import EditSong from '~/components/Popup/EditSong'
+import EditAlbum from '~/components/Popup/EditAlbum'
 import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
 import '~/css/dropdown.css'
@@ -17,6 +18,7 @@ import '~/css/dropdown.css'
 type Props = {|
   nonce: number,
   song?: Object,
+  album?: string,
   playlist?: Object,
   activeSong: number,
   songsIds: Array<number>,
@@ -26,13 +28,20 @@ type Props = {|
 |}
 type State = {|
   opened: boolean,
-  showEditModal: boolean,
+  showEditSongModal: boolean,
+  showEditAlbumModal: boolean,
   playlists: Array<Object> | null,
   showCreatePlaylistModal: boolean,
 |}
 
 class Dropdown extends React.Component<Props, State> {
-  state = { opened: false, showEditModal: false, playlists: null, showCreatePlaylistModal: false }
+  state = {
+    opened: false,
+    showEditSongModal: false,
+    showEditAlbumModal: false,
+    playlists: null,
+    showCreatePlaylistModal: false,
+  }
 
   componentDidMount() {
     this.fetchPlaylists()
@@ -93,11 +102,17 @@ class Dropdown extends React.Component<Props, State> {
     this.props.incrementNonce()
   }
 
-  showEditModal = () => {
-    this.setState({ showEditModal: true })
+  showEditSongModal = () => {
+    this.setState({ showEditSongModal: true })
   }
-  hideEditModal = () => {
-    this.setState({ showEditModal: false })
+  hideEditSongModal = () => {
+    this.setState({ showEditSongModal: false })
+  }
+  showEditAlbumModal = () => {
+    this.setState({ showEditAlbumModal: true })
+  }
+  hideEditAlbumModal = () => {
+    this.setState({ showEditAlbumModal: false })
   }
   showCreatePlaylistModal = () => {
     this.setState({ showCreatePlaylistModal: true })
@@ -107,8 +122,8 @@ class Dropdown extends React.Component<Props, State> {
   }
 
   render() {
-    const { songsIds, playlist, song } = this.props
-    const { playlists, showEditModal, showCreatePlaylistModal } = this.state
+    const { songsIds, playlist, song, album } = this.props
+    const { playlists, showEditSongModal, showCreatePlaylistModal, showEditAlbumModal } = this.state
 
     return (
       <div
@@ -117,7 +132,8 @@ class Dropdown extends React.Component<Props, State> {
           this.ref = element
         }}
       >
-        {showEditModal && <EditSong handleClose={this.hideEditModal} song={song} />}
+        {showEditSongModal && <EditSong handleClose={this.hideEditSongModal} song={song} />}
+        {showEditAlbumModal && <EditAlbum handleClose={this.hideEditAlbumModal} album={songsIds} />}
         {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} songsIds={songsIds} />}
         <i className="material-icons btn-blue">more_horiz</i>
         <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
@@ -142,14 +158,26 @@ class Dropdown extends React.Component<Props, State> {
               </div>
             </React.Fragment>
           </div>
-          <button
-            onClick={() => {
-              this.showEditModal()
-            }}
-            className="dropdown-option"
-          >
-            Edit
-          </button>
+          {song && (
+            <button
+              onClick={() => {
+                this.showEditSongModal()
+              }}
+              className="dropdown-option"
+            >
+              Edit
+            </button>
+          )}
+          {album && (
+            <button
+              onClick={() => {
+                this.showEditAlbumModal()
+              }}
+              className="dropdown-option"
+            >
+              Edit Album
+            </button>
+          )}
           <button className="dropdown-option" onClick={() => this.props.playLater({ ids: songsIds })}>
             Play Later
           </button>

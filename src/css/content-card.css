@@ -1,6 +1,6 @@
 .section-artist {
-  left: 19%;
-  width: 81%;
+  left: 19.1%;
+  width: 80.9%;
   position: relative;
   background-color: #f8f8f6;
   height: calc(100vh - 8rem);
@@ -12,12 +12,6 @@
   padding-right: 1.3rem;
   align-items: baseline;
   background-color: #ffffff;
-}
-.section-artist-header .song-dropdown {
-  color: #ffffff;
-  padding: 0.2rem;
-  border-radius: 50%;
-  background-color: #2f75ff;
 }
 .section-artist-header .dropdown-content {
   top: 0.9rem;
