@@ -113,6 +113,10 @@ export function deleteSongsFromLibrary(songsIds: Array<number>) {
   })
 }
 
+export function deletePlaylist(id: number) {
+  db.playlists.delete(id)
+}
+
 export function humanizeDuration(duration: number): string {
   const minutes = Math.floor(duration / 60)
   const seconds = Math.ceil(duration % 60)

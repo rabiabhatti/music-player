@@ -109,42 +109,58 @@ class EditSong extends React.Component<Props, State> {
 
     return (
       <Popup handleClose={handleClose}>
-        <input
-          type="text"
-          name="fields.name"
-          value={fields.name}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur('name')}
-          className={shouldMarkError('name') ? 'error' : ''}
-          placeholder={song.meta && song.meta.name ? song.meta.name : 'Name'}
-        />
-        <input
-          type="text"
-          name="fields.album"
-          value={fields.album}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur('album')}
-          className={shouldMarkError('album') ? 'error' : ''}
-          placeholder={song.meta && song.meta.album ? song.meta.album : 'Album'}
-        />
-        <input
-          type="text"
-          name="fields.genre"
-          value={fields.genre}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur('genre')}
-          className={shouldMarkError('genre') ? 'error' : ''}
-          placeholder={song.meta && song.meta.genre ? song.meta.genre : 'Genre'}
-        />
-        <input
-          type="text"
-          name="fields.artists"
-          value={fields.artists}
-          onChange={this.handleChange}
-          onBlur={this.handleBlur('artists')}
-          className={shouldMarkError('artists') ? 'error' : ''}
-          placeholder={song.meta && song.meta.artists_original ? song.meta.artists_original : 'Artists'}
-        />
+        <label htmlFor="name">
+          Name
+          <input
+            id="name"
+            type="text"
+            name="fields.name"
+            value={fields.name}
+            onChange={this.handleChange}
+            onBlur={this.handleBlur('name')}
+            placeholder={song.meta && song.meta.name}
+            className={shouldMarkError('name') ? 'error' : ''}
+          />
+        </label>
+        <label htmlFor="album">
+          Album
+          <input
+            id="album"
+            type="text"
+            name="fields.album"
+            value={fields.album}
+            onChange={this.handleChange}
+            onBlur={this.handleBlur('album')}
+            placeholder={song.meta && song.meta.album}
+            className={shouldMarkError('album') ? 'error' : ''}
+          />
+        </label>
+        <label htmlFor="genre">
+          Genre
+          <input
+            id="genre"
+            type="text"
+            name="fields.genre"
+            value={fields.genre}
+            onChange={this.handleChange}
+            onBlur={this.handleBlur('genre')}
+            placeholder={song.meta && song.meta.genre}
+            className={shouldMarkError('genre') ? 'error' : ''}
+          />
+        </label>
+        <label htmlFor="artists">
+          Artists
+          <input
+            type="text"
+            id="artists"
+            name="fields.artists"
+            value={fields.artists}
+            onChange={this.handleChange}
+            onBlur={this.handleBlur('artists')}
+            placeholder={song.meta && song.meta.artists_original}
+            className={shouldMarkError('artists') ? 'error' : ''}
+          />
+        </label>
         <button className="btn-blue-border" onClick={this.saveSongInfo} disabled={isDisabled}>
           Save
         </button>

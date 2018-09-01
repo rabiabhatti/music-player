@@ -9,52 +9,45 @@ import { incrementNonce } from '~/redux/songs'
 import Popup from './Popup'
 
 type Props = {|
-  playlist: {|
-    name: string,
-    id: number,
-    songsIds: Array<number>,
-  |},
+  id: number,
+  name: string,
   handleClose: () => void,
   incrementNonce: () => void,
 |}
 type State = {|
-  name: string,
+  localName: string,
 |}
 
 class EditPlaylist extends React.Component<Props, State> {
   state = {
-    name: '',
+    localName: '',
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ name: event.target.name })
+    this.setState({ localName: event.target.value })
   }
 
   savePlaylist = () => {
-    const playList = this.props.playlist
-    db.playlists.update(playList.id, {
-      name: this.state.name,
+    const { name, id } = this.props
+    db.playlists.update(id, {
+      name: this.state.localName !== '' ? this.state.localName : name,
     })
     this.props.incrementNonce()
     this.props.handleClose()
   }
 
   render() {
-    const { name } = this.state
-    const { playlist, handleClose } = this.props
+    const { localName } = this.state
+    const { name, handleClose } = this.props
 
-    const enable = name !== '' && name.replace(/\s/g, '') !== ''
+    const enable = localName !== '' && localName.replace(/\s/g, '') !== ''
 
     return (
       <Popup handleClose={handleClose}>
-        <input
-          type="text"
-          value={name}
-          name="fields.name"
-          onInput={this.handleChange}
-          placeholder={playlist.name}
-          className={!enable ? 'error' : ''}
-        />
+        <label htmlFor="name">
+          Name
+          <input id="name" type="text" name="name" value={localName} onInput={this.handleChange} placeholder={name} />
+        </label>
         <button className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
           Save
         </button>

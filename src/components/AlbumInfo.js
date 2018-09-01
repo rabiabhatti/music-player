@@ -53,7 +53,7 @@ class AlbumInfo extends React.Component<Props, State> {
           </div>
           <div className="space-between">
             <p>
-              {songs.length} songs, {humanizeDuration(totalDuration)} minutes
+              {songs.length} songs, {!totalDuration ? '' : humanizeDuration(totalDuration)} minutes
             </p>
             <button className="btn-blue" onClick={() => this.playAtIndex(0)}>
               Shuffle

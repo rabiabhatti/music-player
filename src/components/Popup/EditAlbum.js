@@ -62,17 +62,19 @@ class EditAlbum extends React.Component<Props, State> {
     const { name, year } = this.state
     const { handleClose } = this.props
 
+    const enable = name !== '' && year !== '' && name.replace(/\s/g, '') !== '' && year.replace(/\s/g, '') !== ''
+
     return (
       <Popup handleClose={handleClose}>
         <label htmlFor="name">
-          Name:
-          <input type="text" id="name" name="name" value={name} onChange={this.handleChange} placeholder={name} />
+          Name
+          <input type="text" id="name" name="name" value={name} placeholder={name} onChange={this.handleChange} />
         </label>
         <label htmlFor="year">
-          Year:
-          <input type="text" id="name" name="year" value={year} onChange={this.handleChange} placeholder={year} />
+          Year
+          <input type="text" id="name" name="year" value={year} placeholder={year} onChange={this.handleChange} />
         </label>
-        <button className="btn-blue-border" onClick={this.saveAlbumInfo}>
+        <button className="btn-blue-border" onClick={this.saveAlbumInfo} disabled={!enable}>
           Save
         </button>
       </Popup>
