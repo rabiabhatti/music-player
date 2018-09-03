@@ -18,31 +18,20 @@ type Props = {|
   setSongPlaylist: setSongPlaylist,
 |}
 type State = {|
-  index: number,
   songs: Array<Object>,
 |}
 
 class Songs extends React.Component<Props, State> {
-  state = { songs: [], index: 0 }
+  state = { songs: [] }
 
   componentDidMount() {
     this.fetchSongs()
-    document.addEventListener('dblclick', this.handleDblClick)
   }
 
   componentWillReceiveProps(newProps) {
     if (newProps.nonce !== this.props.nonce) {
       this.fetchSongs()
     }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('dblclick', this.handleDblClick)
-  }
-
-  handleDblClick = (e: MouseEvent) => {
-    e.preventDefault()
-    this.playAtIndex(this.state.index)
   }
 
   fetchSongs() {
@@ -95,7 +84,7 @@ class Songs extends React.Component<Props, State> {
                 {songs.map((song, index) => (
                   <tr
                     key={song.sourceId}
-                    onClick={() => this.setState({ index })}
+                    onDoubleClick={() => this.playAtIndex(index)}
                     className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
                   >
                     <td>{song.meta.name || song.filename}</td>

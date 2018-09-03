@@ -21,17 +21,15 @@ type Props = {|
   setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
-  index: number,
   playlist: Object,
   songs: Array<Object>,
 |}
 
 class Playlist extends React.Component<Props, State> {
-  state = { playlist: {}, songs: [], index: 0 }
+  state = { playlist: {}, songs: [] }
 
   componentDidMount() {
     this.getPlaylist(this.props.route.id)
-    document.addEventListener('dblclick', this.handleDoubleClick)
   }
 
   async componentWillReceiveProps(nextProps) {
@@ -45,10 +43,6 @@ class Playlist extends React.Component<Props, State> {
     if (nextProps.nonce !== this.props.nonce) {
       this.getPlaylist(this.props.route.id)
     }
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('dblclick', this.handleDoubleClick)
   }
 
   getPlaylist = async (playlistId: number) => {
@@ -65,11 +59,6 @@ class Playlist extends React.Component<Props, State> {
         }
       })
     }
-  }
-
-  handleDoubleClick = (e: MouseEvent) => {
-    e.preventDefault()
-    this.playAtIndex(this.state.index)
   }
 
   playAtIndex = (index: number) => {
@@ -112,7 +101,7 @@ class Playlist extends React.Component<Props, State> {
                 {songs.map((song, index) => (
                   <tr
                     key={song.sourceId}
-                    onClick={() => this.setState({ index })}
+                    onDoubleClick={() => this.playAtIndex(index)}
                     className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
                   >
                     <td>{song.meta.name || song.filename}</td>
