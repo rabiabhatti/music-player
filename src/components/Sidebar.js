@@ -40,8 +40,8 @@ class Sidebar extends React.Component<Props, State> {
   componentDidMount() {
     this.fetchPlaylists()
   }
-  componentWillReceiveProps(newProps) {
-    if (newProps.nonce !== this.props.nonce) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
       this.fetchPlaylists()
     }
   }
@@ -103,7 +103,7 @@ class Sidebar extends React.Component<Props, State> {
           route.name === routeName && route.id === id ? 'active' : ''
         }`}
       >
-        <button className="btn-dull" onClick={() => this.props.navigateTo({ name: routeName, id })}>
+        <button className="btn-dull playlist-button" onClick={() => this.props.navigateTo({ name: routeName, id })}>
           <i className="material-icons row-icon">{icon}</i>
           {name}
         </button>

@@ -27,8 +27,9 @@ class Downloader extends React.Component<Props, State> {
       .modify({ state: 'pending' })
     this.startProcessingPendingSongs()
   }
-  componentWillReceiveProps(newProps) {
-    if (this.props.nonce !== newProps.nonce) {
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
       this.startProcessingPendingSongs()
     }
   }

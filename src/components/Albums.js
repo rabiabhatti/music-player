@@ -34,8 +34,8 @@ class Albums extends React.Component<Props, State> {
     this.fetchSongs()
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.nonce !== this.props.nonce) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
       this.fetchSongs()
     }
   }

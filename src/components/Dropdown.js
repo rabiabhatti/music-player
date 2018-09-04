@@ -49,9 +49,8 @@ class Dropdown extends React.Component<Props, State> {
     document.addEventListener('keydown', this.handleBodyKeypress)
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (nextProps.nonce !== this.props.nonce) {
-      this.setState({ playlists: null })
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
       this.fetchPlaylists()
     }
   }

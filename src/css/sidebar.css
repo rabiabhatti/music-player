@@ -39,6 +39,9 @@
 .section-sidebar-playlist:hover .section-sidebar-playlist-icons {
   display: flex;
 }
+.playlist-button {
+  width: 60%;
+}
 #sidebar-search-input {
   border-radius: 0px !important;
   padding: 0.79rem 0 0.79rem 1.8rem !important;

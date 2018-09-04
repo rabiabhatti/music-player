@@ -4,8 +4,8 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
-import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist } from '~/redux/songs'
+import { humanizeDuration } from '~/common/songs'
 
 import '~/css/songs.css'
 import '~/css/table.css'
@@ -32,15 +32,8 @@ class Playlist extends React.Component<Props, State> {
     this.getPlaylist(this.props.route.id)
   }
 
-  async componentWillReceiveProps(nextProps) {
-    const oldPlaylist = this.props.route.id
-    const newPlaylist = nextProps.route.id
-
-    if (newPlaylist !== oldPlaylist) {
-      this.getPlaylist(newPlaylist)
-    }
-
-    if (nextProps.nonce !== this.props.nonce) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce || prevProps.route.id !== this.props.route.id) {
       this.getPlaylist(this.props.route.id)
     }
   }
@@ -71,11 +64,6 @@ class Playlist extends React.Component<Props, State> {
   render() {
     const { activeSong } = this.props
     const { songs, playlist } = this.state
-
-    const songsIdsArr = []
-    this.state.songs.forEach(song => {
-      songsIdsArr.push(song.id)
-    })
 
     return (
       <React.Fragment>

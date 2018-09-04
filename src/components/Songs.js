@@ -28,8 +28,8 @@ class Songs extends React.Component<Props, State> {
     this.fetchSongs()
   }
 
-  componentWillReceiveProps(newProps) {
-    if (newProps.nonce !== this.props.nonce) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
       this.fetchSongs()
     }
   }
@@ -54,11 +54,6 @@ class Songs extends React.Component<Props, State> {
   render() {
     const { activeSong } = this.props
     const { songs } = this.state
-
-    const songsIdsArr = []
-    songs.forEach(song => {
-      songsIdsArr.push(song.id)
-    })
 
     return (
       <div className="section-songs bound">
