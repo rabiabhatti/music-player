@@ -42,7 +42,9 @@ class AlbumInfo extends React.Component<Props, State> {
             <img
               alt="album-cover"
               className="album-cover-img"
-              src={songs[0].artwork.album.uri ? songs[0].artwork.album.uri : cover}
+              src={
+                songs[0].artwork && songs[0].artwork.album && songs[0].artwork.album.uri ? songs[0].artwork.album.uri : cover
+              }
             />
             <button className="album-cover-icon align-center" onClick={() => this.playAtIndex(0)}>
               <i className="material-icons album-play-btn">play_circle_outline</i>

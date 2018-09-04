@@ -41,7 +41,7 @@ class ContentCard extends React.Component<Props, State> {
     const artists = getArtistsFromSongs(songs)
     const genres = getGenresFromSongs(songs)
 
-    if (selected === null) {
+    if (!selected) {
       this.setState({
         songsByAlbums: groupBy(songs, 'meta.album'),
       })

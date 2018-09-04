@@ -5,6 +5,7 @@ import { Record, type RecordOf, type RecordFactory } from 'immutable'
 
 const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
 const SET_SONG_PLAYLIST = 'SONGS/SET_SONG_PLAYLIST'
+const ADD_TO_RECENTLY_PLAYED = 'SONGS/ADD_TO_RECENTLY_PLAYED'
 const SET_SONG_REPEAT = 'SONGS/SET_SONG_REPEAT'
 const SET_SONG_VOLUME = 'SONGS/SET_SONG_VOLUME'
 const SET_SONG_MUTE = 'SONGS/SET_SONG_MUTE'
@@ -20,6 +21,7 @@ export type RepeatMode = 'all' | 'single' | 'none'
 
 export const incrementNonce = createAction(INCREMENT_NONCE)
 export const setSongPlaylist = createAction(SET_SONG_PLAYLIST)
+export const addToRecentlyPlayed = createAction(ADD_TO_RECENTLY_PLAYED)
 export const setSongRepeat = createAction(SET_SONG_REPEAT)
 export const setSongVolume = createAction(SET_SONG_VOLUME)
 export const setSongMute = createAction(SET_SONG_MUTE)
@@ -35,6 +37,7 @@ export type SongsStateFields = {|
   nonce: number,
   playlist: Array<number>,
   songsRepeat: RepeatMode,
+  recentlyPlayed: Array<number>,
   songState: 'paused' | 'playing',
   songIndex: number,
   songVolume: number,
@@ -47,6 +50,7 @@ const createSongsState: RecordFactory<SongsStateFields> = Record({
   playlist: [],
   songsRepeat: 'none',
   songState: 'paused',
+  recentlyPlayed: [],
   songIndex: -1,
   songVolume: 50,
   songMuted: false,
@@ -61,6 +65,15 @@ export default handleActions(
         songState: 'playing',
         songIndex: payload.index,
       }),
+    [ADD_TO_RECENTLY_PLAYED]: (state: SongsState, { payload }) => {
+      const recent = state.recentlyPlayed
+      if (recent[recent.length - 1] !== payload) {
+        recent.push(payload)
+      }
+      return state.merge({
+        recentlyPlayed: recent,
+      })
+    },
     [SET_SONG_REPEAT]: (state: SongsState, { payload }) =>
       state.merge({
         songsRepeat: payload,

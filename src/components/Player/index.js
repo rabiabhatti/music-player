@@ -9,7 +9,7 @@ import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
 import { deleteSongsFromLibrary } from '~/common/songs'
-import { playNext, playPrevious, songPlay, songPause, incrementNonce } from '~/redux/songs'
+import { playNext, playPrevious, songPlay, songPause, incrementNonce, addToRecentlyPlayed } from '~/redux/songs'
 
 import '~/css/slider.css'
 import '~/css/player.css'
@@ -144,11 +144,14 @@ class Player extends React.Component<Props, State> {
 
   updateDuration = () => {
     const song = this.state.activeSong
-    if (song && !song.duration) {
-      db.songs.update(song.id, {
-        duration: this.audioElement.duration,
-      })
-      this.props.dispatch(incrementNonce())
+    if (song) {
+      this.props.dispatch(addToRecentlyPlayed(song.id))
+      if (!song.duration) {
+        db.songs.update(song.id, {
+          duration: this.audioElement.duration,
+        })
+        this.props.dispatch(incrementNonce())
+      }
     }
   }
 

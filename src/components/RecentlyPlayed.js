@@ -1,158 +1,119 @@
 // @flow
 
 import * as React from 'react'
+import { connect } from 'react-redux'
+
+import db from '~/db'
+import { setSongPlaylist } from '~/redux/songs'
+import { humanizeDuration } from '~/common/songs'
 
 import '~/css/songs.css'
 import '~/css/table.css'
+import Dropdown from './Dropdown'
 
-export default class RecentlyPlayed extends React.Component<$FlowFixMe, $FlowFixMe> {
+type Props = {|
+  nonce: number,
+  activeSong: number | null,
+  recentlyPlayed: Array<number>,
+  setSongPlaylist: setSongPlaylist,
+|}
+type State = {|
+  songs: Array<Object>,
+|}
+
+class RecentlyPlayed extends React.Component<Props, State> {
+  state = { songs: [] }
+
+  componentDidMount() {
+    this.fetchSongs(this.props.recentlyPlayed.reverse())
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce || prevProps.recentlyPlayed.length !== this.props.recentlyPlayed.length) {
+      this.fetchSongs(this.props.recentlyPlayed.reverse())
+    }
+  }
+
+  fetchSongs(idsArr: Array<number>) {
+    this.setState({ songs: [] })
+    idsArr.forEach(async id => {
+      const song = await db.songs.get(id)
+      if (song) {
+        this.setState(prevState => ({
+          songs: [...prevState.songs, song],
+        }))
+      }
+    })
+  }
+  playAtIndex = (index: number) => {
+    this.props.setSongPlaylist({
+      songs: this.state.songs.map(song => song.id),
+      index,
+    })
+  }
   render() {
+    let i = 0
+    const { activeSong } = this.props
+    const { songs } = this.state
+
     return (
       <div className="section-songs bound">
-        <div className="align-center space-between">
-          <h2>Recently Played</h2>
-          <button>Play All</button>
-        </div>
-        <table className="section-songs-table" cellSpacing="0">
-          <thead>
-            <tr className="table-heading">
-              <th>Title</th>
-              <th>Time</th>
-              <th>Artist</th>
-              <th>Album</th>
-              <th>Genre</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>Mind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-            <tr>
-              <td>Ho ho ho</td>
-              <td>3:39</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Snowman</td>
-              <td>2:48</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Everyday Is Christmas</td>
-              <td>3:24</td>
-              <td>Sia Furler</td>
-              <td>Everyday Is Christmas</td>
-              <td>Holiday</td>
-            </tr>
-            <tr>
-              <td>Something just like this</td>
-              <td>4:21</td>
-              <td>Coldplay, The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>The one</td>
-              <td>2:57</td>
-              <td>The Chainsmokers</td>
-              <td>Memories...Do Not Open</td>
-              <td>Dance/Electronic</td>
-            </tr>
-            <tr>
-              <td>lastMind of mindd</td>
-              <td>0:57</td>
-              <td>Zayn Malik</td>
-              <td>Mind of Mine</td>
-              <td>Pop</td>
-            </tr>
-          </tbody>
-        </table>
+        {songs.length ? (
+          <React.Fragment>
+            <div className="align-center space-between">
+              <h2>Recently Played</h2>
+              <button className="btn-blue" onClick={() => this.playAtIndex(0)}>
+                Play All
+              </button>
+            </div>
+            <table className="section-songs-table" cellSpacing="0">
+              <thead>
+                <tr className="table-heading">
+                  <th>Title</th>
+                  <th>Time</th>
+                  <th>Artist</th>
+                  <th>Album</th>
+                  <th>Genre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {songs.map((song, index) => (
+                  <tr
+                    key={i++}
+                    onDoubleClick={() => this.playAtIndex(index)}
+                    className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
+                  >
+                    <td>{song.meta.name || song.filename}</td>
+                    <td>{!song.duration ? '' : humanizeDuration(song.duration)}</td>
+                    <td>{song.meta.artists_original || 'Unknown'}</td>
+                    <td>{song.meta.album || 'Unknown'}</td>
+                    <td>{song.meta.genre || 'Unknown'} </td>
+                    <td className="song-wrapper-btns space-between">
+                      <button onClick={() => this.playAtIndex(index)}>
+                        <i className="material-icons btn-blue">play_arrow</i>
+                      </button>
+                      <Dropdown songsIds={[song.id]} song={song} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </React.Fragment>
+        ) : (
+          <div className="align-center justify-center" style={{ height: 300 }}>
+            <h2 className="replacement-text">Add Music</h2>
+          </div>
+        )}
       </div>
     )
   }
 }
+
+export default connect(
+  ({ songs }) => ({
+    nonce: songs.nonce,
+    recentlyPlayed: songs.recentlyPlayed,
+    activeSong: songs.playlist[songs.songIndex] || null,
+  }),
+  { setSongPlaylist },
+)(RecentlyPlayed)
