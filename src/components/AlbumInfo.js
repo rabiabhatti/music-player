@@ -32,10 +32,7 @@ class AlbumInfo extends React.Component<Props, State> {
 
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
 
-    const songsIdsArr = []
-    songs.forEach(song => {
-      songsIdsArr.push(song.id)
-    })
+    const songsIds = songs.map(s => s.id)
 
     return (
       <div className="section-album-info space-between flex-wrap">
@@ -72,7 +69,7 @@ class AlbumInfo extends React.Component<Props, State> {
                 {songs[0].meta && songs[0].meta.year ? songs[0].meta.year : 'Unkown'}
               </p>
             </div>
-            <Dropdown songsIds={songsIdsArr} album={name} />
+            <Dropdown songsIds={songsIds} album={name} />
           </div>
           <div className="section-album-songs-table flex-column">
             {songs.map((song, index) => (
