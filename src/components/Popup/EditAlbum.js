@@ -45,17 +45,18 @@ class EditAlbum extends React.Component<Props, State> {
 
   saveAlbumInfo = () => {
     const { name, year } = this.state
-
-    this.props.album.forEach(async id => {
-      const song = await db.songs.get(id)
-      db.songs.update(song.id, {
-        'meta.album': name !== '' ? name : song.meta.album,
-        'meta.year': year !== '' ? parseInt(year, 10) : song.meta.year,
-      })
+    Promise.all(
+      this.props.album.map(async id => {
+        const song = await db.songs.get(id)
+        db.songs.update(song.id, {
+          'meta.album': name !== '' ? name : song.meta.album,
+          'meta.year': year !== '' ? parseInt(year, 10) : song.meta.year,
+        })
+      }),
+    ).then(() => {
+      this.props.incrementNonce()
+      this.props.handleClose()
     })
-
-    this.props.incrementNonce()
-    this.props.handleClose()
   }
 
   render() {

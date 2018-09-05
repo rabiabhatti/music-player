@@ -12,9 +12,9 @@ import Popup from './Popup'
 
 function validateField(field: string, fields: Object, song: Object) {
   if (field === 'artists') {
-    return (fields[field] === '' || fields[field].replace(/\s/g, '') === '') && song.meta.artists_original === undefined
+    return (fields[field] === '' || fields[field].replace(/\s/g, '') === '') && !song.meta.artists_original
   }
-  return (fields[field] === '' || fields[field].replace(/\s/g, '') === '') && song.meta[field] === undefined
+  return (fields[field] === '' || fields[field].replace(/\s/g, '') === '') && !song.meta[field]
 }
 
 function validate(fields: Object, song: Object) {
