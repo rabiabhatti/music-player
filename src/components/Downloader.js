@@ -20,7 +20,6 @@ type State = {||}
 
 class Downloader extends React.Component<Props, State> {
   componentDidMount() {
-    // Convert existing "downloading" state songs to "pending"
     db.songs
       .where('state')
       .equals('downloading')
