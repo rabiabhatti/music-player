@@ -75,7 +75,11 @@ class AlbumInfo extends React.Component<Props, State> {
           </div>
           <div className="section-album-songs-table flex-column">
             {songs.map((song, index) => (
-              <div className="song-info space-between align-center flex-wrap" key={song.sourceId}>
+              <div
+                className="song-info space-between align-center flex-wrap"
+                key={song.sourceId}
+                onDoubleClick={() => this.playAtIndex(index)}
+              >
                 <p>{i++}</p>
                 <p>
                   {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
