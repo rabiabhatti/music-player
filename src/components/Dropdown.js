@@ -177,7 +177,7 @@ class Dropdown extends React.Component<Props, State> {
               Edit Album
             </button>
           )}
-          <button className="dropdown-option" onClick={() => this.props.playLater({ ids: songsIds })}>
+          <button className="dropdown-option" onClick={() => this.props.playLater(songsIds)}>
             Play Later
           </button>
           {playlist && (
@@ -185,7 +185,6 @@ class Dropdown extends React.Component<Props, State> {
               Remove from Playlist
             </button>
           )}
-
           <button className="dropdown-option" onClick={e => this.deleteSong(e, 'library')}>
             Delete from Library
           </button>

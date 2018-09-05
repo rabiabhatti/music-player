@@ -105,7 +105,6 @@ class Player extends React.Component<Props, State> {
   }
   playPause = () => {
     const { songs } = this.props
-
     this.props.dispatch(songs.songState === 'playing' ? songPause() : songPlay())
   }
 
