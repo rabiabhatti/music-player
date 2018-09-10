@@ -22,22 +22,31 @@ type State = {|
     type: string,
     identifier: string,
   |},
+  viewWidth: number,
 |}
+
+const DEFAULT_WIDTH = 1024
 
 class Albums extends React.Component<Props, State> {
   state = {
     songs: [],
     selected: null,
+    viewWidth: DEFAULT_WIDTH,
   }
 
   componentDidMount() {
     this.fetchSongs()
+    window.addEventListener('load', this.handleBodyResize)
+    window.addEventListener('resize', this.handleBodyResize)
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.nonce !== this.props.nonce) {
       this.fetchSongs()
     }
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleBodyResize)
   }
 
   fetchSongs = async () => {
@@ -52,8 +61,28 @@ class Albums extends React.Component<Props, State> {
     })
   }
 
+  openAlbumInfo = (e: SyntheticEvent<HTMLButtonElement>, album: string) => {
+    if (this.state.selected && this.state.selected.identifier === album) {
+      this.setState({ selected: null })
+      return
+    }
+    this.setState({
+      selected: {
+        type: 'album',
+        identifier: album,
+      },
+    })
+  }
+
+  handleBodyResize = () => {
+    const elt = document.getElementById('albums')
+    if (elt) {
+      this.setState({ viewWidth: elt.getClientRects()[0].width })
+    }
+  }
+
   render() {
-    const { songs, selected } = this.state
+    const { songs, selected, viewWidth } = this.state
     const albums = getAlbumsFromSongs(songs)
 
     let songsToShow = songs
@@ -62,49 +91,58 @@ class Albums extends React.Component<Props, State> {
         songsToShow = albums[selected.identifier]
       }
     }
+    const renderedAlbums = Object.keys(albums).map((album, i) => {
+      const albumSongs = albums[album]
+      return (
+        <React.Fragment key={album}>
+          <div className={`album-content ${selected && selected.identifier === album ? 'selected-album' : ''}`}>
+            <div className="album-cover">
+              <div className="album-cover-filter" />
+              <img
+                alt="album-cover"
+                className="album-cover-img"
+                src={albumSongs[0].artwork?.album?.uri ? albumSongs[0].artwork.album.uri : cover}
+              />
+              <button className="album-cover-icon" onClick={() => this.playAtIndex(albumSongs, 0)}>
+                <i className="material-icons">play_circle_outline</i>
+              </button>
+            </div>
+            <button className="album-infomation flex-column" onClick={e => this.openAlbumInfo(e, album)}>
+              <h4 className="album-name">{album}</h4>
+              <p className="album-artist">
+                {album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}
+              </p>
+            </button>
+          </div>
+        </React.Fragment>
+      )
+    })
+    if (selected && selected.type === 'album') {
+      const elem = <AlbumInfo name={selected.identifier} songs={songsToShow} />
+      const selectedAlbumIndex = Object.keys(albums).findIndex(a => a === selected.identifier)
+      if (selectedAlbumIndex > -1) {
+        let insertIndex
+
+        if (viewWidth <= 480) {
+          insertIndex = 3 * Math.ceil((selectedAlbumIndex + 1) / 3)
+        } else if (viewWidth <= 768 && viewWidth > 480) {
+          insertIndex = 4 * Math.ceil((selectedAlbumIndex + 1) / 4)
+        } else {
+          insertIndex = 5 * Math.ceil((selectedAlbumIndex + 1) / 5)
+        }
+        if (insertIndex > renderedAlbums.length) {
+          renderedAlbums.push(elem)
+        } else {
+          renderedAlbums.splice(insertIndex, 0, elem)
+        }
+      }
+    }
 
     return (
       <React.Fragment>
         {this.state.songs.length ? (
-          <div className="section-albums bound">
-            <div className="section-albums-container">
-              {Object.keys(albums).map(album => {
-                const albumSongs = albums[album]
-                return (
-                  <React.Fragment key={album}>
-                    <div className="album-content">
-                      <div className="album-cover">
-                        <div className="album-cover-filter" />
-                        <img
-                          alt="album-cover"
-                          className="album-cover-img"
-                          src={albumSongs[0].artwork?.album?.uri ? albumSongs[0].artwork.album.uri : cover}
-                        />
-                        <button className="album-cover-icon" onClick={() => this.playAtIndex(albumSongs, 0)}>
-                          <i className="material-icons">play_circle_outline</i>
-                        </button>
-                      </div>
-                      <button
-                        className="album-infomation flex-column"
-                        onClick={() =>
-                          this.setState({
-                            selected: { type: 'album', identifier: album },
-                          })
-                        }
-                      >
-                        <h4 className="album-name">{album}</h4>
-                        <p className="album-artist">
-                          {album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}
-                        </p>
-                      </button>
-                    </div>
-                    {selected &&
-                      selected.type === 'album' &&
-                      selected.identifier === album && <AlbumInfo name={album} songs={songsToShow} />}
-                  </React.Fragment>
-                )
-              })}
-            </div>
+          <div className="section-albums bound" id="albums">
+            <div className="section-albums-container">{renderedAlbums}</div>
           </div>
         ) : (
           <div className="align-center justify-center bound" style={{ height: 300 }}>

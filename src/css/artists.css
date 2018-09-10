@@ -18,7 +18,7 @@
   padding: 0.88rem 0 0.88rem 0.88rem;
 }
 .artists-bar-row:first-child {
-  padding: 0.6rem 0 0.6rem 1.8rem !important;
+  padding: 0.6rem 0 0.6rem 0.88rem !important;
 }
 .artists-bar-row:hover,
 .active {

@@ -74,7 +74,8 @@
   #sidebar-search-input,
   .content-row,
   .sidebar-content h3,
-  .logout {
+  .logout,
+  .picker {
     padding: 0.6rem 0 0.6rem 0.6rem !important;
   }
 }
