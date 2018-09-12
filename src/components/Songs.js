@@ -11,6 +11,7 @@ import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
 import Dropdown from './Dropdown'
+import ReplacementText from './ReplacementText'
 
 type Props = {|
   nonce: number,
@@ -99,9 +100,7 @@ class Songs extends React.Component<Props, State> {
             </table>
           </React.Fragment>
         ) : (
-          <div className="align-center justify-center" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
+          <ReplacementText />
         )}
       </div>
     )

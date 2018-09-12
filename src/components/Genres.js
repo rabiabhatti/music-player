@@ -9,6 +9,7 @@ import { getGenresFromSongs } from '~/common/songs'
 
 import '~/css/artists.css'
 import ContentCard from './ContentCard'
+import ReplacementText from './ReplacementText'
 
 type Props = {|
   nonce: number,
@@ -78,9 +79,7 @@ class Genres extends React.Component<Props, State> {
             <ContentCard selected={selected} />
           </div>
         ) : (
-          <div className="align-center justify-center bound" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
+          <ReplacementText />
         )}
       </React.Fragment>
     )

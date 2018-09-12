@@ -145,9 +145,7 @@ class Albums extends React.Component<Props, State> {
             <div className="section-albums-container">{renderedAlbums}</div>
           </div>
         ) : (
-          <div className="align-center justify-center bound" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
+          <ReplacementText />
         )}
       </React.Fragment>
     )

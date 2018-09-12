@@ -9,6 +9,7 @@ import type { File } from '~/types'
 
 import '~/css/artists.css'
 import ContentCard from './ContentCard'
+import ReplacementText from './ReplacementText'
 
 type Props = {|
   nonce: number,
@@ -77,9 +78,7 @@ class Artists extends React.Component<Props, State> {
             <ContentCard selected={selected} />
           </div>
         ) : (
-          <div className="align-center justify-center bound" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
+          <ReplacementText />
         )}
       </React.Fragment>
     )

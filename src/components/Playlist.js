@@ -10,6 +10,7 @@ import { humanizeDuration } from '~/common/songs'
 import '~/css/songs.css'
 import '~/css/table.css'
 import Dropdown from './Dropdown'
+import ReplacementText from './ReplacementText'
 
 type Props = {|
   nonce: number,
@@ -109,9 +110,7 @@ class Playlist extends React.Component<Props, State> {
             </table>
           </div>
         ) : (
-          <div className="align-center justify-center bound" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
+          <ReplacementText />
         )}
       </React.Fragment>
     )
