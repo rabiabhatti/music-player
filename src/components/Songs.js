@@ -3,10 +3,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import '~/css/songs.css'
-import '~/css/table.css'
-
 import db from '~/db'
+import '~/css/songs.css'
 
 import SongsTable from './SongsTable'
 import ReplacementText from './ReplacementText'

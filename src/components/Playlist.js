@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import db from '~/db'
 
 import '~/css/songs.css'
-import '~/css/table.css'
 import SongsTable from './SongsTable'
 import ReplacementText from './ReplacementText'
 

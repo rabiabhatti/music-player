@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import '~/css/content-card.css'
+import '~/css/table.css'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
