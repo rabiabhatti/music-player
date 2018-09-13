@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import '~/css/table.css'
 import { setSongPlaylist } from '~/redux/songs'
@@ -29,8 +29,6 @@ class SongsTable extends React.Component<Props, State> {
   render() {
     let i = 0
     const { activeSong, songs, title } = this.props
-
-    console.log(songs)
 
     return (
       <React.Fragment>

@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
@@ -9,7 +9,7 @@ import { humanizeDuration } from '~/common/songs'
 import '~/css/album-info.css'
 import cover from '~/static/img/alter-img.png'
 
-import Dropdown from './Dropdown'
+import Dropdown from './utilities/Dropdown'
 
 type Props = {|
   name: string,
@@ -28,7 +28,6 @@ class AlbumInfo extends React.Component<Props, State> {
 
   render() {
     const { songs, name } = this.props
-    let i = 1
 
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
 
@@ -80,7 +79,7 @@ class AlbumInfo extends React.Component<Props, State> {
                 key={song.sourceId}
                 onDoubleClick={() => this.playAtIndex(index)}
               >
-                <p>{i++}</p>
+                <p>{index + 1}</p>
                 <p>
                   {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
                 </p>

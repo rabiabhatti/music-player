@@ -2,16 +2,16 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import getEventPath from '~/common/getEventPath'
 import { incrementNonce, playNext, playLater } from '~/redux/songs'
 import { addSongsToPlaylist, deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 
-import EditSong from '~/components/Popup/EditSong'
-import EditAlbum from '~/components/Popup/EditAlbum'
-import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
+import EditSong from '~/components/utilities/Popup/EditSong'
+import EditAlbum from '~/components/utilities/Popup/EditAlbum'
+import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
 
 import '~/css/dropdown.css'
 

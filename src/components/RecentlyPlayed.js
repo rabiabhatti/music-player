@@ -1,13 +1,13 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 
 import '~/css/songs.css'
-import SongsTable from './SongsTable'
-import ReplacementText from './ReplacementText'
+import SongsTable from './utilities/SongsTable'
+import ReplacementText from './utilities/ReplacementText'
 
 type Props = {|
   nonce: number,

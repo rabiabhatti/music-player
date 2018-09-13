@@ -7,14 +7,14 @@ import type { RouteName, RouterRoute } from '~/redux/router'
 
 import '~/css/general.css'
 
+import Songs from '~/components/Songs'
+import Genres from '~/components/Genres'
 import Albums from '~/components/Albums'
 import Player from '~/components/Player'
 import Sidebar from '~/components/Sidebar'
 import Artists from '~/components/Artists'
 import Playlist from '~/components/Playlist'
-import Downloader from '~/components/Downloader'
-import Genres from '~/components/Genres'
-import Songs from '~/components/Songs'
+import Downloader from '~/components/utilities/Downloader'
 import RecentlyPlayed from '~/components/RecentlyPlayed'
 
 const ROUTES: { [RouteName]: $FlowFixMe } = {

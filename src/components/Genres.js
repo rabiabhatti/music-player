@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import type { File } from '~/types'
@@ -9,7 +9,7 @@ import { getGenresFromSongs } from '~/common/songs'
 
 import '~/css/artists.css'
 import ContentCard from './ContentCard'
-import ReplacementText from './ReplacementText'
+import ReplacementText from './utilities/ReplacementText'
 
 type Props = {|
   nonce: number,

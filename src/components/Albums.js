@@ -1,16 +1,17 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'
 
 import '~/css/albums.css'
-import AlbumInfo from './AlbumInfo'
+import cover from '~/static/img/alter-img.png'
 
-import cover from '../static/img/alter-img.png'
+import AlbumInfo from './AlbumInfo'
+import ReplacementText from './utilities/ReplacementText'
 
 type Props = {|
   nonce: number,
@@ -46,6 +47,7 @@ class Albums extends React.Component<Props, State> {
     }
   }
   componentWillUnmount() {
+    window.removeEventListener('load', this.handleBodyResize)
     window.removeEventListener('resize', this.handleBodyResize)
   }
 
@@ -85,17 +87,11 @@ class Albums extends React.Component<Props, State> {
     const { songs, selected, viewWidth } = this.state
     const albums = getAlbumsFromSongs(songs)
 
-    let songsToShow = songs
-    if (selected) {
-      if (selected.type === 'album') {
-        songsToShow = albums[selected.identifier]
-      }
-    }
-    const renderedAlbums = Object.keys(albums).map((album, i) => {
+    const renderedAlbums = Object.keys(albums).map(album => {
       const albumSongs = albums[album]
       return (
         <React.Fragment key={album}>
-          <div className={`album-content ${selected && selected.identifier === album ? 'selected-album' : ''}`}>
+          <div className="album-content">
             <div className="album-cover">
               <div className="album-cover-filter" />
               <img
@@ -108,17 +104,17 @@ class Albums extends React.Component<Props, State> {
               </button>
             </div>
             <button className="album-infomation flex-column" onClick={e => this.openAlbumInfo(e, album)}>
-              <h4 className="album-name">{album}</h4>
-              <p className="album-artist">
+              <b className="album-name">{album}</b>
+              <span className="album-artist">
                 {album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}
-              </p>
+              </span>
             </button>
           </div>
         </React.Fragment>
       )
     })
     if (selected && selected.type === 'album') {
-      const elem = <AlbumInfo name={selected.identifier} songs={songsToShow} />
+      const elem = <AlbumInfo name={selected.identifier} songs={albums[selected.identifier]} />
       const selectedAlbumIndex = Object.keys(albums).findIndex(a => a === selected.identifier)
       if (selectedAlbumIndex > -1) {
         let insertIndex

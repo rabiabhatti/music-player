@@ -3,13 +3,13 @@
 import * as React from 'react'
 import groupBy from 'lodash/groupBy'
 import flatten from 'lodash/flatten'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import '~/css/content-card.css'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
 
-import Dropdown from './Dropdown'
+import Dropdown from './utilities/Dropdown'
 import AlbumInfo from './AlbumInfo'
 
 type Props = {|

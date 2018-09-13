@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import { deletePlaylist } from '~/common/songs'
@@ -9,9 +9,10 @@ import { incrementNonce } from '~/redux/songs'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
 import '~/css/sidebar.css'
-import EditPlaylist from '~/components/Popup/EditPlaylist'
-import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
-import Picker from './Picker'
+import Picker from '~/components/utilities/Picker'
+import EditPlaylist from '~/components/utilities/Popup/EditPlaylist'
+import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
+
 import Logout from './Logout'
 
 type Props = {|
