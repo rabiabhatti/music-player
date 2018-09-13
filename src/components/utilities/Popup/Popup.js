@@ -3,7 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import '~/css/popup.css'
+import '~/styles/popup.less'
 import getEventPath from '~/common/getEventPath'
 
 type Props = {|

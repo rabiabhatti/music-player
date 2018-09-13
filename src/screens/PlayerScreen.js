@@ -5,7 +5,7 @@ import connect from '~/common/connect'
 
 import type { RouteName, RouterRoute } from '~/redux/router'
 
-import '~/css/general.css'
+import '~/styles/general.less'
 
 import Songs from '~/components/Songs'
 import Genres from '~/components/Genres'

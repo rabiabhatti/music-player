@@ -1,11 +1,11 @@
 // @flow
 
 import * as React from 'react'
+import eq from 'lodash/eq'
 import connect from '~/common/connect'
 
 import db from '~/db'
 
-import '~/css/songs.css'
 import SongsTable from './utilities/SongsTable'
 import ReplacementText from './utilities/ReplacementText'
 
@@ -21,18 +21,18 @@ class RecentlyPlayed extends React.Component<Props, State> {
   state = { songs: [] }
 
   componentDidMount() {
-    this.fetchSongs(this.props.recentlyPlayed.reverse())
+    this.fetchSongs(this.props.recentlyPlayed)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce || prevProps.recentlyPlayed.length !== this.props.recentlyPlayed.length) {
-      this.fetchSongs(this.props.recentlyPlayed.reverse())
+    if (prevProps.nonce !== this.props.nonce || !eq(this.props.recentlyPlayed, prevProps.recentlyPlayed)) {
+      this.fetchSongs(this.props.recentlyPlayed)
     }
   }
 
-  fetchSongs(idsArr: Array<number>) {
+  fetchSongs(ids: Array<number>) {
     this.setState({ songs: [] })
-    idsArr.forEach(async id => {
+    ids.forEach(async id => {
       const song = await db.songs.get(id)
       if (song) {
         this.setState(prevState => ({
@@ -44,11 +44,7 @@ class RecentlyPlayed extends React.Component<Props, State> {
   render() {
     const { songs } = this.state
 
-    return (
-      <div className="section-songs bound">
-        {songs.length ? <SongsTable title="Recently Played" songs={songs} /> : <ReplacementText />}
-      </div>
-    )
+    return songs.length ? <SongsTable title="Recently Played" songs={songs} /> : <ReplacementText />
   }
 }
 

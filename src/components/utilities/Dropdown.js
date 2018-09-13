@@ -9,11 +9,10 @@ import getEventPath from '~/common/getEventPath'
 import { incrementNonce, playNext, playLater } from '~/redux/songs'
 import { addSongsToPlaylist, deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 
+import '~/styles/dropdown.less'
 import EditSong from '~/components/utilities/Popup/EditSong'
 import EditAlbum from '~/components/utilities/Popup/EditAlbum'
 import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
-
-import '~/css/dropdown.css'
 
 type Props = {|
   nonce: number,
@@ -97,7 +96,6 @@ class Dropdown extends React.Component<Props, State> {
     } else {
       deleteSongsFromLibrary(songsIds)
     }
-
     this.props.incrementNonce()
   }
 
@@ -136,33 +134,24 @@ class Dropdown extends React.Component<Props, State> {
         {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} songsIds={songsIds} />}
         <i className="material-icons btn-blue">more_horiz</i>
         <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
-          <div className="align-center space-between sub-dropdown-trigger">
-            <button className="btn-dull">Add to Playlist</button>
-            <i className="material-icons">arrow_right</i>
-            <React.Fragment>
-              <div className="sub-dropdown-content dropdown-content hidden">
-                <button onClick={() => this.showCreatePlaylistModal()} className="dropdown-option">
-                  New Playlist
+          <button className="btn-dull space-between">
+            Add to Playlist
+            <i className="material-icons">add</i>
+          </button>
+          <div className="sub-dropdown-content dropdown-content hidden">
+            <button onClick={() => this.showCreatePlaylistModal()}>New Playlist</button>
+            {playlists &&
+              playlists.map(localPlaylist => (
+                <button key={localPlaylist.id} onClick={() => addSongsToPlaylist(songsIds, localPlaylist.id)}>
+                  {localPlaylist.name}
                 </button>
-                {playlists &&
-                  playlists.map(localPlaylist => (
-                    <button
-                      key={localPlaylist.id}
-                      className="dropdown-option"
-                      onClick={() => addSongsToPlaylist(songsIds, localPlaylist.id)}
-                    >
-                      {localPlaylist.name}
-                    </button>
-                  ))}
-              </div>
-            </React.Fragment>
+              ))}
           </div>
           {song && (
             <button
               onClick={() => {
                 this.showEditSongModal()
               }}
-              className="dropdown-option"
             >
               Edit
             </button>
@@ -172,22 +161,13 @@ class Dropdown extends React.Component<Props, State> {
               onClick={() => {
                 this.showEditAlbumModal()
               }}
-              className="dropdown-option"
             >
               Edit Album
             </button>
           )}
-          <button className="dropdown-option" onClick={() => this.props.playLater(songsIds)}>
-            Play Later
-          </button>
-          {playlist && (
-            <button className="dropdown-option" onClick={e => this.deleteSong(e, 'playlist')}>
-              Remove from Playlist
-            </button>
-          )}
-          <button className="dropdown-option" onClick={e => this.deleteSong(e, 'library')}>
-            Delete from Library
-          </button>
+          <button onClick={() => this.props.playLater(songsIds)}>Play Later</button>
+          {playlist && <button onClick={e => this.deleteSong(e, 'playlist')}>Remove from Playlist</button>}
+          <button onClick={e => this.deleteSong(e, 'library')}>Delete from Library</button>
         </div>
       </div>
     )

@@ -5,7 +5,6 @@ import connect from '~/common/connect'
 
 import db from '~/db'
 
-import '~/css/songs.css'
 import SongsTable from './utilities/SongsTable'
 import ReplacementText from './utilities/ReplacementText'
 
@@ -53,11 +52,7 @@ class Playlist extends React.Component<Props, State> {
   render() {
     const { songs, playlist } = this.state
 
-    return (
-      <div className="section-songs bound">
-        {songs.length ? <SongsTable title={playlist.name} songs={songs} /> : <ReplacementText />}
-      </div>
-    )
+    return songs.length ? <SongsTable title={playlist.name} songs={songs} /> : <ReplacementText />
   }
 }
 

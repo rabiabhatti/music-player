@@ -7,7 +7,7 @@ import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'
 
-import '~/css/albums.css'
+import '~/styles/albums.less'
 import cover from '~/static/img/alter-img.png'
 
 import AlbumInfo from './AlbumInfo'
@@ -52,8 +52,8 @@ class Albums extends React.Component<Props, State> {
   }
 
   fetchSongs = async () => {
-    const dbSongs = await db.songs.toArray()
-    this.setState({ songs: dbSongs })
+    const songs = await db.songs.toArray()
+    this.setState({ songs })
   }
 
   playAtIndex = (songs: Array<Object>, index: number) => {
@@ -84,37 +84,29 @@ class Albums extends React.Component<Props, State> {
   }
 
   render() {
+    let i = 0
     const { songs, selected, viewWidth } = this.state
     const albums = getAlbumsFromSongs(songs)
 
     const renderedAlbums = Object.keys(albums).map(album => {
       const albumSongs = albums[album]
       return (
-        <React.Fragment key={album}>
-          <div className="album-content">
-            <div className="album-cover">
-              <div className="album-cover-filter" />
-              <img
-                alt="album-cover"
-                className="album-cover-img"
-                src={albumSongs[0].artwork?.album?.uri ? albumSongs[0].artwork.album.uri : cover}
-              />
-              <button className="album-cover-icon" onClick={() => this.playAtIndex(albumSongs, 0)}>
-                <i className="material-icons">play_circle_outline</i>
-              </button>
-            </div>
-            <button className="album-infomation flex-column" onClick={e => this.openAlbumInfo(e, album)}>
-              <b className="album-name">{album}</b>
-              <span className="album-artist">
-                {album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}
-              </span>
+        <div className="album-content" key={album}>
+          <div className="album-cover">
+            <img alt={cover} src={albumSongs[0].artwork?.album?.uri ? albumSongs[0].artwork.album.uri : cover} />
+            <button onClick={() => this.playAtIndex(albumSongs, 0)}>
+              <i className="material-icons">play_circle_outline</i>
             </button>
           </div>
-        </React.Fragment>
+          <button className="flex-column" onClick={e => this.openAlbumInfo(e, album)}>
+            <b>{album}</b>
+            <span>{album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}</span>
+          </button>
+        </div>
       )
     })
     if (selected && selected.type === 'album') {
-      const elem = <AlbumInfo name={selected.identifier} songs={albums[selected.identifier]} />
+      const elem = <AlbumInfo key={i++} name={selected.identifier} songs={albums[selected.identifier]} />
       const selectedAlbumIndex = Object.keys(albums).findIndex(a => a === selected.identifier)
       if (selectedAlbumIndex > -1) {
         let insertIndex
@@ -134,16 +126,12 @@ class Albums extends React.Component<Props, State> {
       }
     }
 
-    return (
-      <React.Fragment>
-        {this.state.songs.length ? (
-          <div className="section-albums bound" id="albums">
-            <div className="section-albums-container">{renderedAlbums}</div>
-          </div>
-        ) : (
-          <ReplacementText />
-        )}
-      </React.Fragment>
+    return songs.length ? (
+      <div className="section-albums bound flex-row flex-wrap" id="albums">
+        {renderedAlbums}
+      </div>
+    ) : (
+      <ReplacementText />
     )
   }
 }

@@ -8,7 +8,7 @@ import { deletePlaylist } from '~/common/songs'
 import { incrementNonce } from '~/redux/songs'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
-import '~/css/sidebar.css'
+import '~/styles/sidebar.less'
 import Picker from '~/components/utilities/Picker'
 import EditPlaylist from '~/components/utilities/Popup/EditPlaylist'
 import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
@@ -84,7 +84,7 @@ class Sidebar extends React.Component<Props, State> {
     return (
       <button
         key={`route-${name}`}
-        className={`content-row align-center btn-dull ${route.name === routeName ? 'active' : ''}`}
+        className={`btn-dull ${route.name === routeName ? 'active' : ''}`}
         onClick={() =>
           routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.props.navigateTo({ name: routeName })
         }
@@ -100,15 +100,15 @@ class Sidebar extends React.Component<Props, State> {
     return (
       <div
         key={`route-${name}-${id}`}
-        className={`content-row space-between align-center flex-row btn-dull section-sidebar-playlist ${
+        className={`space-between flex-row btn-dull section-sidebar-playlist ${
           route.name === routeName && route.id === id ? 'active' : ''
         }`}
       >
-        <button className="btn-dull playlist-button" onClick={() => this.props.navigateTo({ name: routeName, id })}>
-          <i className="material-icons row-icon">{icon}</i>
+        <button className="btn-dull" onClick={() => this.props.navigateTo({ name: routeName, id })}>
+          <i className="material-icons">{icon}</i>
           {name}
         </button>
-        <div className="flex-row section-sidebar-playlist-icons">
+        <div className="flex-row">
           <button onClick={e => this.showEditPlaylistModal(e, name, id)}>
             <i title="Edit Playlist" className="material-icons">
               edit
@@ -131,24 +131,18 @@ class Sidebar extends React.Component<Props, State> {
       <div className="section-sidebar">
         {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} />}
         {showEditPlaylistModal && <EditPlaylist handleClose={this.hideEditPlaylistModal} name={name} id={id} />}
-        <div className="flex-column">
-          <input id="sidebar-search-input" type="text" placeholder="Search" />
-          <div className="sidebar-content flex-column">
-            <h3>Library</h3>
-            {this.renderNavigationItem('access_time', 'RecentlyPlayed', 'Recently Played')}
-            {this.renderNavigationItem('music_note', 'Songs')}
-            {this.renderNavigationItem('album', 'Albums')}
-            {this.renderNavigationItem('mic', 'Artists')}
-            {this.renderNavigationItem('queue_music', 'Genres')}
-          </div>
-          <div className="sidebar-content flex-column">
-            <h3>PlayLists</h3>
-            {this.renderNavigationItem('playlist_add', 'NewPlaylist', 'New')}
-            {playlists.map(playlist => this.renderPlaylists('playlist_play', 'Playlist', playlist.name, playlist.id))}
-          </div>
-          <Picker />
-          <Logout />
-        </div>
+        <input id="sidebar-search-input" type="text" placeholder="Search" />
+        <h3>Library</h3>
+        {this.renderNavigationItem('access_time', 'RecentlyPlayed', 'Recently Played')}
+        {this.renderNavigationItem('music_note', 'Songs')}
+        {this.renderNavigationItem('album', 'Albums')}
+        {this.renderNavigationItem('mic', 'Artists')}
+        {this.renderNavigationItem('queue_music', 'Genres')}
+        <h3>PlayLists</h3>
+        {this.renderNavigationItem('playlist_add', 'NewPlaylist', 'New')}
+        {playlists.map(playlist => this.renderPlaylists('playlist_play', 'Playlist', playlist.name, playlist.id))}
+        <Picker />
+        <Logout />
       </div>
     )
   }

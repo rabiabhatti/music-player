@@ -6,7 +6,7 @@ import connect from '~/common/connect'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
-import '~/css/album-info.css'
+import '~/styles/album-info.less'
 import cover from '~/static/img/alter-img.png'
 
 import Dropdown from './utilities/Dropdown'
@@ -37,15 +37,13 @@ class AlbumInfo extends React.Component<Props, State> {
       <div className="section-album-info space-between flex-wrap">
         <div className="album-title flex-column">
           <div className="album-cover">
-            <div className="album-cover-filter" />
             <img
               alt="album-cover"
-              className="album-cover-img"
               src={
                 songs[0].artwork && songs[0].artwork.album && songs[0].artwork.album.uri ? songs[0].artwork.album.uri : cover
               }
             />
-            <button className="album-cover-icon align-center" onClick={() => this.playAtIndex(0)}>
+            <button className="align-center" onClick={() => this.playAtIndex(0)}>
               <i className="material-icons album-play-btn">play_circle_outline</i>
             </button>
           </div>
@@ -59,12 +57,10 @@ class AlbumInfo extends React.Component<Props, State> {
           </div>
         </div>
         <div className="album-info-content">
-          <div className="space-between section-album-info-header">
+          <div className="space-between">
             <div>
               <h2>{name === 'undefined' ? 'Unkown' : name}</h2>
-              <button className="album-info-artist btn-blue">
-                {songs[0].meta && songs[0].meta.album_artists.join(', ')}
-              </button>
+              <button className="btn-blue">{songs[0].meta && songs[0].meta.album_artists.join(', ')}</button>
               <p>
                 {songs[0].meta && songs[0].meta.genre ? songs[0].meta.genre : 'Unkown'} &bull;{' '}
                 {songs[0].meta && songs[0].meta.year ? songs[0].meta.year : 'Unkown'}
@@ -72,10 +68,10 @@ class AlbumInfo extends React.Component<Props, State> {
             </div>
             <Dropdown songsIds={songsIds} album={name} />
           </div>
-          <div className="section-album-songs-table flex-column">
+          <div className="flex-column">
             {songs.map((song, index) => (
               <div
-                className="song-info space-between align-center flex-wrap"
+                className="space-between align-center flex-wrap"
                 key={song.sourceId}
                 onDoubleClick={() => this.playAtIndex(index)}
               >

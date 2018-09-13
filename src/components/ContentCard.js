@@ -6,7 +6,7 @@ import flatten from 'lodash/flatten'
 import connect from '~/common/connect'
 
 import db from '~/db'
-import '~/css/content-card.css'
+import '~/styles/content-card.less'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
 
 import Dropdown from './utilities/Dropdown'

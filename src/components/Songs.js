@@ -4,7 +4,6 @@ import * as React from 'react'
 import connect from '~/common/connect'
 
 import db from '~/db'
-import '~/css/songs.css'
 
 import SongsTable from './utilities/SongsTable'
 import ReplacementText from './utilities/ReplacementText'
@@ -42,11 +41,7 @@ class Songs extends React.Component<Props, State> {
   render() {
     const { songs } = this.state
 
-    return (
-      <div className="section-songs bound">
-        {songs.length ? <SongsTable title="Songs" songs={songs} /> : <ReplacementText />}
-      </div>
-    )
+    return songs.length ? <SongsTable title="Songs" songs={songs} /> : <ReplacementText />
   }
 }
 

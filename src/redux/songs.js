@@ -66,10 +66,12 @@ export default handleActions(
         songIndex: payload.index,
       }),
     [ADD_TO_RECENTLY_PLAYED]: (state: SongsState, { payload }) => {
-      const recent = state.recentlyPlayed
-      if (recent[recent.length - 1] !== payload) {
-        recent.push(payload)
+      const recent = state.recentlyPlayed.slice()
+      const index = recent.indexOf(payload)
+      if (index !== -1) {
+        recent.splice(index, 1)
       }
+      recent.unshift(payload)
       return state.merge({
         recentlyPlayed: recent,
       })

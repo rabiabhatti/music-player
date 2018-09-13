@@ -3,7 +3,7 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import '~/css/table.css'
+import '~/styles/table.less'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
@@ -27,20 +27,19 @@ class SongsTable extends React.Component<Props, State> {
   }
 
   render() {
-    let i = 0
     const { activeSong, songs, title } = this.props
 
     return (
-      <React.Fragment>
+      <div className="section-songs bound">
         <div className="align-center space-between">
           <h2>{title}</h2>
           <button className="btn-blue" onClick={() => this.playAtIndex(0)}>
             Play All
           </button>
         </div>
-        <table className="section-songs-table" cellSpacing="0">
+        <table cellSpacing="0">
           <thead>
-            <tr className="table-heading">
+            <tr>
               <th>Title</th>
               <th>Time</th>
               <th>Artist</th>
@@ -51,9 +50,9 @@ class SongsTable extends React.Component<Props, State> {
           <tbody>
             {songs.map((song, index) => (
               <tr
-                key={i++}
+                key={song.id}
                 onDoubleClick={() => this.playAtIndex(index)}
-                className={song.id === activeSong ? 'active-song song-wrapper' : 'song-wrapper'}
+                className={song.id === activeSong ? 'active-song' : ''}
               >
                 <td>{song.meta.name || song.filename}</td>
                 <td>{!song.duration ? '' : humanizeDuration(song.duration)}</td>
@@ -70,7 +69,7 @@ class SongsTable extends React.Component<Props, State> {
             ))}
           </tbody>
         </table>
-      </React.Fragment>
+      </div>
     )
   }
 }

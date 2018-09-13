@@ -7,7 +7,7 @@ import db from '~/db'
 import type { File } from '~/types'
 import { getGenresFromSongs } from '~/common/songs'
 
-import '~/css/artists.css'
+import '~/styles/artists.less'
 import ContentCard from './ContentCard'
 import ReplacementText from './utilities/ReplacementText'
 
@@ -39,49 +39,45 @@ class Genres extends React.Component<Props, State> {
   }
 
   fetchSongs = async () => {
-    const dbSongs = await db.songs.toArray()
-    this.setState({ songs: dbSongs })
+    const songs = await db.songs.toArray()
+    this.setState({ songs })
   }
 
   render() {
     const { songs, selected } = this.state
     const genres = getGenresFromSongs(songs)
 
-    return (
-      <React.Fragment>
-        {songs.length ? (
-          <div className="section-artists bound">
-            <div className="artists-bar">
-              <button
-                className={`align-center btn-dull artists-bar-row ${!selected ? 'active' : ''}`}
-                onClick={() => this.setState({ selected: null })}
-              >
-                <i className="material-icons artists-bar-row-icon">queue_music</i>
-                <span>All Genres</span>
-              </button>
+    return songs.length ? (
+      <div className="section-artists bound">
+        <div className="artists-bar">
+          <button
+            className={`align-center btn-dull artists-bar-row ${!selected ? 'active' : ''}`}
+            onClick={() => this.setState({ selected: null })}
+          >
+            <i className="material-icons artists-bar-row-icon">queue_music</i>
+            <span>All Genres</span>
+          </button>
 
-              {Object.keys(genres).map(genre => (
-                <button
-                  key={genre}
-                  className={`align-center btn-dull artists-bar-row ${
-                    selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
-                  }`}
-                  onClick={() =>
-                    this.setState({
-                      selected: { type: 'genre', identifier: genre },
-                    })
-                  }
-                >
-                  <span>{genre}</span>
-                </button>
-              ))}
-            </div>
-            <ContentCard selected={selected} />
-          </div>
-        ) : (
-          <ReplacementText />
-        )}
-      </React.Fragment>
+          {Object.keys(genres).map(genre => (
+            <button
+              key={genre}
+              className={`align-center btn-dull artists-bar-row ${
+                selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
+              }`}
+              onClick={() =>
+                this.setState({
+                  selected: { type: 'genre', identifier: genre },
+                })
+              }
+            >
+              <span>{genre}</span>
+            </button>
+          ))}
+        </div>
+        <ContentCard selected={selected} />
+      </div>
+    ) : (
+      <ReplacementText />
     )
   }
 }
