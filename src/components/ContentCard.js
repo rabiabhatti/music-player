@@ -65,8 +65,8 @@ class ContentCard extends React.Component<Props, State> {
     const songsIds = songs.map(s => s.id)
 
     return (
-      <div className="section-artist">
-        <div className="space-between section-artist-header">
+      <div className="section-contect-card">
+        <div className="space-between">
           <div>
             <h2>{!selected ? `All` : selected.identifier}</h2>
             <p>

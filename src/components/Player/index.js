@@ -194,16 +194,16 @@ class Player extends React.Component<Props, State> {
 
     return (
       <div className="section-player flex-column">
-        <div className="flex-row section-cover space-between">
+        <div className="flex-row space-between">
           <div className="flex-row section-player-cover">
-            <img className="cover-img" src={coverImg} alt={cover} />
-            <div className="song-details">
-              <h1 className="song-title">{activeSong ? songName : ''}</h1>
-              <h3 className="song-artist">{activeSong ? songArtist : ''}</h3>
+            <img src={coverImg} alt={cover} />
+            <div>
+              <h1 className="btn-white">{activeSong ? songName : ''}</h1>
+              <h3 className="btn-white">{activeSong ? songArtist : ''}</h3>
             </div>
           </div>
-          <button onClick={this.deleteSong} className="player-delete-song">
-            <i title="Delete from Library" className="material-icons player-material-icons">
+          <button onClick={this.deleteSong}>
+            <i title="Delete from Library" className="material-icons btn-white">
               delete
             </i>
           </button>
@@ -211,20 +211,17 @@ class Player extends React.Component<Props, State> {
         <div className="section-player-controls align-center space-between">
           <div className="section-player-btns align-center">
             <button onClick={this.playPrevious}>
-              <i title="Previous" className="material-icons player-material-icons">
+              <i title="Previous" className="material-icons btn-white">
                 fast_rewind
               </i>
             </button>
             <button onClick={this.playPause}>
-              <i
-                title={songs.songState === 'playing' ? 'Pause' : 'Play'}
-                className="material-icons player-material-icons play-btn"
-              >
+              <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons btn-white">
                 {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
               </i>
             </button>
             <button onClick={this.playNext}>
-              <i title="Previous" className="material-icons player-material-icons">
+              <i title="Previous" className="material-icons btn-white">
                 fast_forward
               </i>
             </button>

@@ -37,7 +37,7 @@ function PlayerScreen(props: Props) {
     <React.Fragment>
       <Downloader />
       <Player />
-      <div className="app-wrapper space-between">
+      <div className="space-between" style={{ alignItems: 'stretch' }}>
         <Sidebar />
         <ActiveRoute />
       </div>

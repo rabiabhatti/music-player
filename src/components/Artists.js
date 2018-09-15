@@ -48,19 +48,19 @@ class Artists extends React.Component<Props, State> {
     const artists = getArtistsFromSongs(songs)
 
     return songs.length ? (
-      <div className="section-artists bound">
+      <div className="flex-row bound">
         <div className="artists-bar">
           <button
-            className={`align-center btn-dull artists-bar-row ${!selected ? 'active' : ''}`}
+            className={`align-center btn-dull ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
-            <i className="material-icons artists-bar-row-icon">mic</i>
-            <span>All Artists</span>
+            <i className="material-icons">mic</i>
+            All Artists
           </button>
           {Object.keys(artists).map(artist => (
             <button
               key={artist}
-              className={`align-center btn-dull artists-bar-row ${
+              className={`align-center btn-dull ${
                 selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
               }`}
               onClick={() =>
@@ -69,7 +69,7 @@ class Artists extends React.Component<Props, State> {
                 })
               }
             >
-              <span>{artist}</span>
+              {artist}
             </button>
           ))}
         </div>

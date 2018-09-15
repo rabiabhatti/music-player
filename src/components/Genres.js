@@ -48,20 +48,20 @@ class Genres extends React.Component<Props, State> {
     const genres = getGenresFromSongs(songs)
 
     return songs.length ? (
-      <div className="section-artists bound">
+      <div className="flex-row bound">
         <div className="artists-bar">
           <button
-            className={`align-center btn-dull artists-bar-row ${!selected ? 'active' : ''}`}
+            className={`align-center btn-dull ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
-            <i className="material-icons artists-bar-row-icon">queue_music</i>
-            <span>All Genres</span>
+            <i className="material-icons">queue_music</i>
+            All Genres
           </button>
 
           {Object.keys(genres).map(genre => (
             <button
               key={genre}
-              className={`align-center btn-dull artists-bar-row ${
+              className={`align-center btn-dull ${
                 selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
               }`}
               onClick={() =>
@@ -70,7 +70,7 @@ class Genres extends React.Component<Props, State> {
                 })
               }
             >
-              <span>{genre}</span>
+              {genre}
             </button>
           ))}
         </div>

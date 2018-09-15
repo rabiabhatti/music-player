@@ -1,6 +1,3 @@
-.section-artists {
-  display: flex;
-}
 .artists-bar {
   width: 16%;
   height: 100vh;
@@ -9,28 +6,27 @@
   overflow-y: auto;
   max-height: calc(100vh - 8rem);
   border-right: 1px solid rgba(0, 0, 0, 0.13);
+
+  & > button {
+    min-width: 100%;
+    text-align: left;
+    font-size: 0.84rem;
+    transition: all 0.2s ease-in;
+    padding: 0.88rem 0 0.88rem 0.88rem;
+
+    &:first-child {
+      padding: 0.6rem 0 0.6rem 0.88rem !important;
+    }
+
+    &:hover {
+      color: #757575 !important;
+      background-color: rgba(0, 0, 0, 0.07);
+    }
+  }
 }
-.artists-bar-row {
-  min-width: 100%;
-  text-align: left;
-  font-size: 0.84rem;
-  transition: all 0.2s ease-in;
-  padding: 0.88rem 0 0.88rem 0.88rem;
-}
-.artists-bar-row:first-child {
-  padding: 0.6rem 0 0.6rem 0.88rem !important;
-}
-.artists-bar-row:hover,
-.active {
-  color: #757575 !important;
-  background-color: rgba(0, 0, 0, 0.07);
-}
+
 @media screen and (max-width: 480px) {
   .artists-bar {
     display: none;
-  }
-  .section-artists-info {
-    left: 0;
-    width: 100%;
   }
 }

@@ -55,7 +55,7 @@ class PlayerControlDuration extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <span>{humanizeDuration(currentTime)}</span>
-        <div className="progressbar">
+        <div>
           <div className="progress-fill" style={{ width: `${percentage + 0.5}%` }} />
           <input type="range" onChange={this.handleDurationSlide} value={currentTimeToUse} min={0} max={duration} />
         </div>
