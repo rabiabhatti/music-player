@@ -10,7 +10,7 @@ import '~/styles/login.less'
 import type { Service } from '~/services/types'
 
 type Props = {|
-  authorizeService: authorizeService,
+  authorizeService: typeof authorizeService,
 |}
 type State = {||}
 
@@ -20,8 +20,8 @@ class Login extends React.Component<Props, State> {
 
     service
       .authorize()
-      .then(auth => {
-        this.props.authorizeService({ authorization: auth })
+      .then(authorization => {
+        this.props.authorizeService({ authorization })
       })
       .catch(console.error)
   }
@@ -39,4 +39,7 @@ class Login extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { authorizeService })(Login)
+export default connect(
+  null,
+  { authorizeService },
+)(Login)
