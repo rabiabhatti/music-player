@@ -101,18 +101,27 @@ const googleDriveService: Service = {
     const selectedItems = await showPickerView(authorization)
     const files = flatten(await Promise.all(selectedItems.map(item => resolveFileIds(authorization, item))))
 
-    return files.map(file => ({
-      source: SERVICE_NAME,
-      sourceId: file.id,
-      sourceUid: authorization.uid,
-      filename: file.name,
-      duration: null,
-      meta: null,
-      artist: null,
-      album: null,
-      picture: null,
-      state: 'pending',
-    }))
+    return files.map(file => {
+      const artwork = {
+        source: SERVICE_NAME,
+        sourceId: file.id,
+        sourceUid: authorization.uid,
+        filename: file.name,
+      }
+      return {
+        source: SERVICE_NAME,
+        sourceId: file.id,
+        sourceUid: authorization.uid,
+        filename: file.name,
+        duration: null,
+        meta: null,
+        artwork: {
+          album: null,
+          artwork,
+        },
+        state: 'pending',
+      }
+    })
   },
   async getFile(authorization: UserAuthorization, sourceId: string): Promise<Response> {
     const request = new Request(`https://www.googleapis.com/drive/v3/files/${sourceId}/?alt=media`)

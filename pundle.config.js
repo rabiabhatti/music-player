@@ -5,7 +5,7 @@ const pundleConfig = {
   entry: ['./src', './index.html'],
   components: presetDefault({
     transform: {
-      babel: 6,
+      babel: 7,
     },
   }),
   rootDirectory: __dirname,

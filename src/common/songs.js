@@ -3,50 +3,79 @@
 import db from '~/db'
 import type { File } from '~/types'
 
-export function getArtistsFromSongs(songs: Array<File>): Array<string> {
-  const artists = new Set()
+export function getAlbumsFromSongs(songs: Array<File>): { [string]: Array<File> } {
+  const albums = {}
 
   songs.forEach(function(song) {
     const { meta } = song
-    if (meta) {
-      if (meta.artists.length === 0) {
-        artists.add('Unknown')
-      }
-      meta.artists.forEach(item => artists.add(item))
+    const albumName = meta && meta.album ? meta.album : 'Unknown'
+
+    let albumSongs = albums[albumName]
+    if (!albumSongs) {
+      albumSongs = []
+      albums[albumName] = albumSongs
     }
+
+    albumSongs.push(song)
   })
 
-  return Array.from(artists)
+  return albums
 }
 
-export function getGenresFromSongs(songs: Array<File>): Array<string> {
-  const genres = new Set()
+export function getArtistsFromSongs(songs: Array<File>): { [string]: Array<File> } {
+  const artists = {}
 
   songs.forEach(function(song) {
     const { meta } = song
-    if (meta) {
-      if (typeof meta.genre === 'undefined' || meta.genre[0] === '') {
-        genres.add('Unknown')
-      } else {
-        meta.genre.forEach(item => genres.add(item))
-      }
+    const artistsArr = []
+    if (meta && meta.album_artists.length) {
+      meta.album_artists.forEach(artist => {
+        artistsArr.push(artist)
+      })
+    } else {
+      artistsArr.push('Unknown')
     }
+
+    artistsArr.forEach(artistName => {
+      let artistsSongs = artists[artistName]
+      if (!artistsSongs) {
+        artistsSongs = []
+        artists[artistName] = artistsSongs
+      }
+
+      artistsSongs.push(song)
+    })
   })
 
-  return Array.from(genres)
+  return artists
 }
 
-export function getAlbumsFromSongs(songs: Array<File>): Array<string> {
-  const albums = new Set()
+export function getGenresFromSongs(songs: Array<File>): { [string]: Array<File> } {
+  const genres = {}
 
   songs.forEach(function(song) {
     const { meta } = song
-    if (meta) {
-      albums.add(meta.album || 'Unknown')
+    const genresArr = []
+    if (meta && meta.genre && meta.genre.length) {
+      meta.genre.forEach(genre => {
+        genresArr.push(genre)
+      })
+    } else {
+      genresArr.push('Unknown')
     }
+
+    genresArr.forEach(genre => {
+      let genresSongs = genres[genre]
+      if (!genresSongs) {
+        genresSongs = []
+        genres[genre] = genresSongs
+      }
+
+      genresSongs.push(song)
+    })
   })
 
-  return Array.from(albums)
+  return genres
 }
 
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {
@@ -70,13 +99,22 @@ export function deleteSongFromPlaylist(playlist: Object, id: number) {
   }
 }
 
-export function deleteSongsFromLibrary(songsIds: Array<number>, playlist?: Object) {
+export function deleteSongsFromLibrary(songsIds: Array<number>) {
   songsIds.forEach(async id => {
     await db.songs.delete(id)
-    if (playlist) {
+    const dbPlaylists = await db.playlists
+      .where('songs')
+      .equals(id)
+      .distinct()
+      .toArray()
+    dbPlaylists.forEach(playlist => {
       deleteSongFromPlaylist(playlist, id)
-    }
+    })
   })
+}
+
+export function deletePlaylist(id: number) {
+  db.playlists.delete(id)
 }
 
 export function humanizeDuration(duration: number): string {

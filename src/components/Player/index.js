@@ -1,22 +1,22 @@
 // @flow
 
 import * as React from 'react'
-import { connect } from 'react-redux'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import services from '~/services'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
-import { playNext, playPrevious, songPlay, songPause } from '~/redux/songs'
+import { deleteSongsFromLibrary } from '~/common/songs'
+import { playNext, playPrevious, songPlay, songPause, incrementNonce, addToRecentlyPlayed } from '~/redux/songs'
 
-import '~/css/slider.css'
-import '~/css/player.css'
+import '~/styles/slider.less'
+import '~/styles/player.less'
+import cover from '~/static/img/alter-img.png'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
 import PlayerControlDuration from './PlayerControlsDuration'
-
-import cover from '../../static/img/album-cover.jpg'
 
 type Props = {|
   songs: SongsStateFields,
@@ -33,6 +33,9 @@ class Player extends React.Component<Props, State> {
     super(props, context)
     this.audioElement = document.createElement('audio')
     this.audioElement.addEventListener('ended', this.handleEnded)
+    this.audioElement.addEventListener('canplay', () => {
+      this.updateDuration()
+    })
   }
 
   state = {
@@ -102,7 +105,6 @@ class Player extends React.Component<Props, State> {
   }
   playPause = () => {
     const { songs } = this.props
-
     this.props.dispatch(songs.songState === 'playing' ? songPause() : songPlay())
   }
 
@@ -138,6 +140,20 @@ class Player extends React.Component<Props, State> {
       this.internalPlay()
     }
   }
+
+  updateDuration = () => {
+    const song = this.state.activeSong
+    if (song) {
+      this.props.dispatch(addToRecentlyPlayed(song.id))
+      if (!song.duration) {
+        db.songs.update(song.id, {
+          duration: this.audioElement.duration,
+        })
+        this.props.dispatch(incrementNonce())
+      }
+    }
+  }
+
   internalPause() {
     this.audioElement.pause()
   }
@@ -145,11 +161,21 @@ class Player extends React.Component<Props, State> {
     this.audioElement.play()
   }
 
+  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    if (this.state.activeSong) {
+      deleteSongsFromLibrary([this.state.activeSong.id])
+      this.props.dispatch(playNext())
+      this.props.dispatch(incrementNonce())
+    }
+  }
+
   render() {
     const { songs } = this.props
     const { activeSong } = this.state
 
     let songName = activeSong ? activeSong.filename : ''
+    let coverImg
     let songArtist = activeSong ? 'Unknown' : ''
     if (activeSong) {
       if (activeSong.meta && activeSong.meta.name) {
@@ -158,45 +184,54 @@ class Player extends React.Component<Props, State> {
       if (activeSong.meta && activeSong.meta.artists_original) {
         songArtist = activeSong.meta.artists_original
       }
+
+      if (activeSong.artwork && activeSong.artwork.album && activeSong.artwork.album.uri !== null) {
+        coverImg = activeSong.artwork.album.uri
+      } else {
+        coverImg = cover
+      }
     }
 
     return (
-      <div className="section-player">
-        <div className="section-player-cover" style={{ backgroundImage: `url(${cover})` }}>
-          <div className="section-song-description flex-row space-between">
-            <div className="song-details">
-              <h1 className="song-title">{activeSong ? songName : ''}</h1>
-              <h4 className="song-artist">{activeSong ? songArtist : ''}</h4>
+      <div className="section-player flex-column">
+        <div className="flex-row space-between">
+          <div className="flex-row section-player-cover">
+            <img src={coverImg} alt={cover} />
+            <div>
+              <h1 className="btn-white">{activeSong ? songName : ''}</h1>
+              <h3 className="btn-white">{activeSong ? songArtist : ''}</h3>
             </div>
           </div>
-          <div className="section-player-controls align-center space-between">
-            <div className="section-player-btns align-center">
-              <button onClick={this.playPrevious}>
-                <i title="Previous" className="material-icons player-material-icons">
-                  fast_rewind
-                </i>
-              </button>
-              <button onClick={this.playPause}>
-                <i
-                  title={songs.songState === 'playing' ? 'Pause' : 'Play'}
-                  className="material-icons player-material-icons play-btn"
-                >
-                  {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
-                </i>
-              </button>
-              <button onClick={this.playNext}>
-                <i title="Previous" className="material-icons player-material-icons">
-                  fast_forward
-                </i>
-              </button>
-            </div>
-            <div className="section-progress align-center space-between">
-              <PlayerControlDuration audioElement={this.audioElement} />
-            </div>
-            <div className="section-volume align-center">
-              <PlayerControlsVolume audioElement={this.audioElement} />
-              <PlayerControlsRepeat />
-            </div>
+          <button onClick={this.deleteSong}>
+            <i title="Delete from Library" className="material-icons btn-white">
+              delete
+            </i>
+          </button>
+        </div>
+        <div className="section-player-controls align-center space-between">
+          <div className="section-player-btns align-center">
+            <button onClick={this.playPrevious}>
+              <i title="Previous" className="material-icons btn-white">
+                fast_rewind
+              </i>
+            </button>
+            <button onClick={this.playPause}>
+              <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons btn-white">
+                {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
+              </i>
+            </button>
+            <button onClick={this.playNext}>
+              <i title="Previous" className="material-icons btn-white">
+                fast_forward
+              </i>
+            </button>
+          </div>
+          <div className="section-progress align-center space-between">
+            <PlayerControlDuration audioElement={this.audioElement} />
+          </div>
+          <div className="section-volume align-center">
+            <PlayerControlsVolume audioElement={this.audioElement} />
+            <PlayerControlsRepeat />
           </div>
         </div>
       </div>

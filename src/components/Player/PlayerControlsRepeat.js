@@ -40,7 +40,7 @@ const PlayerControlsRepeat = ({
         setSongRepeatProp(newState)
       }}
     >
-      <i title={title} className="material-icons player-material-icons" {...(dim ? { style: { color: '#ffffff7a' } } : {})}>
+      <i title={title} className="material-icons btn-white" {...(dim ? { style: { color: '#ffffff7a' } } : {})}>
         {icon}
       </i>
     </button>

@@ -9,7 +9,7 @@ import type { UserAuthorization } from '~/redux/user'
 
 import services from '~/services'
 import * as parser from '~/parser'
-import connect from '../common/connect'
+import connect from '~/common/connect'
 
 type Props = {|
   nonce: number,
@@ -20,15 +20,15 @@ type State = {||}
 
 class Downloader extends React.Component<Props, State> {
   componentDidMount() {
-    // Convert existing "downloading" state songs to "pending"
     db.songs
       .where('state')
       .equals('downloading')
       .modify({ state: 'pending' })
     this.startProcessingPendingSongs()
   }
-  componentWillReceiveProps(newProps) {
-    if (this.props.nonce !== newProps.nonce) {
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
       this.startProcessingPendingSongs()
     }
   }

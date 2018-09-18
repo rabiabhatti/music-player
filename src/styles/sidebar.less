@@ -1,0 +1,96 @@
+.section-sidebar {
+  left: 0;
+  top: 8rem;
+  width: 16%;
+  z-index: 51;
+  position: fixed;
+  overflow-y: auto;
+  background-color: #f8f8f6;
+  height: calc(100vh - 8rem);
+  max-height: calc(100vh - 8rem);
+  border-right: 1px solid rgba(0, 0, 0, 0.13);
+
+  & > button,
+  .section-sidebar-playlist {
+    width: 100%;
+    font-size: 0.84rem;
+    padding: 0.6rem 0 0.6rem 1.8rem;
+    transition: all 0.1s ease-in-out;
+
+    &:hover {
+      color: #757575 !important;
+      background-color: rgba(0, 0, 0, 0.07);
+    }
+  }
+
+  .section-sidebar-playlist {
+    & > :last-child {
+      display: none;
+    }
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.07);
+
+      & > :last-child {
+        display: flex;
+      }
+    }
+  }
+
+  .logout,
+  .picker {
+    padding: 1rem 0 1rem 1.8rem !important;
+  }
+
+  h3,
+  .logout,
+  .picker {
+    color: #515151;
+    font-weight: 600;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    padding: 0.6rem 0 0.6rem 1.8rem;
+  }
+}
+#sidebar-search-input {
+  border-radius: 0px !important;
+  padding: 0.79rem 0 0.79rem 1.8rem !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.13);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+}
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  border-radius: 1rem;
+  background-color: #eff0f2;
+  border-left: 1px solid rgba(0, 0, 0, 0.13);
+}
+::-webkit-scrollbar-thumb {
+  background: #cdced0;
+  border-radius: 2rem;
+  transition: background 0.1s ease-all;
+}
+::-webkit-scrollbar-thumb:hover {
+  cursor: pointer;
+  background: #bdbdbd;
+}
+
+@media screen and (max-width: 768px) {
+  .section-sidebar {
+    #sidebar-search-input,
+    & > button,
+    .section-sidebar-playlist,
+    h3,
+    .logout,
+    .picker {
+      padding: 0.6rem 0 0.6rem 0.6rem !important;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .section-sidebar {
+    display: none;
+  }
+}

@@ -1,15 +1,19 @@
 // @flow
 
 import * as React from 'react'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import { getArtistsFromSongs } from '~/common/songs'
 import type { File } from '~/types'
 
-import '~/css/artists.css'
+import '~/styles/artists.less'
 import ContentCard from './ContentCard'
+import ReplacementText from './utilities/ReplacementText'
 
-type Props = {||}
+type Props = {|
+  nonce: number,
+|}
 type State = {|
   songs: Array<File>,
   selected: ?{|
@@ -18,7 +22,7 @@ type State = {|
   |},
 |}
 
-export default class Artists extends React.Component<Props, State> {
+class Artists extends React.Component<Props, State> {
   state = {
     songs: [],
     selected: null,
@@ -28,57 +32,56 @@ export default class Artists extends React.Component<Props, State> {
     this.fetchSongs()
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
+      this.fetchSongs()
+    }
+  }
+
   fetchSongs = async () => {
-    const dbSongs = await db.songs.toArray()
-    this.setState({ songs: dbSongs })
+    const songs = await db.songs.toArray()
+    this.setState({ songs })
   }
 
   render() {
     const { songs, selected } = this.state
     const artists = getArtistsFromSongs(songs)
 
-    return (
-      <React.Fragment>
-        {this.state.songs.length ? (
-          <div className="section-artists bound">
-            <div className="artists-bar">
-              <a
-                className={`align-center artists-bar-row ${selected && selected.type === 'artist' ? '' : 'active'}`}
-                href="#allArtists"
-                onClick={() => this.setState({ selected: null })}
-              >
-                <i className="material-icons artists-bar-row-icon">mic</i>
-                <span>All Artists</span>
-              </a>
-              {artists.map(artist => (
-                <a
-                  className={`align-center artists-bar-row ${
-                    selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
-                  }`}
-                  key={artist}
-                  href={`#${artist}`}
-                  style={{ cursor: 'pointer' }}
-                  onClick={() =>
-                    this.setState({
-                      selected: { type: 'artist', identifier: artist },
-                    })
-                  }
-                >
-                  <i className="material-icons artists-bar-row-icon">person</i>
-                  <span>{artist}</span>
-                </a>
-              ))}
-            </div>
-            <div className="section-artists-info">
-              <ContentCard songs={songs} selected={selected && selected.type === 'artist' ? selected : null} />
-            </div>
-          </div>
-        ) : (
-          <div className="align-center justify-center bound" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
-        )}
-      </React.Fragment>
+    return songs.length ? (
+      <div className="flex-row bound">
+        <div className="artists-bar">
+          <button
+            className={`align-center btn-dull ${!selected ? 'active' : ''}`}
+            onClick={() => this.setState({ selected: null })}
+          >
+            <i className="material-icons">mic</i>
+            All Artists
+          </button>
+          {Object.keys(artists).map(artist => (
+            <button
+              key={artist}
+              className={`align-center btn-dull ${
+                selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
+              }`}
+              onClick={() =>
+                this.setState({
+                  selected: { type: 'artist', identifier: artist },
+                })
+              }
+            >
+              {artist}
+            </button>
+          ))}
+        </div>
+        <ContentCard selected={selected} />
+      </div>
+    ) : (
+      <ReplacementText />
     )
   }
 }
+
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(Artists)

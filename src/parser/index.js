@@ -36,7 +36,7 @@ const parsers = {
 // TODO: Maybe , ?
 // TODO: Make this configurable
 const NAME_DELIMITERS = /&/
-function normalizeArtist(name: string | Array<string>): Array<string> {
+export function normalizeArtist(name: string | Array<string>): Array<string> {
   if (!name) {
     return []
   }
@@ -61,6 +61,14 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     },
   })
 
+  let base64
+
+  if (metadata.common.picture && metadata.common.picture.length) {
+    base64 = btoa(
+      new Uint8Array(metadata.common.picture[0].data).reduce((data, byte) => data + String.fromCharCode(byte), ''),
+    )
+  }
+
   return {
     duration: metadata.format.duration,
     meta: {
@@ -74,10 +82,12 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
       track: metadata.common.track,
       disc: metadata.common.comment,
       genre: metadata.common.genre,
-      // picture: metadata.common.picture,
-      // ^ TODO: Set this in artwork instead
     },
-    artwork: null,
+    artwork: {
+      album: {
+        uri: base64 ? `data:image/jpeg;base64,${base64}` : null,
+      },
+    },
   }
 }
 
