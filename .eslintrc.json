@@ -3,7 +3,7 @@
   "rules": {
     "new-cap": "warn",
     "no-bitwise": "warn",
-    "prettier/prettier": "warn",
+    "prettier/prettier": "off",
     "no-underscore-dangle": "warn",
     "import/prefer-default-export": "warn"
   }
