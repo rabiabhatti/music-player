@@ -136,7 +136,4 @@ class Albums extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
-  { setSongPlaylist },
-)(Albums)
+export default connect(({ songs }) => ({ nonce: songs.nonce }), { setSongPlaylist })(Albums)

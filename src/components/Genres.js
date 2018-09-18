@@ -82,7 +82,4 @@ class Genres extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
-  null,
-)(Genres)
+export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(Genres)

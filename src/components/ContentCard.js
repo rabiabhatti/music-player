@@ -83,7 +83,4 @@ class ContentCard extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
-  null,
-)(ContentCard)
+export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(ContentCard)

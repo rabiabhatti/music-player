@@ -56,7 +56,4 @@ class EditPlaylist extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { incrementNonce },
-)(EditPlaylist)
+export default connect(null, { incrementNonce })(EditPlaylist)

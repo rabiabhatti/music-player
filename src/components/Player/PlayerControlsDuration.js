@@ -50,7 +50,7 @@ class PlayerControlDuration extends React.Component<Props, State> {
     const { currentTime, currentSeekTime, duration } = this.state
 
     const currentTimeToUse = currentSeekTime !== null && this.dragging ? currentSeekTime : currentTime
-    const percentage = duration === 0 ? 0 : (currentTimeToUse / duration) * 100
+    const percentage = duration === 0 ? 0 : currentTimeToUse / duration * 100
 
     return (
       <React.Fragment>

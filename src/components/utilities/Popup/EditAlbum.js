@@ -83,7 +83,4 @@ class EditAlbum extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { incrementNonce },
-)(EditAlbum)
+export default connect(null, { incrementNonce })(EditAlbum)

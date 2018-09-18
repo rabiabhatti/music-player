@@ -81,7 +81,4 @@ class Artists extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
-  null,
-)(Artists)
+export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(Artists)

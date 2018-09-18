@@ -169,7 +169,4 @@ class EditSong extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { incrementNonce },
-)(EditSong)
+export default connect(null, { incrementNonce })(EditSong)
