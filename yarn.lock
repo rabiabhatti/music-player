@@ -4243,10 +4243,6 @@ prettier@^1.10.2:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.12.1.tgz#c1ad20e803e7749faf905a409d2367e06bbe7325"
 
-prettier@^1.14.2:
-  version "1.14.2"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.2.tgz#0ac1c6e1a90baa22a62925f41963c841983282f9"
-
 pretty-bytes@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/pretty-bytes/-/pretty-bytes-5.1.0.tgz#6237ecfbdc6525beaef4de722cc60a58ae0e6c6d"
@@ -5773,9 +5769,9 @@ vm-browserify@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.0.tgz#bd76d6a23323e2ca8ffa12028dc04559c75f9019"
 
-web-streams-node@JCCR/web-streams-node#8a5910a911:
+web-streams-node@steelbrain/web-streams-node#8a5910a911:
   version "0.3.1"
-  resolved "https://codeload.github.com/JCCR/web-streams-node/tar.gz/8a5910a9119a649498ef872962c80ed5f6803ee6"
+  resolved "https://codeload.github.com/steelbrain/web-streams-node/tar.gz/8a5910a9119a649498ef872962c80ed5f6803ee6"
   dependencies:
     is-stream "^1.1.0"
     readable-stream-node-to-web "^1.0.1"
