@@ -103,12 +103,11 @@ class PlayerControlsVolume extends React.Component<Props, State> {
             this.handleMuteUnmute(icon !== 'volume_off')
           }}
         >
-          <i title="Volume" className="material-icons player-material-icons">
+          <i title="Volume" className="material-icons btn-white">
             {icon}
           </i>
         </button>
-
-        <div className="volume-progressbar">
+        <div>
           <div className="progress-fill" style={{ width: `${currentVolumeToUse}%` }} />
           <input
             onChange={this.handleVolumeSlide}

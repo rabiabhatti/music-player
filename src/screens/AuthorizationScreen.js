@@ -6,9 +6,8 @@ import services from '~/services'
 import connect from '~/common/connect'
 import { authorizeService } from '~/redux/user'
 
+import '~/styles/login.less'
 import type { Service } from '~/services/types'
-
-import '~/css/login.css'
 
 type Props = {|
   authorizeService: authorizeService,

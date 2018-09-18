@@ -2,48 +2,88 @@
 
 import * as React from 'react'
 import groupBy from 'lodash/groupBy'
+import flatten from 'lodash/flatten'
+import connect from '~/common/connect'
 
-import '~/css/content-card.css'
+import db from '~/db'
+import '~/styles/content-card.less'
+import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
 
-import Dropdown from './Dropdown'
+import Dropdown from './utilities/Dropdown'
 import AlbumInfo from './AlbumInfo'
 
 type Props = {|
-  songs: Array<Object>,
+  nonce: number,
   selected: ?Object,
 |}
 
-export default (props: Props) => {
-  const { songs, selected } = props
-  let songsToShow = songs
-  if (selected) {
-    if (selected.type === 'artist') {
-      songsToShow = songs.filter(item => item.meta && item.meta.artists.includes(selected.identifier))
-    } else if (selected.type === 'genre') {
-      songsToShow = songs.filter(item => item.meta && item.meta.genre && item.meta.genre.includes(selected.identifier))
+type State = {|
+  songsByAlbums: Object,
+|}
+
+class ContentCard extends React.Component<Props, State> {
+  state = {
+    songsByAlbums: {},
+  }
+
+  componentDidMount() {
+    this.fetchSongs(this.props.selected)
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce || prevProps.selected !== this.props.selected) {
+      this.fetchSongs(this.props.selected)
     }
   }
-  const songsByAlbums = groupBy(songsToShow, 'meta.album')
 
-  const songsIdsArr = []
-  songsToShow.forEach(song => {
-    songsIdsArr.push(song.id)
-  })
+  fetchSongs = async (selected: ?Object) => {
+    const songs = await db.songs.toArray()
+    const artists = getArtistsFromSongs(songs)
+    const genres = getGenresFromSongs(songs)
 
-  return (
-    <div className="section-artist" id={selected ? selected.identifier : 'allArtists'}>
-      <div className="space-between section-artist-header">
-        <div>
-          <h2>{selected ? selected.identifier : 'All Artists'}</h2>
-          <p>
-            {Object.keys(songsByAlbums).length} albums, {songsToShow.length} songs
-          </p>
+    if (!selected) {
+      this.setState({
+        songsByAlbums: groupBy(songs, 'meta.album'),
+      })
+    } else if (selected && selected.type === 'artist') {
+      this.setState({
+        songsByAlbums: groupBy(artists[selected.identifier], 'meta.album'),
+      })
+    } else if (selected && selected.type === 'genre') {
+      this.setState({
+        songsByAlbums: groupBy(genres[selected.identifier], 'meta.album'),
+      })
+    }
+  }
+
+  render() {
+    const { selected } = this.props
+    const { songsByAlbums } = this.state
+
+    const songs = flatten(Object.values(songsByAlbums))
+
+    const songsIds = songs.map(s => s.id)
+
+    return (
+      <div className="section-contect-card">
+        <div className="space-between">
+          <div>
+            <h2>{!selected ? `All` : selected.identifier}</h2>
+            <p>
+              {Object.keys(songsByAlbums).length} albums, {songs.length} songs
+            </p>
+          </div>
+          <Dropdown songsIds={songsIds} />
         </div>
-        <Dropdown songsIds={songsIdsArr} />
+        {Object.keys(songsByAlbums).map(albumName => (
+          <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
+        ))}
       </div>
-      {Object.keys(songsByAlbums).map(albumName => (
-        <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
-      ))}
-    </div>
-  )
+    )
+  }
 }
+
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(ContentCard)

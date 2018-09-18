@@ -8,7 +8,7 @@ import { incrementNonce } from '~/redux/songs'
 import type { UserAuthorization } from '~/redux/user'
 
 import services from '~/services'
-import connect from '../common/connect'
+import connect from '~/common/connect'
 
 type Props = {|
   authorizations: Array<UserAuthorization>,
@@ -50,6 +50,9 @@ class Picker extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(state => ({ authorizations: state.user.authorizations.toArray() }), { incrementNonce }))(
-  Picker,
-)
+export default compose(
+  connect(
+    state => ({ authorizations: state.user.authorizations.toArray() }),
+    { incrementNonce },
+  ),
+)(Picker)

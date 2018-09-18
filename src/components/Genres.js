@@ -1,15 +1,19 @@
 // @flow
 
 import * as React from 'react'
+import connect from '~/common/connect'
 
 import db from '~/db'
 import type { File } from '~/types'
 import { getGenresFromSongs } from '~/common/songs'
 
-import '~/css/artists.css'
+import '~/styles/artists.less'
 import ContentCard from './ContentCard'
+import ReplacementText from './utilities/ReplacementText'
 
-type Props = {||}
+type Props = {|
+  nonce: number,
+|}
 type State = {|
   songs: Array<File>,
   selected: ?{|
@@ -18,7 +22,7 @@ type State = {|
   |},
 |}
 
-export default class Genres extends React.Component<Props, State> {
+class Genres extends React.Component<Props, State> {
   state = {
     songs: [],
     selected: null,
@@ -28,52 +32,57 @@ export default class Genres extends React.Component<Props, State> {
     this.fetchSongs()
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.nonce !== this.props.nonce) {
+      this.fetchSongs()
+    }
+  }
+
   fetchSongs = async () => {
-    const dbSongs = await db.songs.toArray()
-    this.setState({ songs: dbSongs })
+    const songs = await db.songs.toArray()
+    this.setState({ songs })
   }
 
   render() {
     const { songs, selected } = this.state
     const genres = getGenresFromSongs(songs)
 
-    return (
-      <React.Fragment>
-        {this.state.songs.length ? (
-          <div className="section-artists bound">
-            <div className="artists-bar">
-              {genres.map(
-                genre =>
-                  genre !== 'Unknown' && (
-                    <a
-                      className={`align-center artists-bar-row ${
-                        selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
-                      }`}
-                      href={`#${genre}`}
-                      key={genre}
-                      style={{ cursor: 'pointer' }}
-                      onClick={() =>
-                        this.setState({
-                          selected: { type: 'genre', identifier: genre },
-                        })
-                      }
-                    >
-                      <i className="material-icons artists-bar-row-icon">queue_music</i>
-                      <span>{genre}</span>
-                    </a>
-                  ),
-              )}
-            </div>
-            <div className="section-artists-info">
-              <ContentCard songs={songs} selected={selected && selected.type === 'genre' ? selected : null} />
-            </div>
-          </div>
-        ) : (
-          <div className="align-center justify-center bound" style={{ height: 300 }}>
-            <h2 className="replacement-text">Add Music</h2>
-          </div>
-        )}
-      </React.Fragment>
+    return songs.length ? (
+      <div className="flex-row bound">
+        <div className="artists-bar">
+          <button
+            className={`align-center btn-dull ${!selected ? 'active' : ''}`}
+            onClick={() => this.setState({ selected: null })}
+          >
+            <i className="material-icons">queue_music</i>
+            All Genres
+          </button>
+
+          {Object.keys(genres).map(genre => (
+            <button
+              key={genre}
+              className={`align-center btn-dull ${
+                selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
+              }`}
+              onClick={() =>
+                this.setState({
+                  selected: { type: 'genre', identifier: genre },
+                })
+              }
+            >
+              {genre}
+            </button>
+          ))}
+        </div>
+        <ContentCard selected={selected} />
+      </div>
+    ) : (
+      <ReplacementText />
     )
   }
 }
+
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(Genres)
