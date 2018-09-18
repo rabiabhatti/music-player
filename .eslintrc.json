@@ -6,10 +6,5 @@
     "prettier/prettier": "off",
     "no-underscore-dangle": "warn",
     "import/prefer-default-export": "warn"
-  },
-  "settings": {
-    "import/resolver": {
-      "babel-module": {}
-    }
   }
 }
