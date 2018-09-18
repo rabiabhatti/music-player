@@ -39,7 +39,4 @@ class Login extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { authorizeService },
-)(Login)
+export default connect(null, { authorizeService })(Login)

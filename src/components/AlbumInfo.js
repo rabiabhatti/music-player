@@ -95,7 +95,4 @@ class AlbumInfo extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { setSongPlaylist },
-)(AlbumInfo)
+export default connect(null, { setSongPlaylist })(AlbumInfo)

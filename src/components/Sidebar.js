@@ -148,10 +148,7 @@ class Sidebar extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ router, songs }) => ({ route: router.route, nonce: songs.nonce }),
-  {
-    navigateTo,
-    incrementNonce,
-  },
-)(Sidebar)
+export default connect(({ router, songs }) => ({ route: router.route, nonce: songs.nonce }), {
+  navigateTo,
+  incrementNonce,
+})(Sidebar)

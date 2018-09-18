@@ -49,7 +49,4 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  null,
-  { incrementNonce },
-)(CreateNewPlaylist)
+export default connect(null, { incrementNonce })(CreateNewPlaylist)

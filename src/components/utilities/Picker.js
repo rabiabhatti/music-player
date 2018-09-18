@@ -50,9 +50,6 @@ class Picker extends React.Component<Props, State> {
   }
 }
 
-export default compose(
-  connect(
-    state => ({ authorizations: state.user.authorizations.toArray() }),
-    { incrementNonce },
-  ),
-)(Picker)
+export default compose(connect(state => ({ authorizations: state.user.authorizations.toArray() }), { incrementNonce }))(
+  Picker,
+)
