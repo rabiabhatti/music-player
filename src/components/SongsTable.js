@@ -55,7 +55,7 @@ class SongsTable extends React.Component<Props, State> {
                 className={song.id === activeSong ? 'active-song' : ''}
               >
                 <td>{song.meta.name || song.filename}</td>
-                <td>{!song.duration ? '' : humanizeDuration(song.duration)}</td>
+                <td>{song.duration ?  humanizeDuration(song.duration) : ''}</td>
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>

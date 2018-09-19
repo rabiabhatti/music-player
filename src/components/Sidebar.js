@@ -4,14 +4,13 @@ import * as React from 'react'
 import connect from '~/common/connect'
 
 import db from '~/db'
-import { deletePlaylist } from '~/common/songs'
 import { incrementNonce } from '~/redux/songs'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
 import '~/styles/sidebar.less'
-import Picker from '~/components/utilities/Picker'
-import EditPlaylist from '~/components/utilities/Popup/EditPlaylist'
-import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
+import Picker from '~/components/Picker'
+import EditPlaylist from '~/components/Popup/EditPlaylist'
+import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
 import Logout from './Logout'
 
@@ -52,8 +51,8 @@ class Sidebar extends React.Component<Props, State> {
     })
   }
 
-  deletePlaylist = (e: SyntheticEvent<HTMLButtonElement>, id: number) => {
-    deletePlaylist(id)
+  deletePlaylist = async (e: SyntheticEvent<HTMLButtonElement>, id: number) => {
+    await db.playlists.delete(id)
     this.props.incrementNonce()
   }
 

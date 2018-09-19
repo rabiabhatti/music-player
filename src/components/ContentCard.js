@@ -9,7 +9,7 @@ import db from '~/db'
 import '~/styles/content-card.less'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
 
-import Dropdown from './utilities/Dropdown'
+import Dropdown from './Dropdown'
 import AlbumInfo from './AlbumInfo'
 
 type Props = {|

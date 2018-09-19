@@ -9,7 +9,8 @@ import { incrementNonce } from '~/redux/songs'
 import Popup from './Popup'
 
 type Props = {|
-  songsIds?: Array<number>,
+  id: number,
+  name: string,
   handleClose: () => void,
   incrementNonce: () => void,
 |}
@@ -17,30 +18,36 @@ type State = {|
   name: string,
 |}
 
-class CreateNewPlaylist extends React.Component<Props, State> {
+class EditPlaylist extends React.Component<Props, State> {
   state = {
     name: '',
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ name: event.target.value })
+    this.setState({ name: event.target.value.trim() })
   }
 
   savePlaylist = () => {
-    db.playlists.add({ name: this.state.name, songs: this.props.songsIds })
+    const { name: playlistName, id } = this.props
+    db.playlists.update(id, {
+      name: this.state.name !== '' ? this.state.name : playlistName,
+    })
     this.props.incrementNonce()
     this.props.handleClose()
   }
 
   render() {
     const { name } = this.state
-    const { handleClose } = this.props
+    const { name: playlistName, handleClose } = this.props
 
-    const enable = name !== '' && name.replace(/\s/g, '') !== ''
+    const enable = name !== ''
 
     return (
       <Popup handleClose={handleClose}>
-        <input type="text" name="name" value={name} onInput={this.handleChange} placeholder="Choose name" />
+        <label htmlFor="name">
+          Name
+          <input id="name" type="text" name="name" value={name} onInput={this.handleChange} placeholder={playlistName} />
+        </label>
         <button className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
           Save
         </button>
@@ -49,4 +56,4 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { incrementNonce })(CreateNewPlaylist)
+export default connect(null, { incrementNonce })(EditPlaylist)

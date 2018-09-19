@@ -10,7 +10,7 @@ import { incrementNonce } from '~/redux/songs'
 import Popup from './Popup'
 
 type Props = {|
-  album: Array<number>,
+  songs: Array<number>,
   handleClose: () => void,
   incrementNonce: () => void,
 |}
@@ -29,8 +29,8 @@ class EditAlbum extends React.Component<Props, State> {
   }
 
   getInfo = async () => {
-    const localAlbum = this.props.album
-    const dbSong = await db.songs.get(localAlbum[0])
+    const songsIds = this.props.songs
+    const dbSong = await db.songs.get(songsIds[0])
 
     this.setState({
       name: !dbSong.meta.album ? 'Unkown' : dbSong.meta.album,
@@ -40,13 +40,13 @@ class EditAlbum extends React.Component<Props, State> {
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.persist()
-    this.setState(state => set(state, event.target.name, event.target.value))
+    this.setState(state => set(state, event.target.name, event.target.value.trim()))
   }
 
   saveAlbumInfo = () => {
     const { name, year } = this.state
     Promise.all(
-      this.props.album.map(async id => {
+      this.props.songs.map(async id => {
         const song = await db.songs.get(id)
         db.songs.update(song.id, {
           'meta.album': name !== '' ? name : song.meta.album,
@@ -63,7 +63,7 @@ class EditAlbum extends React.Component<Props, State> {
     const { name, year } = this.state
     const { handleClose } = this.props
 
-    const enable = name !== '' && year !== '' && name.replace(/\s/g, '') !== '' && year.replace(/\s/g, '') !== ''
+    const enable = name !== '' && year !== '' 
 
     return (
       <Popup handleClose={handleClose}>
