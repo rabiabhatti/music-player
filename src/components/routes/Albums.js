@@ -10,8 +10,8 @@ import { getAlbumsFromSongs } from '~/common/songs'
 import '~/styles/albums.less'
 import cover from '~/static/img/alter-img.png'
 
-import AlbumInfo from './AlbumInfo'
-import ReplacementText from './utilities/ReplacementText'
+import AlbumInfo from '../AlbumInfo'
+import EmptyMusicText from '../EmptyMusicText'
 
 type Props = {|
   nonce: number,
@@ -20,7 +20,6 @@ type Props = {|
 type State = {|
   songs: Array<Object>,
   selected: ?{|
-    type: string,
     identifier: string,
   |},
   viewWidth: number,
@@ -70,7 +69,6 @@ class Albums extends React.Component<Props, State> {
     }
     this.setState({
       selected: {
-        type: 'album',
         identifier: album,
       },
     })
@@ -90,10 +88,17 @@ class Albums extends React.Component<Props, State> {
 
     const renderedAlbums = Object.keys(albums).map(album => {
       const albumSongs = albums[album]
+      let coverImg
+
+      if (albumSongs[0].artwork && albumSongs[0].artwork.album && albumSongs[0].artwork.album.uri !== null) {
+        coverImg = albumSongs[0].artwork.album.uri
+      } else {
+        coverImg = cover
+      }
       return (
         <div className="album-content" key={album}>
           <div className="album-cover">
-            <img alt={cover} src={albumSongs[0].artwork?.album?.uri ? albumSongs[0].artwork.album.uri : cover} />
+            <img alt={cover} src={coverImg} />
             <button onClick={() => this.playAtIndex(albumSongs, 0)}>
               <i className="material-icons">play_circle_outline</i>
             </button>
@@ -105,19 +110,21 @@ class Albums extends React.Component<Props, State> {
         </div>
       )
     })
-    if (selected && selected.type === 'album') {
+    if (selected) {
       const elem = <AlbumInfo key={i++} name={selected.identifier} songs={albums[selected.identifier]} />
       const selectedAlbumIndex = Object.keys(albums).findIndex(a => a === selected.identifier)
       if (selectedAlbumIndex > -1) {
-        let insertIndex
+        let itemsInRow
 
         if (viewWidth <= 480) {
-          insertIndex = 3 * Math.ceil((selectedAlbumIndex + 1) / 3)
+          itemsInRow = 3
         } else if (viewWidth <= 768 && viewWidth > 480) {
-          insertIndex = 4 * Math.ceil((selectedAlbumIndex + 1) / 4)
+          itemsInRow = 4
         } else {
-          insertIndex = 5 * Math.ceil((selectedAlbumIndex + 1) / 5)
+          itemsInRow = 5
         }
+
+        const insertIndex =  itemsInRow * Math.ceil((selectedAlbumIndex + 1) / itemsInRow)
         if (insertIndex > renderedAlbums.length) {
           renderedAlbums.push(elem)
         } else {
@@ -131,7 +138,7 @@ class Albums extends React.Component<Props, State> {
         {renderedAlbums}
       </div>
     ) : (
-      <ReplacementText />
+      <EmptyMusicText />
     )
   }
 }

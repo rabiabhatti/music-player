@@ -5,8 +5,8 @@ import connect from '~/common/connect'
 
 import db from '~/db'
 
-import SongsTable from './utilities/SongsTable'
-import ReplacementText from './utilities/ReplacementText'
+import SongsTable from '../SongsTable'
+import EmptyMusicText from '../EmptyMusicText'
 
 type Props = {|
   nonce: number,
@@ -41,7 +41,7 @@ class Songs extends React.Component<Props, State> {
   render() {
     const { songs } = this.state
 
-    return songs.length ? <SongsTable title="Songs" songs={songs} /> : <ReplacementText />
+    return songs.length ? <SongsTable title="Songs" songs={songs} /> : <EmptyMusicText />
   }
 }
 

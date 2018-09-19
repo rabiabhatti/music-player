@@ -61,13 +61,7 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     },
   })
 
-  let base64
-
-  if (metadata.common.picture && metadata.common.picture.length) {
-    base64 = btoa(
-      new Uint8Array(metadata.common.picture[0].data).reduce((data, byte) => data + String.fromCharCode(byte), ''),
-    )
-  }
+  const picture = Buffer.from(metadata.common.picture[0].data).toString('base64')
 
   return {
     duration: metadata.format.duration,
@@ -85,7 +79,7 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     },
     artwork: {
       album: {
-        uri: base64 ? `data:image/jpeg;base64,${base64}` : null,
+        uri: picture ? `data:image/jpeg;base64,${picture}` : null,
       },
     },
   }

@@ -64,7 +64,7 @@ class EditSong extends React.Component<Props, State> {
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.persist()
-    this.setState(state => set(state, event.target.name, event.target.value))
+    this.setState(state => set(state, event.target.name, event.target.value.trim()))
   }
 
   handleBlur = (field: string) => (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -76,18 +76,13 @@ class EditSong extends React.Component<Props, State> {
 
   saveSongInfo = () => {
     const info = this.state.fields
-    const localGenre = info.genre.split(',')
-    const localArtists = info.artists.split(',')
-    const localSong = this.props.song.meta
+    const songMeta = this.props.song.meta
 
     db.songs.update(this.props.song.id, {
-      'meta.name': info.name !== '' ? info.name : localSong.name,
-      'meta.album': info.album !== '' ? info.album : localSong.album,
-      'meta.genre': info.genre !== '' ? localGenre : localSong.genre,
-      'meta.artists': info.artists !== '' ? normalizeArtist(localArtists) : localSong.artists,
-      'meta.artists_original': info.artists !== '' ? localArtists : localSong.artists_original,
-      'meta.album_artists': info.artists !== '' ? normalizeArtist(localArtists) : localSong.album_artists,
-      'meta.album_artists_original': info.artists !== '' ? localArtists : localSong.album_artists_original,
+      'meta.name': info.name !== '' ? info.name : songMeta.name,
+      'meta.album': info.album !== '' ? info.album : songMeta.album,
+      'meta.genre': info.genre !== '' ? info.genre.split(',') : songMeta.genre,
+      'meta.artists_original': info.artists !== '' ? normalizeArtist(info.artists.split(',')) : songMeta.artists_original,
     })
     this.props.incrementNonce()
     this.props.handleClose()

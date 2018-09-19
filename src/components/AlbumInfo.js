@@ -9,7 +9,7 @@ import { humanizeDuration } from '~/common/songs'
 import '~/styles/album-info.less'
 import cover from '~/static/img/alter-img.png'
 
-import Dropdown from './utilities/Dropdown'
+import Dropdown from './Dropdown'
 
 type Props = {|
   name: string,
@@ -19,9 +19,9 @@ type Props = {|
 type State = {||}
 
 class AlbumInfo extends React.Component<Props, State> {
-  playAtIndex = (index: number) => {
+  playAtIndex = (index: number, ids: Array<number>) => {
     this.props.setSongPlaylist({
-      songs: this.props.songs.map(song => song.id),
+      songs: ids,
       index,
     })
   }
@@ -43,15 +43,15 @@ class AlbumInfo extends React.Component<Props, State> {
                 songs[0].artwork && songs[0].artwork.album && songs[0].artwork.album.uri ? songs[0].artwork.album.uri : cover
               }
             />
-            <button className="align-center" onClick={() => this.playAtIndex(0)}>
+            <button className="align-center" onClick={() => this.playAtIndex(0, songsIds)}>
               <i className="material-icons album-play-btn">play_circle_outline</i>
             </button>
           </div>
           <div className="space-between">
             <p>
-              {songs.length} songs, {!totalDuration ? '' : humanizeDuration(totalDuration)} minutes
+              {songs.length} songs, {totalDuration ? humanizeDuration(totalDuration): ''} minutes
             </p>
-            <button className="btn-blue" onClick={() => this.playAtIndex(0)}>
+            <button className="btn-blue" onClick={() => this.playAtIndex(0, songsIds)}>
               Shuffle
             </button>
           </div>
@@ -73,15 +73,15 @@ class AlbumInfo extends React.Component<Props, State> {
               <div
                 className="space-between align-center flex-wrap"
                 key={song.sourceId}
-                onDoubleClick={() => this.playAtIndex(index)}
+                onDoubleClick={() => this.playAtIndex(index, songsIds)}
               >
                 <p>{index + 1}</p>
                 <p>
                   {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
                 </p>
-                <p>{!song.duration ? '' : humanizeDuration(song.duration)}</p>
+                <p>{song.duration ? humanizeDuration(song.duration): ''}</p>
                 <div className="song-btns space-between">
-                  <button onClick={() => this.playAtIndex(index)}>
+                  <button onClick={() => this.playAtIndex(index, songsIds)}>
                     <i className="material-icons song-play-btn btn-blue">play_arrow</i>
                   </button>
                   <Dropdown songsIds={[song.id]} song={song} />

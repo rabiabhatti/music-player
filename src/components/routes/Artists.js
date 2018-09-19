@@ -4,12 +4,12 @@ import * as React from 'react'
 import connect from '~/common/connect'
 
 import db from '~/db'
+import { getArtistsFromSongs } from '~/common/songs'
 import type { File } from '~/types'
-import { getGenresFromSongs } from '~/common/songs'
 
 import '~/styles/artists.less'
-import ContentCard from './ContentCard'
-import ReplacementText from './utilities/ReplacementText'
+import ContentCard from '../ContentCard'
+import EmptyMusicText from '../EmptyMusicText'
 
 type Props = {|
   nonce: number,
@@ -22,7 +22,7 @@ type State = {|
   |},
 |}
 
-class Genres extends React.Component<Props, State> {
+class Artists extends React.Component<Props, State> {
   state = {
     songs: [],
     selected: null,
@@ -45,7 +45,7 @@ class Genres extends React.Component<Props, State> {
 
   render() {
     const { songs, selected } = this.state
-    const genres = getGenresFromSongs(songs)
+    const artists = getArtistsFromSongs(songs)
 
     return songs.length ? (
       <div className="flex-row bound">
@@ -54,32 +54,31 @@ class Genres extends React.Component<Props, State> {
             className={`align-center btn-dull ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
-            <i className="material-icons">queue_music</i>
-            All Genres
+            <i className="material-icons">mic</i>
+            All Artists
           </button>
-
-          {Object.keys(genres).map(genre => (
+          {Object.keys(artists).map(artist => (
             <button
-              key={genre}
+              key={artist}
               className={`align-center btn-dull ${
-                selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
+                selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
               }`}
               onClick={() =>
                 this.setState({
-                  selected: { type: 'genre', identifier: genre },
+                  selected: { type: 'artist', identifier: artist },
                 })
               }
             >
-              {genre}
+              {artist}
             </button>
           ))}
         </div>
         <ContentCard selected={selected} />
       </div>
     ) : (
-      <ReplacementText />
+      <EmptyMusicText />
     )
   }
 }
 
-export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(Genres)
+export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(Artists)

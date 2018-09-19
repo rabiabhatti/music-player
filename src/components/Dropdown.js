@@ -10,9 +10,9 @@ import { incrementNonce, playNext, playLater } from '~/redux/songs'
 import { addSongsToPlaylist, deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 
 import '~/styles/dropdown.less'
-import EditSong from '~/components/utilities/Popup/EditSong'
-import EditAlbum from '~/components/utilities/Popup/EditAlbum'
-import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
+import EditSong from '~/components/Popup/EditSong'
+import EditAlbum from '~/components/Popup/EditAlbum'
+import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
 type Props = {|
   nonce: number,
@@ -130,7 +130,7 @@ class Dropdown extends React.Component<Props, State> {
         }}
       >
         {showEditSongModal && <EditSong handleClose={this.hideEditSongModal} song={song} />}
-        {showEditAlbumModal && <EditAlbum handleClose={this.hideEditAlbumModal} album={songsIds} />}
+        {showEditAlbumModal && <EditAlbum handleClose={this.hideEditAlbumModal} songs={songsIds} />}
         {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} songsIds={songsIds} />}
         <i className="material-icons btn-blue">more_horiz</i>
         <div className={`dropdown-content ${this.state.opened ? '' : 'hidden'}`}>
