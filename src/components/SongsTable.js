@@ -7,10 +7,11 @@ import '~/styles/table.less'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
-import Dropdown from './Dropdown'
+import SongDropdown from '~/components/Dropdown/SongDropdown'
 
 type Props = {|
   title: string,
+  playlist?: Object,
   songs: Array<Object>,
   activeSong: number | null,
   setSongPlaylist: setSongPlaylist,
@@ -20,20 +21,21 @@ type State = {||}
 
 class SongsTable extends React.Component<Props, State> {
   playAtIndex = (index: number) => {
+    const { songs } = this.props
     this.props.setSongPlaylist({
-      songs: this.props.songs.map(song => song.id),
+      songs: songs.map(song => song.id),
       index,
     })
   }
 
   render() {
-    const { activeSong, songs, title } = this.props
+    const { activeSong, songs, title, playlist } = this.props
 
     return (
       <div className="section-songs bound">
         <div className="align-center space-between">
           <h2>{title}</h2>
-          <button className="btn-blue" onClick={() => this.playAtIndex(0)}>
+          <button type="button" className="btn-blue" onClick={() => this.playAtIndex(0)}>
             Play All
           </button>
         </div>
@@ -55,15 +57,15 @@ class SongsTable extends React.Component<Props, State> {
                 className={song.id === activeSong ? 'active-song' : ''}
               >
                 <td>{song.meta.name || song.filename}</td>
-                <td>{song.duration ?  humanizeDuration(song.duration) : ''}</td>
+                <td>{song.duration ? humanizeDuration(song.duration) : ''}</td>
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>
                 <td className="song-wrapper-btns space-between">
-                  <button onClick={() => this.playAtIndex(index)}>
+                  <button type="button" onClick={() => this.playAtIndex(index)}>
                     <i className="material-icons btn-blue">play_arrow</i>
                   </button>
-                  <Dropdown songsIds={[song.id]} song={song} />
+                  <SongDropdown song={song} playlist={playlist} />
                 </td>
               </tr>
             ))}

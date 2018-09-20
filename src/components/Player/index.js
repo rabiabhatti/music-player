@@ -108,7 +108,34 @@ class Player extends React.Component<Props, State> {
     this.props.dispatch(songs.songState === 'playing' ? songPause() : songPlay())
   }
 
-  audioElement: HTMLAudioElement
+  updateDuration = () => {
+    const { activeSong } = this.state
+    if (activeSong) {
+      this.props.dispatch(addToRecentlyPlayed(activeSong.id))
+      if (!activeSong.duration) {
+        db.songs.update(activeSong.id, {
+          duration: this.audioElement.duration,
+        })
+        this.props.dispatch(incrementNonce())
+      }
+    }
+  }
+
+  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const { activeSong } = this.state
+    if (activeSong) {
+      deleteSongsFromLibrary([activeSong.id])
+      this.props.dispatch(playNext())
+      this.props.dispatch(incrementNonce())
+    }
+  }
+  internalPlay() {
+    this.audioElement.play()
+  }
+  internalPause() {
+    this.audioElement.pause()
+  }
 
   async loadSong(songId: number, songState) {
     const { authorizations } = this.props
@@ -141,34 +168,7 @@ class Player extends React.Component<Props, State> {
     }
   }
 
-  updateDuration = () => {
-    const song = this.state.activeSong
-    if (song) {
-      this.props.dispatch(addToRecentlyPlayed(song.id))
-      if (!song.duration) {
-        db.songs.update(song.id, {
-          duration: this.audioElement.duration,
-        })
-        this.props.dispatch(incrementNonce())
-      }
-    }
-  }
-
-  internalPause() {
-    this.audioElement.pause()
-  }
-  internalPlay() {
-    this.audioElement.play()
-  }
-
-  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (this.state.activeSong) {
-      deleteSongsFromLibrary([this.state.activeSong.id])
-      this.props.dispatch(playNext())
-      this.props.dispatch(incrementNonce())
-    }
-  }
+  audioElement: HTMLAudioElement
 
   render() {
     const { songs } = this.props
@@ -202,7 +202,7 @@ class Player extends React.Component<Props, State> {
               <h3 className="btn-white">{activeSong ? songArtist : ''}</h3>
             </div>
           </div>
-          <button onClick={this.deleteSong}>
+          <button type="button" onClick={this.deleteSong}>
             <i title="Delete from Library" className="material-icons btn-white">
               delete
             </i>
@@ -210,17 +210,17 @@ class Player extends React.Component<Props, State> {
         </div>
         <div className="section-player-controls align-center space-between">
           <div className="section-player-btns align-center">
-            <button onClick={this.playPrevious}>
+            <button type="button" onClick={this.playPrevious}>
               <i title="Previous" className="material-icons btn-white">
                 fast_rewind
               </i>
             </button>
-            <button onClick={this.playPause}>
+            <button type="button" onClick={this.playPause}>
               <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons btn-white">
                 {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
               </i>
             </button>
-            <button onClick={this.playNext}>
+            <button type="button" onClick={this.playNext}>
               <i title="Previous" className="material-icons btn-white">
                 fast_forward
               </i>

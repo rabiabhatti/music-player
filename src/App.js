@@ -16,7 +16,8 @@ class Root extends React.Component {
 
   componentDidMount() {
     const timeout = setTimeout(() => {
-      if (this.state.loading) {
+      const { loading } = this.state
+      if (loading) {
         this.setState({ showLoadingScreen: true })
       }
     }, SHOW_LOADING_SCREEN_IN)

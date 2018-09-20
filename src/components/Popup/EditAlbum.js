@@ -29,12 +29,12 @@ class EditAlbum extends React.Component<Props, State> {
   }
 
   getInfo = async () => {
-    const songsIds = this.props.songs
-    const dbSong = await db.songs.get(songsIds[0])
+    const { songs } = this.props
+    const song = await db.songs.get(songs[0])
 
     this.setState({
-      name: !dbSong.meta.album ? 'Unkown' : dbSong.meta.album,
-      year: !dbSong.meta.year ? 'Unkown' : dbSong.meta.year.toString(),
+      name: !song.meta.album ? 'Unkown' : song.meta.album,
+      year: !song.meta.year ? 'Unkown' : song.meta.year.toString(),
     })
   }
 
@@ -44,9 +44,10 @@ class EditAlbum extends React.Component<Props, State> {
   }
 
   saveAlbumInfo = () => {
+    const { songs } = this.props
     const { name, year } = this.state
     Promise.all(
-      this.props.songs.map(async id => {
+      songs.map(async id => {
         const song = await db.songs.get(id)
         db.songs.update(song.id, {
           'meta.album': name !== '' ? name : song.meta.album,
@@ -63,7 +64,7 @@ class EditAlbum extends React.Component<Props, State> {
     const { name, year } = this.state
     const { handleClose } = this.props
 
-    const enable = name !== '' && year !== '' 
+    const enable = name !== '' && year !== ''
 
     return (
       <Popup handleClose={handleClose}>
@@ -75,7 +76,7 @@ class EditAlbum extends React.Component<Props, State> {
           Year
           <input type="text" id="name" name="year" value={year} placeholder={year} onChange={this.handleChange} />
         </label>
-        <button className="btn-blue-border" onClick={this.saveAlbumInfo} disabled={!enable}>
+        <button type="submit" className="btn-blue-border" onClick={this.saveAlbumInfo} disabled={!enable}>
           Save
         </button>
       </Popup>
@@ -83,4 +84,7 @@ class EditAlbum extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { incrementNonce })(EditAlbum)
+export default connect(
+  null,
+  { incrementNonce },
+)(EditAlbum)

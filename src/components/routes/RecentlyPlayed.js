@@ -21,12 +21,14 @@ class RecentlyPlayed extends React.Component<Props, State> {
   state = { songs: [] }
 
   componentDidMount() {
-    this.fetchSongs(this.props.recentlyPlayed)
+    const { recentlyPlayed } = this.props
+    this.fetchSongs(recentlyPlayed)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce || !eq(this.props.recentlyPlayed, prevProps.recentlyPlayed)) {
-      this.fetchSongs(this.props.recentlyPlayed)
+    const { nonce, recentlyPlayed } = this.props
+    if (prevProps.nonce !== nonce || !eq(recentlyPlayed, prevProps.recentlyPlayed)) {
+      this.fetchSongs(recentlyPlayed)
     }
   }
 

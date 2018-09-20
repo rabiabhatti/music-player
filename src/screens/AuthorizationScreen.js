@@ -30,7 +30,7 @@ class Login extends React.Component<Props, State> {
     return (
       <div className="section-login align-center">
         {services.map(service => (
-          <button className="btn-blue-border" onClick={e => this.authorize(service, e)} key={service.name}>
+          <button type="button" className="btn-blue-border" onClick={e => this.authorize(service, e)} key={service.name}>
             Authorize with {service.name}
           </button>
         ))}

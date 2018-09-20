@@ -27,7 +27,10 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   }
 
   savePlaylist = () => {
-    db.playlists.add({ name: this.state.name, songs: this.props.songsIds })
+    const { name } = this.state
+    const { songsIds } = this.props
+
+    db.playlists.add({ name, songs: songsIds })
     this.props.incrementNonce()
     this.props.handleClose()
   }
@@ -41,7 +44,7 @@ class CreateNewPlaylist extends React.Component<Props, State> {
     return (
       <Popup handleClose={handleClose}>
         <input type="text" name="name" value={name} onInput={this.handleChange} placeholder="Choose name" />
-        <button className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
+        <button type="submit" className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
           Save
         </button>
       </Popup>
@@ -49,4 +52,7 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { incrementNonce })(CreateNewPlaylist)
+export default connect(
+  null,
+  { incrementNonce },
+)(CreateNewPlaylist)

@@ -35,7 +35,7 @@ const PlayerControlsRepeat = ({
   const { dim, icon, newState, title } = BUTTONS_CONFIG[repeatMode]
 
   return (
-    <button
+    <button type="button"
       onClick={() => {
         setSongRepeatProp(newState)
       }}

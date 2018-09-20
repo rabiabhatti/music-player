@@ -32,7 +32,7 @@
     "@babel/preset-flow": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "babel-plugin-module-resolver": "^3.1.1",
-    "eslint-config-steelbrain": "^5.0.2",
+    "eslint-config-steelbrain": "^6.0.0",
     "flow-bin": "^0.79.1",
     "less": "^3.8.1",
     "link-tilde": "^1.0.0",

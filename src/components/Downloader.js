@@ -19,6 +19,9 @@ type Props = {|
 type State = {||}
 
 class Downloader extends React.Component<Props, State> {
+  lastSong = null
+  downloading = false
+
   componentDidMount() {
     db.songs
       .where('state')
@@ -28,13 +31,11 @@ class Downloader extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce) {
+    const { nonce } = this.props
+    if (prevProps.nonce !== nonce) {
       this.startProcessingPendingSongs()
     }
   }
-
-  lastSong = null
-  downloading = false
 
   startProcessingPendingSongs() {
     if (this.downloading) {
@@ -102,5 +103,8 @@ class Downloader extends React.Component<Props, State> {
 }
 
 export default compose(
-  connect(({ user, songs }) => ({ authorizations: user.authorizations.toArray(), nonce: songs.nonce }), { incrementNonce }),
+  connect(
+    ({ user, songs }) => ({ authorizations: user.authorizations.toArray(), nonce: songs.nonce }),
+    { incrementNonce },
+  ),
 )(Downloader)

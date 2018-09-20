@@ -24,12 +24,14 @@ class Playlist extends React.Component<Props, State> {
   state = { playlist: {}, songs: [] }
 
   componentDidMount() {
-    this.getPlaylist(this.props.route.id)
+    const { route } = this.props
+    this.getPlaylist(route.id)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce || prevProps.route.id !== this.props.route.id) {
-      this.getPlaylist(this.props.route.id)
+    const { nonce, route } = this.props
+    if (prevProps.nonce !== nonce || prevProps.route.id !== route.id) {
+      this.getPlaylist(route.id)
     }
   }
 
@@ -52,7 +54,7 @@ class Playlist extends React.Component<Props, State> {
   render() {
     const { songs, playlist } = this.state
 
-    return songs.length ? <SongsTable title={playlist.name} songs={songs} /> : <EmptyMusicText />
+    return songs.length ? <SongsTable title={playlist.name} songs={songs} playlist={playlist} /> : <EmptyMusicText />
   }
 }
 

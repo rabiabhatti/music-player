@@ -43,7 +43,7 @@ class Picker extends React.Component<Props, State> {
 
   render() {
     return (
-      <button className="picker" onClick={this.createPicker}>
+      <button type="button" className="picker" onClick={this.createPicker}>
         Add Songs
       </button>
     )

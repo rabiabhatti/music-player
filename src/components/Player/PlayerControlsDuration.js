@@ -15,6 +15,16 @@ type State = {|
 
 class PlayerControlDuration extends React.Component<Props, State> {
   state = { currentSeekTime: null, currentTime: 0, duration: 0 }
+  dragging = false
+
+  handleDurationSlideFlush = debounce(() => {
+    const { audioElement } = this.props
+    const { currentSeekTime } = this.state
+    if (currentSeekTime !== null) {
+      audioElement.currentTime = currentSeekTime
+    }
+    this.dragging = false
+  }, 50)
 
   componentDidMount() {
     this.props.audioElement.addEventListener('timeupdate', this.handleDurationChange)
@@ -23,12 +33,11 @@ class PlayerControlDuration extends React.Component<Props, State> {
     this.props.audioElement.removeEventListener('timeupdate', this.handleDurationChange)
   }
 
-  dragging = false
-
   handleDurationChange = () => {
+    const { audioElement } = this.props
     this.setState({
-      currentTime: this.props.audioElement.currentTime || 0,
-      duration: this.props.audioElement.duration || 0,
+      currentTime: audioElement.currentTime || 0,
+      duration: audioElement.duration || 0,
     })
   }
 
@@ -38,19 +47,12 @@ class PlayerControlDuration extends React.Component<Props, State> {
     this.dragging = true
     this.handleDurationSlideFlush()
   }
-  handleDurationSlideFlush = debounce(() => {
-    const { currentSeekTime } = this.state
-    if (currentSeekTime !== null) {
-      this.props.audioElement.currentTime = currentSeekTime
-    }
-    this.dragging = false
-  }, 50)
 
   render() {
     const { currentTime, currentSeekTime, duration } = this.state
 
     const currentTimeToUse = currentSeekTime !== null && this.dragging ? currentSeekTime : currentTime
-    const percentage = duration === 0 ? 0 : currentTimeToUse / duration * 100
+    const percentage = duration === 0 ? 0 : (currentTimeToUse / duration) * 100
 
     return (
       <React.Fragment>

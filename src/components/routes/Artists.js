@@ -33,7 +33,8 @@ class Artists extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce) {
+    const { nonce } = this.props
+    if (prevProps.nonce !== nonce) {
       this.fetchSongs()
     }
   }
@@ -51,6 +52,7 @@ class Artists extends React.Component<Props, State> {
       <div className="flex-row bound">
         <div className="artists-bar">
           <button
+            type="submit"
             className={`align-center btn-dull ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
@@ -59,6 +61,7 @@ class Artists extends React.Component<Props, State> {
           </button>
           {Object.keys(artists).map(artist => (
             <button
+              type="submit"
               key={artist}
               className={`align-center btn-dull ${
                 selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
@@ -81,4 +84,7 @@ class Artists extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(Artists)
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(Artists)
