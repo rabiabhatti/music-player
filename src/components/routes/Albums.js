@@ -100,6 +100,7 @@ class Albums extends React.Component<Props, State> {
       return (
         <div className="album-content" key={album}>
           <div className="album-cover">
+            <div className="filter" />
             <img alt={cover} src={coverImg} />
             <button type="button" onClick={() => this.playAtIndex(albumSongs, 0)}>
               <i className="material-icons">play_circle_outline</i>
