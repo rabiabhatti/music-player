@@ -18,10 +18,26 @@ type Props = {|
 
 class PlayerControlsVolume extends React.Component<Props, State> {
   state = { currentSeekVolume: null }
+  dragging = false
+
+  handleVolumeSlideFlush = debounce(() => {
+    const { dispatch, audioElement, songMuted } = this.props
+    const { currentSeekVolume } = this.state
+    if (currentSeekVolume !== null) {
+      audioElement.volume = currentSeekVolume / 100
+      if (audioElement.volume < 0.01) {
+        dispatch(setSongMute(false))
+      } else if (songMuted) {
+        dispatch(setSongMute(false))
+      }
+    }
+    this.dragging = false
+  }, 10)
 
   componentDidMount() {
-    this.props.audioElement.volume = this.props.songMuted ? 0 : this.props.songVolume / 100
-    this.props.audioElement.addEventListener('volumechange', this.handleVolumeChange)
+    const { audioElement, songMuted, songVolume } = this.props
+    audioElement.volume = songMuted ? 0 : songVolume / 100
+    audioElement.addEventListener('volumechange', this.handleVolumeChange)
   }
   componentWillReceiveProps(newProps) {
     const { songMuted: oldMuted, songVolume: oldVolume, audioElement } = this.props
@@ -46,10 +62,10 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     return currentSeekVolume !== null && this.dragging ? currentSeekVolume : songVolume
   }
 
-  dragging = false
   handleVolumeChange = () => {
-    const newValue = this.props.audioElement.volume
-    if (newValue === 0 && this.props.songMuted) {
+    const { audioElement, songMuted } = this.props
+    const newValue = audioElement.volume
+    if (newValue === 0 && songMuted) {
       // Don't let mutes destroy local volume state
       return
     }
@@ -61,23 +77,11 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     this.dragging = true
     this.handleVolumeSlideFlush()
   }
-  handleVolumeSlideFlush = debounce(() => {
-    const { dispatch, audioElement, songMuted } = this.props
-    const { currentSeekVolume } = this.state
-    if (currentSeekVolume !== null) {
-      audioElement.volume = currentSeekVolume / 100
-      if (audioElement.volume < 0.01) {
-        dispatch(setSongMute(false))
-      } else if (songMuted) {
-        dispatch(setSongMute(false))
-      }
-    }
-    this.dragging = false
-  }, 10)
-  handleMuteUnmute = (mute: boolean) => {
-    const { dispatch } = this.props
 
-    if (this.props.songMuted || mute) {
+  handleMuteUnmute = (mute: boolean) => {
+    const { dispatch, songMuted } = this.props
+
+    if (songMuted || mute) {
       dispatch(setSongMute(mute))
     } else {
       dispatch(setSongVolume(50))
@@ -99,6 +103,7 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     return (
       <React.Fragment>
         <button
+          type="button"
           onClick={() => {
             this.handleMuteUnmute(icon !== 'volume_off')
           }}

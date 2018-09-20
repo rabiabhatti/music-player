@@ -12,6 +12,9 @@ type Props = {|
 |}
 
 export default class Popup extends React.Component<Props> {
+  ref: ?HTMLDivElement = null
+  element = document.createElement('div')
+
   componentDidMount() {
     const modalRootRef = document.getElementById('modal-root')
     if (modalRootRef) {
@@ -26,13 +29,10 @@ export default class Popup extends React.Component<Props> {
     document.removeEventListener('keydown', this.handleKeyPress)
   }
 
-  timeout: TimeoutID
-  ref: ?HTMLDivElement = null
-  element = document.createElement('div')
-
   handleKeyPress = (e: KeyboardEvent) => {
+    const { handleClose } = this.props
     if (e.key === 'Escape') {
-      this.props.handleClose()
+      handleClose()
     }
   }
 
@@ -40,10 +40,10 @@ export default class Popup extends React.Component<Props> {
     if (e.defaultPrevented) {
       return
     }
-
+    const { handleClose } = this.props
     const firedOnSelf = getEventPath(e).includes(this.ref)
     if (!firedOnSelf) {
-      this.props.handleClose()
+      handleClose()
     }
   }
 
@@ -58,7 +58,7 @@ export default class Popup extends React.Component<Props> {
             this.ref = element
           }}
         >
-          <button className="close" onClick={handleClose}>
+          <button type="button" className="close" onClick={handleClose}>
             ×
           </button>
           {children}

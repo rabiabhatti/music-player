@@ -28,9 +28,10 @@ class EditPlaylist extends React.Component<Props, State> {
   }
 
   savePlaylist = () => {
+    const { name } = this.state
     const { name: playlistName, id } = this.props
     db.playlists.update(id, {
-      name: this.state.name !== '' ? this.state.name : playlistName,
+      name: name !== '' ? name : playlistName,
     })
     this.props.incrementNonce()
     this.props.handleClose()
@@ -48,7 +49,7 @@ class EditPlaylist extends React.Component<Props, State> {
           Name
           <input id="name" type="text" name="name" value={name} onInput={this.handleChange} placeholder={playlistName} />
         </label>
-        <button className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
+        <button type="submit" className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
           Save
         </button>
       </Popup>
@@ -56,4 +57,7 @@ class EditPlaylist extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { incrementNonce })(EditPlaylist)
+export default connect(
+  null,
+  { incrementNonce },
+)(EditPlaylist)

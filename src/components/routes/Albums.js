@@ -41,7 +41,8 @@ class Albums extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce) {
+    const { nonce } = this.props
+    if (prevProps.nonce !== nonce) {
       this.fetchSongs()
     }
   }
@@ -63,7 +64,8 @@ class Albums extends React.Component<Props, State> {
   }
 
   openAlbumInfo = (e: SyntheticEvent<HTMLButtonElement>, album: string) => {
-    if (this.state.selected && this.state.selected.identifier === album) {
+    const { selected } = this.state
+    if (selected && selected.identifier === album) {
       this.setState({ selected: null })
       return
     }
@@ -99,11 +101,11 @@ class Albums extends React.Component<Props, State> {
         <div className="album-content" key={album}>
           <div className="album-cover">
             <img alt={cover} src={coverImg} />
-            <button onClick={() => this.playAtIndex(albumSongs, 0)}>
+            <button type="button" onClick={() => this.playAtIndex(albumSongs, 0)}>
               <i className="material-icons">play_circle_outline</i>
             </button>
           </div>
-          <button className="flex-column" onClick={e => this.openAlbumInfo(e, album)}>
+          <button type="button" className="flex-column" onClick={e => this.openAlbumInfo(e, album)}>
             <b>{album}</b>
             <span>{album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}</span>
           </button>
@@ -124,7 +126,7 @@ class Albums extends React.Component<Props, State> {
           itemsInRow = 5
         }
 
-        const insertIndex =  itemsInRow * Math.ceil((selectedAlbumIndex + 1) / itemsInRow)
+        const insertIndex = itemsInRow * Math.ceil((selectedAlbumIndex + 1) / itemsInRow)
         if (insertIndex > renderedAlbums.length) {
           renderedAlbums.push(elem)
         } else {
@@ -143,4 +145,7 @@ class Albums extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ songs }) => ({ nonce: songs.nonce }), { setSongPlaylist })(Albums)
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  { setSongPlaylist },
+)(Albums)

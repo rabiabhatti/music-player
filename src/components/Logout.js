@@ -29,7 +29,7 @@ class Logout extends React.Component<Props, State> {
 
   render() {
     return (
-      <button className="logout" onClick={this.handleSignoutClick}>
+      <button type="button" className="logout" onClick={this.handleSignoutClick}>
         Logout
       </button>
     )

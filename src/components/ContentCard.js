@@ -8,8 +8,8 @@ import connect from '~/common/connect'
 import db from '~/db'
 import '~/styles/content-card.less'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
+import ContentCardDropdown from '~/components/Dropdown/ContentCardDropdown'
 
-import Dropdown from './Dropdown'
 import AlbumInfo from './AlbumInfo'
 
 type Props = {|
@@ -27,12 +27,14 @@ class ContentCard extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.fetchSongs(this.props.selected)
+    const { selected } = this.props
+    this.fetchSongs(selected)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce || prevProps.selected !== this.props.selected) {
-      this.fetchSongs(this.props.selected)
+    const { nonce, selected } = this.props
+    if (prevProps.nonce !== nonce || prevProps.selected !== selected) {
+      this.fetchSongs(selected)
     }
   }
 
@@ -73,7 +75,7 @@ class ContentCard extends React.Component<Props, State> {
               {Object.keys(songsByAlbums).length} albums, {songs.length} songs
             </p>
           </div>
-          <Dropdown songsIds={songsIds} />
+          <ContentCardDropdown songsIds={songsIds} />
         </div>
         {Object.keys(songsByAlbums).map(albumName => (
           <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
@@ -83,4 +85,7 @@ class ContentCard extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(ContentCard)
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(ContentCard)

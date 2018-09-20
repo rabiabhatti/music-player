@@ -31,13 +31,14 @@ type Props = {|
 |}
 
 function PlayerScreen(props: Props) {
-  const ActiveRoute = ROUTES[props.route.name]
+  const { route } = props
+  const ActiveRoute = ROUTES[route.name]
 
   return (
     <React.Fragment>
       <Downloader />
       <Player />
-      <div className="space-between" style={{ alignItems: 'stretch' }}>
+      <div className="space-between align-stretch">
         <Sidebar />
         <ActiveRoute />
       </div>

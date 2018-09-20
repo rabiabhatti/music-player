@@ -33,7 +33,8 @@ class Genres extends React.Component<Props, State> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce) {
+    const { nonce } = this.props
+    if (prevProps.nonce !== nonce) {
       this.fetchSongs()
     }
   }
@@ -51,6 +52,7 @@ class Genres extends React.Component<Props, State> {
       <div className="flex-row bound">
         <div className="artists-bar">
           <button
+            type="button"
             className={`align-center btn-dull ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
@@ -60,6 +62,7 @@ class Genres extends React.Component<Props, State> {
 
           {Object.keys(genres).map(genre => (
             <button
+              type="button"
               key={genre}
               className={`align-center btn-dull ${
                 selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
@@ -82,4 +85,7 @@ class Genres extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(Genres)
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(Genres)

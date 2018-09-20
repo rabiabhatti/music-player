@@ -56,25 +56,8 @@ class Sidebar extends React.Component<Props, State> {
     this.props.incrementNonce()
   }
 
-  showEditPlaylistModal = (e: SyntheticEvent<HTMLButtonElement>, name: string, id: number) => {
-    this.setState({
-      id,
-      name,
-      showEditPlaylistModal: true,
-    })
-  }
-  hideEditPlaylistModal = () => {
-    this.setState({
-      id: null,
-      name: null,
-      showEditPlaylistModal: false,
-    })
-  }
   showCreatePlaylistModal = () => {
     this.setState({ showCreatePlaylistModal: true })
-  }
-  hideCreatePlaylistModal = () => {
-    this.setState({ showCreatePlaylistModal: false })
   }
 
   renderNavigationItem(icon: string, routeName: RouteName, name: string = routeName) {
@@ -82,6 +65,7 @@ class Sidebar extends React.Component<Props, State> {
 
     return (
       <button
+        type="submit"
         key={`route-${name}`}
         className={`btn-dull ${route.name === routeName ? 'active' : ''}`}
         onClick={() =>
@@ -103,17 +87,26 @@ class Sidebar extends React.Component<Props, State> {
           route.name === routeName && route.id === id ? 'active' : ''
         }`}
       >
-        <button className="btn-dull" onClick={() => this.props.navigateTo({ name: routeName, id })}>
+        <button type="button" className="btn-dull" onClick={() => this.props.navigateTo({ name: routeName, id })}>
           <i className="material-icons">{icon}</i>
           {name}
         </button>
         <div className="flex-row">
-          <button onClick={e => this.showEditPlaylistModal(e, name, id)}>
+          <button
+            type="submit"
+            onClick={() =>
+              this.setState({
+                id,
+                name,
+                showEditPlaylistModal: true,
+              })
+            }
+          >
             <i title="Edit Playlist" className="material-icons">
               edit
             </i>
           </button>
-          <button onClick={e => this.deletePlaylist(e, id)}>
+          <button type="button" onClick={e => this.deletePlaylist(e, id)}>
             <i title="Delete from Library" className="material-icons">
               delete
             </i>
@@ -128,8 +121,22 @@ class Sidebar extends React.Component<Props, State> {
 
     return (
       <div className="section-sidebar">
-        {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} />}
-        {showEditPlaylistModal && <EditPlaylist handleClose={this.hideEditPlaylistModal} name={name} id={id} />}
+        {showCreatePlaylistModal && (
+          <CreateNewPlaylist handleClose={() => this.setState({ showCreatePlaylistModal: false })} />
+        )}
+        {showEditPlaylistModal && (
+          <EditPlaylist
+            name={name}
+            id={id}
+            handleClose={() =>
+              this.setState({
+                id: null,
+                name: null,
+                showEditPlaylistModal: false,
+              })
+            }
+          />
+        )}
         <input id="sidebar-search-input" type="text" placeholder="Search" />
         <h3>Library</h3>
         {this.renderNavigationItem('access_time', 'RecentlyPlayed', 'Recently Played')}
@@ -147,7 +154,10 @@ class Sidebar extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ router, songs }) => ({ route: router.route, nonce: songs.nonce }), {
-  navigateTo,
-  incrementNonce,
-})(Sidebar)
+export default connect(
+  ({ router, songs }) => ({ route: router.route, nonce: songs.nonce }),
+  {
+    navigateTo,
+    incrementNonce,
+  },
+)(Sidebar)

@@ -75,21 +75,22 @@ class EditSong extends React.Component<Props, State> {
   }
 
   saveSongInfo = () => {
-    const info = this.state.fields
-    const songMeta = this.props.song.meta
+    const { song } = this.props
+    const { fields } = this.state
 
-    db.songs.update(this.props.song.id, {
-      'meta.name': info.name !== '' ? info.name : songMeta.name,
-      'meta.album': info.album !== '' ? info.album : songMeta.album,
-      'meta.genre': info.genre !== '' ? info.genre.split(',') : songMeta.genre,
-      'meta.artists_original': info.artists !== '' ? normalizeArtist(info.artists.split(',')) : songMeta.artists_original,
+    db.songs.update(song.id, {
+      'meta.name': fields.name !== '' ? fields.name : song.meta.name,
+      'meta.album': fields.album !== '' ? fields.album : song.meta.album,
+      'meta.genre': fields.genre !== '' ? fields.genre.split(',') : song.meta.genre,
+      'meta.artists_original':
+        fields.artists !== '' ? normalizeArtist(fields.artists.split(',')) : song.meta.artists_original,
     })
     this.props.incrementNonce()
     this.props.handleClose()
   }
 
   render() {
-    const { fields } = this.state
+    const { fields, touched } = this.state
     const { song, handleClose } = this.props
 
     const errors = validate(fields, song)
@@ -97,7 +98,7 @@ class EditSong extends React.Component<Props, State> {
 
     const shouldMarkError = field => {
       const hasError = errors[field]
-      const shouldShow = this.state.touched[field]
+      const shouldShow = touched[field]
 
       return hasError ? shouldShow : false
     }
@@ -156,7 +157,7 @@ class EditSong extends React.Component<Props, State> {
             className={shouldMarkError('artists') ? 'error' : ''}
           />
         </label>
-        <button className="btn-blue-border" onClick={this.saveSongInfo} disabled={isDisabled}>
+        <button type="submit" className="btn-blue-border" onClick={this.saveSongInfo} disabled={isDisabled}>
           Save
         </button>
       </Popup>
@@ -164,4 +165,7 @@ class EditSong extends React.Component<Props, State> {
   }
 }
 
-export default connect(null, { incrementNonce })(EditSong)
+export default connect(
+  null,
+  { incrementNonce },
+)(EditSong)
