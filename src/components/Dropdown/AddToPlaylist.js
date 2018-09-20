@@ -47,12 +47,12 @@ class AddToPlaylist extends React.Component<Props, State> {
     }
 
     return (
-      <React.Fragment>
+      <div className="sub-dropdown-trigger">
         <button type="button" className="btn-dull space-between" onClick={e => e.preventDefault()}>
           Add to Playlist
           <i className="material-icons">add</i>
         </button>
-        <div className="sub-dropdown-content dropdown-content hidden">
+        <div className="sub-dropdown dropdown-content hidden">
           <button type="button" onClick={() => this.setState({ showCreatePlaylistModal: true })}>
             New Playlist
           </button>
@@ -63,7 +63,7 @@ class AddToPlaylist extends React.Component<Props, State> {
               </button>
             ))}
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }

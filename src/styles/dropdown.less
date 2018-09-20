@@ -27,11 +27,16 @@
       background-color: rgba(0, 0, 0, 0.07);
     }
   }
-  .btn-dull:hover + .sub-dropdown-content, .btn-dull:active + .sub-dropdown-content {
-    display: block !important;
-  }
-  .sub-dropdown-content {
-    top: 0 !important;
-    right: 10rem !important;
+  .sub-dropdown-trigger {
+    .sub-dropdown {
+      top: 0 !important;
+      right: 10rem !important;
+    }
+
+    &:hover {
+      .sub-dropdown {
+        display: block !important;
+      }
+    }
   }
 }
