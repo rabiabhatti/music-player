@@ -106,7 +106,12 @@ class Albums extends React.Component<Props, State> {
               <i className="material-icons">play_circle_outline</i>
             </button>
           </div>
-          <button type="button" className="flex-column" onClick={e => this.openAlbumInfo(e, album)}>
+          <button
+            type="button"
+            className="flex-column"
+            onClick={e => this.openAlbumInfo(e, album)}
+            onDoubleClick={() => this.playAtIndex(albumSongs, 0)}
+          >
             <b>{album}</b>
             <span>{album !== 'Unknown' ? albumSongs[0].meta && albumSongs[0].meta.artists_original : 'Unknown'}</span>
           </button>
