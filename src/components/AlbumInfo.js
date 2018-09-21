@@ -38,6 +38,7 @@ class AlbumInfo extends React.Component<Props, State> {
       <div className="section-album-info space-between flex-wrap">
         <div className="album-title flex-column">
           <div className="album-cover">
+            <div className="filter" />
             <img
               alt="album-cover"
               src={
