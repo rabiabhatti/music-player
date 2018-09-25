@@ -21,7 +21,8 @@ type State = {||}
 
 class AlbumInfo extends React.Component<Props, State> {
   playAtIndex = (index: number, ids: Array<number>) => {
-    this.props.setSongPlaylist({
+    const { setSongPlaylist: setSongPlaylistProp } = this.props
+    setSongPlaylistProp({
       songs: ids,
       index,
     })

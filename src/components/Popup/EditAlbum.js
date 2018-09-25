@@ -44,7 +44,7 @@ class EditAlbum extends React.Component<Props, State> {
   }
 
   saveAlbumInfo = () => {
-    const { songs } = this.props
+    const { songs, handleClose, incrementNonce: incrementNonceProp } = this.props
     const { name, year } = this.state
     Promise.all(
       songs.map(async id => {
@@ -55,8 +55,8 @@ class EditAlbum extends React.Component<Props, State> {
         })
       }),
     ).then(() => {
-      this.props.incrementNonce()
-      this.props.handleClose()
+      incrementNonceProp()
+      handleClose()
     })
   }
 

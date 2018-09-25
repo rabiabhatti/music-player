@@ -27,13 +27,14 @@ class AlbumDropdown extends React.Component<Props, State> {
   }
 
   deleteSong = (e: SyntheticEvent<HTMLButtonElement>, ids: Array<number>) => {
+    const { incrementNonce: incrementNonceProp } = this.props
     deleteSongsFromLibrary(ids)
-    this.props.incrementNonce()
+    incrementNonceProp()
   }
 
   render() {
     const { showEditAlbumModal } = this.state
-    const { handleClose, songsIds } = this.props
+    const { handleClose, songsIds, playLater: playLaterProp } = this.props
 
     return (
       <Dropdown handleClose={handleClose}>
@@ -44,7 +45,7 @@ class AlbumDropdown extends React.Component<Props, State> {
         <button type="button" onClick={() => this.setState({ showEditAlbumModal: true })}>
           Edit Album
         </button>
-        <button type="button" onClick={() => this.props.playLater(songsIds)}>
+        <button type="button" onClick={() => playLaterProp(songsIds)}>
           Play Later
         </button>
         <button type="button" onClick={e => this.deleteSong(e, songsIds)}>

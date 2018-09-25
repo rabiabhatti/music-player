@@ -31,21 +31,21 @@ class SongDropdown extends React.Component<Props, State> {
 
   deleteSong = (e: SyntheticEvent<HTMLButtonElement>, id: number, playlist?: Object) => {
     e.preventDefault()
-    const { activeSong } = this.props
+    const { activeSong, playNext: playNextProp, incrementNonce: incrementNonceProp } = this.props
     if (id === activeSong) {
-      this.props.playNext()
+      playNextProp()
     }
     if (playlist) {
       deleteSongFromPlaylist(playlist, id)
     } else {
       deleteSongsFromLibrary([id])
     }
-    this.props.incrementNonce()
+    incrementNonceProp()
   }
 
   render() {
     const { showEditSongModal } = this.state
-    const { handleClose, playlist, song } = this.props
+    const { handleClose, playlist, song, playLater: playLaterProp } = this.props
 
     return (
       <Dropdown handleClose={handleClose}>
@@ -54,7 +54,7 @@ class SongDropdown extends React.Component<Props, State> {
         <button type="button" onClick={() => this.setState({ showEditSongModal: true })}>
           Edit
         </button>
-        <button type="button" onClick={() => this.props.playLater([song.id])}>
+        <button type="button" onClick={() => playLaterProp([song.id])}>
           Play Later
         </button>
         {playlist !== null && (

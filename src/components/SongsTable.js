@@ -21,8 +21,8 @@ type State = {||}
 
 class SongsTable extends React.Component<Props, State> {
   playAtIndex = (index: number) => {
-    const { songs } = this.props
-    this.props.setSongPlaylist({
+    const { songs, setSongPlaylist: setSongPlaylistProp } = this.props
+    setSongPlaylistProp({
       songs: songs.map(song => song.id),
       index,
     })

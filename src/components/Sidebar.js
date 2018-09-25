@@ -41,7 +41,8 @@ class Sidebar extends React.Component<Props, State> {
     this.fetchPlaylists()
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce) {
+    const { nonce } = this.props
+    if (prevProps.nonce !== nonce) {
       this.fetchPlaylists()
     }
   }
@@ -51,9 +52,15 @@ class Sidebar extends React.Component<Props, State> {
     })
   }
 
+  navigateTo = (e: SyntheticEvent<HTMLButtonElement>, name: string, id: ?number) => {
+    const { navigateTo: navigateToProp } = this.props
+    navigateToProp({ name, id })
+  }
+
   deletePlaylist = async (e: SyntheticEvent<HTMLButtonElement>, id: number) => {
+    const { incrementNonce: incrementNonceProp } = this.props
     await db.playlists.delete(id)
-    this.props.incrementNonce()
+    incrementNonceProp()
   }
 
   showCreatePlaylistModal = () => {
@@ -68,9 +75,7 @@ class Sidebar extends React.Component<Props, State> {
         type="submit"
         key={`route-${name}`}
         className={`btn-dull ${route.name === routeName ? 'active' : ''}`}
-        onClick={() =>
-          routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.props.navigateTo({ name: routeName })
-        }
+        onClick={e => (routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.navigateTo(e, routeName))}
       >
         <i className="material-icons">{icon}</i>
         {name}
@@ -87,7 +92,7 @@ class Sidebar extends React.Component<Props, State> {
           route.name === routeName && route.id === id ? 'active' : ''
         }`}
       >
-        <button type="button" className="btn-dull" onClick={() => this.props.navigateTo({ name: routeName, id })}>
+        <button type="button" className="btn-dull" onClick={e => this.navigateTo(e, routeName, id)}>
           <i className="material-icons">{icon}</i>
           {name}
         </button>
