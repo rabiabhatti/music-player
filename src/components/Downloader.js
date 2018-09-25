@@ -64,7 +64,9 @@ class Downloader extends React.Component<Props, State> {
       return
     }
 
-    const authorization = this.props.authorizations.find(auth => auth.uid === song.sourceUid)
+    const { authorizations, incrementNonce: incrementNonceProp } = this.props
+
+    const authorization = authorizations.find(auth => auth.uid === song.sourceUid)
     if (!authorization) {
       await db.songs.update(song.id, {
         state: 'error',
@@ -94,7 +96,7 @@ class Downloader extends React.Component<Props, State> {
       state: 'downloaded',
     })
 
-    this.props.incrementNonce()
+    incrementNonceProp()
   }
 
   render() {

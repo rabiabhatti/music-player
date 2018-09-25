@@ -16,14 +16,16 @@ type State = {||}
 class Logout extends React.Component<Props, State> {
   handleSignoutClick = (e: SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault()
-    this.props.authorizations.forEach(authorization => {
+
+    const { authorizations, unauthorizeService: unauthorizeServiceProp } = this.props
+    authorizations.forEach(authorization => {
       const service = services.find(i => i.name === authorization.service)
       if (!service) {
         console.warn('Unable to find service for authorization', authorization)
         return
       }
       service.unauthorize(authorization)
-      this.props.unauthorizeService({ authorization })
+      unauthorizeServiceProp({ authorization })
     })
   }
 
@@ -36,6 +38,9 @@ class Logout extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(state => ({ authorizations: state.user.authorizations.toArray() }), { unauthorizeService }))(
-  Logout,
-)
+export default compose(
+  connect(
+    state => ({ authorizations: state.user.authorizations.toArray() }),
+    { unauthorizeService },
+  ),
+)(Logout)

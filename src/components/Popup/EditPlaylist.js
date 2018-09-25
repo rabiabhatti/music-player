@@ -29,12 +29,12 @@ class EditPlaylist extends React.Component<Props, State> {
 
   savePlaylist = () => {
     const { name } = this.state
-    const { name: playlistName, id } = this.props
+    const { name: playlistName, id, handleClose, incrementNonce: incrementNonceProp } = this.props
     db.playlists.update(id, {
       name: name !== '' ? name : playlistName,
     })
-    this.props.incrementNonce()
-    this.props.handleClose()
+    incrementNonceProp()
+    handleClose()
   }
 
   render() {

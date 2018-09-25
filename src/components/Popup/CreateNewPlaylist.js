@@ -28,11 +28,11 @@ class CreateNewPlaylist extends React.Component<Props, State> {
 
   savePlaylist = () => {
     const { name } = this.state
-    const { songsIds } = this.props
+    const { songsIds, handleClose, incrementNonce: incrementNonceProp } = this.props
 
     db.playlists.add({ name, songs: songsIds })
-    this.props.incrementNonce()
-    this.props.handleClose()
+    incrementNonceProp()
+    handleClose()
   }
 
   render() {

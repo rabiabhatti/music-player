@@ -51,9 +51,11 @@ class Player extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps({ activeSong, songs }) {
+    const { activeSong: song, songs: currentSongs } = this.props
+
     let promise = Promise.resolve()
-    if (this.props.activeSong !== activeSong) {
-      if (this.props.activeSong) {
+    if (song !== activeSong) {
+      if (song) {
         this.internalPause()
       }
       if (activeSong) {
@@ -62,13 +64,13 @@ class Player extends React.Component<Props, State> {
         this.internalPause()
         this.setState({ activeSong: null })
       }
-    } else if (this.props.songs.songState !== songs.songState) {
+    } else if (currentSongs.songState !== songs.songState) {
       if (songs.songState === 'playing') {
         promise.then(() => this.internalPlay())
       } else {
         promise.then(() => this.internalPause())
       }
-      if (this.props.songs.nonce !== songs.nonce && activeSong) {
+      if (currentSongs.nonce !== songs.nonce && activeSong) {
         promise = promise.then(() => this.loadSong(activeSong, songs.songState))
       }
     }
@@ -86,48 +88,45 @@ class Player extends React.Component<Props, State> {
     }
   }
   handleEnded = () => {
-    const { songsRepeat, songIndex, playlist } = this.props.songs
+    const { dispatch, songs } = this.props
+    const { songsRepeat, songIndex, playlist } = songs
     if (songsRepeat === 'single') {
       this.audioElement.play()
     } else {
       const isLastSong = songIndex === playlist.length - 1
       if (!isLastSong || songsRepeat === 'all') {
-        this.props.dispatch(playNext())
+        dispatch(playNext())
       }
     }
   }
 
-  playPrevious = () => {
-    this.props.dispatch(playPrevious())
-  }
-  playNext = () => {
-    this.props.dispatch(playNext())
-  }
   playPause = () => {
-    const { songs } = this.props
-    this.props.dispatch(songs.songState === 'playing' ? songPause() : songPlay())
+    const { songs, dispatch } = this.props
+    dispatch(songs.songState === 'playing' ? songPause() : songPlay())
   }
 
   updateDuration = () => {
+    const { dispatch } = this.props
     const { activeSong } = this.state
     if (activeSong) {
-      this.props.dispatch(addToRecentlyPlayed(activeSong.id))
+      dispatch(addToRecentlyPlayed(activeSong.id))
       if (!activeSong.duration) {
         db.songs.update(activeSong.id, {
           duration: this.audioElement.duration,
         })
-        this.props.dispatch(incrementNonce())
+        dispatch(incrementNonce())
       }
     }
   }
 
   deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault()
+    const { dispatch } = this.props
     const { activeSong } = this.state
     if (activeSong) {
       deleteSongsFromLibrary([activeSong.id])
-      this.props.dispatch(playNext())
-      this.props.dispatch(incrementNonce())
+      dispatch(playNext())
+      dispatch(incrementNonce())
     }
   }
   internalPlay() {
@@ -171,8 +170,8 @@ class Player extends React.Component<Props, State> {
   audioElement: HTMLAudioElement
 
   render() {
-    const { songs } = this.props
     const { activeSong } = this.state
+    const { songs, dispatch } = this.props
 
     let songName = activeSong ? activeSong.filename : ''
     let coverImg
@@ -210,7 +209,7 @@ class Player extends React.Component<Props, State> {
         </div>
         <div className="section-player-controls align-center space-between">
           <div className="section-player-btns align-center">
-            <button type="button" onClick={this.playPrevious}>
+            <button type="button" onClick={() => dispatch(playPrevious())}>
               <i title="Previous" className="material-icons btn-white">
                 fast_rewind
               </i>
@@ -220,8 +219,8 @@ class Player extends React.Component<Props, State> {
                 {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
               </i>
             </button>
-            <button type="button" onClick={this.playNext}>
-              <i title="Previous" className="material-icons btn-white">
+            <button type="button" onClick={() => dispatch(playNext())}>
+              <i title="Next" className="material-icons btn-white">
                 fast_forward
               </i>
             </button>

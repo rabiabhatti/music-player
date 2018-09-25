@@ -25,6 +25,7 @@ class Picker extends React.Component<Props, State> {
       return
     }
     authorizations.forEach(authorization => {
+      const { incrementNonce: incrementNonceProp } = this.props
       const service = services.find(item => item.name === authorization.service)
       if (!service) {
         console.warn('Service not found for authorization', authorization)
@@ -35,7 +36,7 @@ class Picker extends React.Component<Props, State> {
         .addFiles(authorization)
         .then(filesChosen => {
           db.songs.bulkAdd(filesChosen)
-          this.props.incrementNonce()
+          incrementNonceProp()
         })
         .catch(console.error)
     })
@@ -50,6 +51,9 @@ class Picker extends React.Component<Props, State> {
   }
 }
 
-export default compose(connect(state => ({ authorizations: state.user.authorizations.toArray() }), { incrementNonce }))(
-  Picker,
-)
+export default compose(
+  connect(
+    state => ({ authorizations: state.user.authorizations.toArray() }),
+    { incrementNonce },
+  ),
+)(Picker)

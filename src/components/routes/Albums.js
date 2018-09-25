@@ -57,7 +57,8 @@ class Albums extends React.Component<Props, State> {
   }
 
   playAtIndex = (songs: Array<Object>, index: number) => {
-    this.props.setSongPlaylist({
+    const { setSongPlaylist: setSongPlaylistProp } = this.props
+    setSongPlaylistProp({
       songs: songs.map(song => song.id),
       index,
     })

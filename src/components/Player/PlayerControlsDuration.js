@@ -27,10 +27,12 @@ class PlayerControlDuration extends React.Component<Props, State> {
   }, 50)
 
   componentDidMount() {
-    this.props.audioElement.addEventListener('timeupdate', this.handleDurationChange)
+    const { audioElement } = this.props
+    audioElement.addEventListener('timeupdate', this.handleDurationChange)
   }
   componentWillUnmount() {
-    this.props.audioElement.removeEventListener('timeupdate', this.handleDurationChange)
+    const { audioElement } = this.props
+    audioElement.removeEventListener('timeupdate', this.handleDurationChange)
   }
 
   handleDurationChange = () => {
@@ -43,7 +45,6 @@ class PlayerControlDuration extends React.Component<Props, State> {
 
   handleDurationSlide = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ currentSeekTime: parseInt(e.target.value, 10) })
-
     this.dragging = true
     this.handleDurationSlideFlush()
   }
@@ -56,12 +57,12 @@ class PlayerControlDuration extends React.Component<Props, State> {
 
     return (
       <React.Fragment>
-        <span>{humanizeDuration(currentTime)}</span>
+        <span className="btn-white">{humanizeDuration(currentTime)}</span>
         <div>
           <div className="progress-fill" style={{ width: `${percentage + 0.5}%` }} />
           <input type="range" onChange={this.handleDurationSlide} value={currentTimeToUse} min={0} max={duration} />
         </div>
-        <span>{humanizeDuration(duration)}</span>
+        <span className="btn-white">{humanizeDuration(duration)}</span>
       </React.Fragment>
     )
   }

@@ -69,14 +69,15 @@ class EditSong extends React.Component<Props, State> {
 
   handleBlur = (field: string) => (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.preventDefault()
+    const { touched } = this.state
     this.setState({
-      touched: { ...this.state.touched, [field]: true },
+      touched: { ...touched, [field]: true },
     })
   }
 
   saveSongInfo = () => {
-    const { song } = this.props
     const { fields } = this.state
+    const { song, handleClose, incrementNonce: incrementNonceProp } = this.props
 
     db.songs.update(song.id, {
       'meta.name': fields.name !== '' ? fields.name : song.meta.name,
@@ -85,8 +86,8 @@ class EditSong extends React.Component<Props, State> {
       'meta.artists_original':
         fields.artists !== '' ? normalizeArtist(fields.artists.split(',')) : song.meta.artists_original,
     })
-    this.props.incrementNonce()
-    this.props.handleClose()
+    incrementNonceProp()
+    handleClose()
   }
 
   render() {

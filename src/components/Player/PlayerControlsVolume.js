@@ -53,7 +53,8 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     }
   }
   componentWillUnmount() {
-    this.props.audioElement.removeEventListener('volumechange', this.handleVolumeChange)
+    const { audioElement } = this.props
+    audioElement.removeEventListener('volumechange', this.handleVolumeChange)
   }
   getVolumeToUse() {
     const { songVolume } = this.props
@@ -63,13 +64,13 @@ class PlayerControlsVolume extends React.Component<Props, State> {
   }
 
   handleVolumeChange = () => {
-    const { audioElement, songMuted } = this.props
+    const { audioElement, songMuted, dispatch } = this.props
     const newValue = audioElement.volume
     if (newValue === 0 && songMuted) {
       // Don't let mutes destroy local volume state
       return
     }
-    this.props.dispatch(setSongVolume(newValue * 100))
+    dispatch(setSongVolume(newValue * 100))
   }
   handleVolumeSlide = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ currentSeekVolume: parseInt(e.target.value, 10) })
@@ -101,7 +102,7 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     }
 
     return (
-      <React.Fragment>
+      <div className="volume flex-row align-center">
         <button
           type="button"
           onClick={() => {
@@ -112,18 +113,18 @@ class PlayerControlsVolume extends React.Component<Props, State> {
             {icon}
           </i>
         </button>
-        <div>
+        <div className="volume-slider">
           <div className="progress-fill" style={{ width: `${currentVolumeToUse}%` }} />
           <input
-            onChange={this.handleVolumeSlide}
-            title="Volume"
-            type="range"
-            value={currentVolumeToUse}
             min="0"
             max="100"
+            type="range"
+            title="Volume"
+            value={currentVolumeToUse}
+            onChange={this.handleVolumeSlide}
           />
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }
