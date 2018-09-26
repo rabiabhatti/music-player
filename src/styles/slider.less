@@ -1,10 +1,11 @@
-input[type='range']::-webkit-slider-runnable-track,
-input[type='range']::-webkit-slider-thumb,
-input[type='range'] {
+@import 'variables.less';
+.range::-webkit-slider-runnable-track,
+.range::-webkit-slider-thumb,
+.range {
   -webkit-appearance: none;
 }
 
-input[type='range'] {
+.range {
   top: 0;
   left: 0;
   margin: 0;
@@ -13,95 +14,89 @@ input[type='range'] {
   cursor: pointer;
   position: absolute;
   background-clip: content-box;
-  background-color: rgba(255, 255, 255, 0.53);
+  background-color: @darkBackground;
 }
 
-input[type='range']::-webkit-slider-runnable-track {
-  height: 2px;
+.range::-webkit-slider-runnable-track {
+  height: 3px;
   border-radius: 0;
-  box-shadow: 0px 0px 1rem #ffffff;
 }
-input[type='range']::-moz-range-track {
-  height: 2px;
+.range::-moz-range-track {
+  height: 3px;
   border-radius: 0;
-  box-shadow: 0px 0px 1rem #ffffff;
 }
-input[type='range']::-ms-track {
-  height: 2px;
+.range::-ms-track {
+  height: 3px;
   border-radius: 0;
-  box-shadow: 0px 0px 1rem #ffffff;
 }
-input[type='range']:hover::-webkit-slider-runnable-track,
-input[type='range']:focus::-webkit-slider-runnable-track {
+.range:hover::-webkit-slider-runnable-track,
+.range:focus::-webkit-slider-runnable-track {
   background: none;
 }
-input[type='range']:hover::-ms-track,
-input[type='range']:focus::-ms-track {
+.range:hover::-ms-track,
+.range:focus::-ms-track {
   background: none;
 }
-input[type='range']:hover::-moz-range-track,
-input[type='range']:focus::-moz-range-track {
+.range:hover::-moz-range-track,
+.range:focus::-moz-range-track {
   background: none;
 }
-input[type='range']::-moz-focus-outer {
+.range::-moz-focus-outer {
   border: 0;
 }
-input[type='range']::-ms-tooltip {
+.range::-ms-tooltip {
   display: none;
 }
-input[type='range']::-moz-range-progress,
-input[type='range']:hover::-moz-range-progress,
-input[type='range']:focus::-moz-range-progress {
+.range::-moz-range-progress,
+.range:hover::-moz-range-progress,
+.range:focus::-moz-range-progress {
   background: 0;
 }
 
-input[type='range']::-webkit-slider-thumb {
+.range::-webkit-slider-thumb {
   border: none;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: @activeColor;
   transition: box-shadow 0.1s ease-in;
-  transform: translateY(calc(2px - 10px / 1.5));
+  transform: translateY(calc(3px - 10px / 1.5));
 }
-input[type='range']::-moz-range-thumb {
+.range::-moz-range-thumb {
   border: none;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: @activeColor;
   transition: box-shadow 0.1s ease-in;
-  transform: translateY(calc(2px - 10px / 1.5));
+  transform: translateY(calc(3px - 10px / 1.5));
 }
-input[type='range']::-ms-thumb {
+.range::-ms-thumb {
   border: none;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: @activeColor;
   transition: box-shadow 0.1s ease-in;
-  transform: translateY(calc(2px - 10px / 1.5));
+  transform: translateY(calc(3px - 10px / 1.5));
 }
-input[type='range']:hover {
-  filter: brightness(150%);
+.range::-webkit-slider-thumb:hover,
+.range::-webkit-slider-thumb:active,
+.range::-webkit-slider-thumb:focus {
+  box-shadow: 0px 0px 7px @activeColor;
 }
-input[type='range']::-webkit-slider-thumb:hover,
-input[type='range']::-webkit-slider-thumb:active,
-input[type='range']::-webkit-slider-thumb:focus {
-  box-shadow: 0px 0px 7px #ffffff;
+.range:hover::-moz-range-thumb,
+.range:active::-moz-range-thumb,
+.range:focus::-moz-range-thumb {
+  box-shadow: 0px 0px 7px @activeColor;
 }
-input[type='range']:hover::-moz-range-thumb,
-input[type='range']:active::-moz-range-thumb,
-input[type='range']:focus::-moz-range-thumb {
-  box-shadow: 0px 0px 7px #ffffff;
-}
-input[type='range']:hover::-ms-thumb,
-input[type='range']:focus::-ms-thumb {
-  box-shadow: 0px 0px 7px #ffffff;
+.range:hover::-ms-thumb,
+.range:focus::-ms-thumb {
+  box-shadow: 0px 0px 7px @activeColor;
 }
 
 @media screen and (max-width: 768px) {
-  input[type='range'] {
+  .range {
     width: 85%;
   }
 }

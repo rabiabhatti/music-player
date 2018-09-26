@@ -18,7 +18,7 @@ type Props = {|
 type State = {||}
 
 class ContentCardDropdown extends React.Component<Props, State> {
-  deleteSong = (e: SyntheticEvent<HTMLButtonElement>, ids: Array<number>) => {
+  deleteSong = (ids: Array<number>) => {
     const { incrementNonce: incrementNonceProp } = this.props
     deleteSongsFromLibrary(ids)
     incrementNonceProp()
@@ -30,10 +30,10 @@ class ContentCardDropdown extends React.Component<Props, State> {
     return (
       <Dropdown handleClose={handleClose}>
         <AddToPlaylist songsIds={songsIds} />
-        <button type="button" onClick={e => playLaterProp(e, songsIds)}>
+        <button type="button" onClick={() => playLaterProp(songsIds)}>
           Play Later
         </button>
-        <button type="button" onClick={e => this.deleteSong(e, songsIds)}>
+        <button type="button" onClick={() => this.deleteSong(songsIds)}>
           Delete from Library
         </button>
       </Dropdown>

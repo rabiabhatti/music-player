@@ -1,3 +1,4 @@
+@import 'variables.less';
 * {
   box-sizing: border-box;
 }
@@ -30,12 +31,13 @@ a {
   color: currentColor;
   text-decoration: none;
 }
+h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  color: #515151;
+  color: @headerColor;
 }
 h2 {
   font-weight: 500;
@@ -154,8 +156,11 @@ input[type='text']::placeholder {
   border: 1px solid #ef9a9a !important;
 }
 .active {
-  color: #757575 !important;
-  background-color: rgba(0, 0, 0, 0.07);
+  color: @activeColor !important;
+  background-color: @activeBackground !important;
+  i {
+    color: @activeColor !important;
+  }
 }
 @media screen and (max-width: 768px) {
   html {

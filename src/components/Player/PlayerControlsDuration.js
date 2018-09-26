@@ -4,7 +4,13 @@ import React from 'react'
 import debounce from 'lodash/debounce'
 import { humanizeDuration } from '~/common/songs'
 
+import flex from '~/styles/flex.less'
+import slider from '~/styles/slider.less'
+import player from '~/styles/player.less'
+
 type Props = {|
+  title: string,
+  artist: string,
   audioElement: HTMLAudioElement,
 |}
 type State = {|
@@ -50,20 +56,36 @@ class PlayerControlDuration extends React.Component<Props, State> {
   }
 
   render() {
+    const { title, artist } = this.props
     const { currentTime, currentSeekTime, duration } = this.state
 
     const currentTimeToUse = currentSeekTime !== null && this.dragging ? currentSeekTime : currentTime
     const percentage = duration === 0 ? 0 : (currentTimeToUse / duration) * 100
 
     return (
-      <React.Fragment>
-        <span className="btn-white">{humanizeDuration(currentTime)}</span>
-        <div>
-          <div className="progress-fill" style={{ width: `${percentage + 0.5}%` }} />
-          <input type="range" onChange={this.handleDurationSlide} value={currentTimeToUse} min={0} max={duration} />
+      <div className={player.progress_bar_info}>
+        <div className={player.progress_bar}>
+          <input
+            min={0}
+            type="range"
+            max={duration}
+            className={slider.range}
+            value={currentTimeToUse}
+            onChange={this.handleDurationSlide}
+          />
+          <div className={player.progress_fill} style={{ width: `${percentage + 0.5}%` }} />
         </div>
-        <span className="btn-white">{humanizeDuration(duration)}</span>
-      </React.Fragment>
+        <div className={`${flex.row} ${flex.align_center} ${flex.space_between}`}>
+          <h1 className={flex.baseline}>
+            {title}
+            <span className={player.lighten}> &bull; {artist}</span>
+          </h1>
+          <p>
+            <span>{humanizeDuration(currentTime)}</span> /{' '}
+            <span className={player.lighten}>{humanizeDuration(duration)}</span>
+          </p>
+        </div>
+      </div>
     )
   }
 }

@@ -11,8 +11,9 @@ import type { SongsStateFields } from '~/redux/songs'
 import { deleteSongsFromLibrary } from '~/common/songs'
 import { playNext, playPrevious, songPlay, songPause, incrementNonce, addToRecentlyPlayed } from '~/redux/songs'
 
-import '~/styles/slider.less'
-import '~/styles/player.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import player from '~/styles/player.less'
 import cover from '~/static/img/alter-img.png'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
@@ -51,11 +52,11 @@ class Player extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps({ activeSong, songs }) {
-    const { activeSong: song, songs: currentSongs } = this.props
+    const { activeSong: currentActiveSong, songs: currentSongs } = this.props
 
     let promise = Promise.resolve()
-    if (song !== activeSong) {
-      if (song) {
+    if (currentActiveSong !== activeSong) {
+      if (currentActiveSong) {
         this.internalPause()
       }
       if (activeSong) {
@@ -192,46 +193,44 @@ class Player extends React.Component<Props, State> {
     }
 
     return (
-      <div className="section-player flex-column">
-        <div className="flex-row space-between">
-          <div className="flex-row section-player-cover">
-            <img src={coverImg} alt={cover} />
-            <div>
-              <h1 className="btn-white">{activeSong ? songName : ''}</h1>
-              <h3 className="btn-white">{activeSong ? songArtist : ''}</h3>
-            </div>
-          </div>
-          <button type="button" onClick={this.deleteSong}>
-            <i title="Delete from Library" className="material-icons btn-white">
-              delete
+      <div className={`${player.section_player} ${flex.row} ${flex.baseline}`}>
+        <div className={`${player.right_btns} ${flex.align_center}`}>
+          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={() => dispatch(playPrevious())}>
+            <i title="Previous" className="material-icons">
+              fast_rewind
+            </i>
+          </button>
+          <button
+            type="button"
+            className={`${button.btn} ${button.btn_round} ${songs.songState === 'playing' ? 'active' : ''}`}
+            onClick={this.playPause}
+          >
+            <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons">
+              {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
+            </i>
+          </button>
+          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={() => dispatch(playNext())}>
+            <i title="Next" className="material-icons">
+              fast_forward
             </i>
           </button>
         </div>
-        <div className="section-player-controls align-center space-between">
-          <div className="section-player-btns align-center">
-            <button type="button" onClick={() => dispatch(playPrevious())}>
-              <i title="Previous" className="material-icons btn-white">
-                fast_rewind
-              </i>
-            </button>
-            <button type="button" onClick={this.playPause}>
-              <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons btn-white">
-                {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
-              </i>
-            </button>
-            <button type="button" onClick={() => dispatch(playNext())}>
-              <i title="Next" className="material-icons btn-white">
-                fast_forward
-              </i>
-            </button>
-          </div>
-          <div className="section-progress align-center space-between">
-            <PlayerControlDuration audioElement={this.audioElement} />
-          </div>
-          <div className="section-volume align-center">
-            <PlayerControlsVolume audioElement={this.audioElement} />
-            <PlayerControlsRepeat />
-          </div>
+        <div className={`${player.section_progress} ${flex.align_center} ${flex.space_around}`}>
+          <img className={player.img} src={coverImg} alt={cover} />
+          <PlayerControlDuration
+            audioElement={this.audioElement}
+            title={activeSong ? songName : ''}
+            artist={activeSong ? songArtist : ''}
+          />
+        </div>
+        <div className={`${player.section_volume} ${flex.align_center}`}>
+          <PlayerControlsVolume audioElement={this.audioElement} />
+          <PlayerControlsRepeat />
+          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={this.deleteSong}>
+            <i title="Delete from Library" className="material-icons">
+              delete
+            </i>
+          </button>
         </div>
       </div>
     )
