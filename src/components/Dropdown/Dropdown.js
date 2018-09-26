@@ -14,7 +14,7 @@ type State = {|
   opened: boolean,
 |}
 
-export default class Popup extends React.Component<Props, State> {
+export default class Dropdown extends React.Component<Props, State> {
   state = { opened: false }
   ref: ?HTMLDivElement = null
 
