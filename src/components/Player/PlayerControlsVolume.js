@@ -6,6 +6,11 @@ import connect from '~/common/connect'
 
 import { setSongMute, setSongVolume } from '~/redux/songs'
 
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import slider from '~/styles/slider.less'
+import player from '~/styles/player.less'
+
 type State = {|
   currentSeekVolume: number | null,
 |}
@@ -102,27 +107,29 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     }
 
     return (
-      <div className="volume flex-row align-center">
+      <div className={`${player.volume} ${flex.align_center} ${flex.row}`}>
         <button
           type="button"
+          className={`${button.btn} ${button.btn_round}`}
           onClick={() => {
             this.handleMuteUnmute(icon !== 'volume_off')
           }}
         >
-          <i title="Volume" className="material-icons btn-white">
+          <i title="Volume" className="material-icons">
             {icon}
           </i>
         </button>
-        <div className="volume-slider">
-          <div className="progress-fill" style={{ width: `${currentVolumeToUse}%` }} />
+        <div className={player.volume_slider}>
           <input
             min="0"
             max="100"
             type="range"
             title="Volume"
+            className={slider.range}
             value={currentVolumeToUse}
             onChange={this.handleVolumeSlide}
           />
+          <div className={player.progress_fill} style={{ width: `${currentVolumeToUse}%` }} />
         </div>
       </div>
     )
