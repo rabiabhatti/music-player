@@ -37,11 +37,11 @@ function PlayerScreen(props: Props) {
   return (
     <React.Fragment>
       <Downloader />
-      <Player />
       <div className="space-between align-stretch">
         <Sidebar />
         <ActiveRoute />
       </div>
+      <Player />
     </React.Fragment>
   )
 }

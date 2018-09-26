@@ -10,6 +10,9 @@ import type { UserAuthorization } from '~/redux/user'
 import services from '~/services'
 import connect from '~/common/connect'
 
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+
 type Props = {|
   authorizations: Array<UserAuthorization>,
   incrementNonce: () => void,
@@ -44,8 +47,11 @@ class Picker extends React.Component<Props, State> {
 
   render() {
     return (
-      <button type="button" className="picker" onClick={this.createPicker}>
-        Add Songs
+      <button type="button" className={`${button.btn} ${button.add_music} ${flex.align_center}`} onClick={this.createPicker}>
+        <i title="Add Music" className="material-icons">
+          add
+        </i>
+        Add Music
       </button>
     )
   }

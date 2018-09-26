@@ -17,11 +17,11 @@ type State = {||}
 class Login extends React.Component<Props, State> {
   authorize = (service: Service, e: SyntheticEvent<HTMLButtonElement>) => {
     e.preventDefault()
-
+    const { authorizeService: authorizeServiceProp } = this.props
     service
       .authorize()
       .then(authorization => {
-        this.props.authorizeService({ authorization })
+        authorizeServiceProp({ authorization })
       })
       .catch(console.error)
   }

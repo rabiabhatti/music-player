@@ -7,12 +7,13 @@ import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
-import '~/styles/sidebar.less'
 import Picker from '~/components/Picker'
 import EditPlaylist from '~/components/Popup/EditPlaylist'
 import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
-import Logout from './Logout'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import sidebar from '~/styles/sidebar.less'
 
 type Props = {|
   nonce: number,
@@ -72,9 +73,9 @@ class Sidebar extends React.Component<Props, State> {
 
     return (
       <button
-        type="submit"
+        type="button"
         key={`route-${name}`}
-        className={`btn-dull ${route.name === routeName ? 'active' : ''}`}
+        className={`${button.btn} ${button.btn_round_half} ${sidebar.row_btn} ${route.name === routeName ? 'active' : ''}`}
         onClick={e => (routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.navigateTo(e, routeName))}
       >
         <i className="material-icons">{icon}</i>
@@ -88,17 +89,18 @@ class Sidebar extends React.Component<Props, State> {
     return (
       <div
         key={`route-${name}-${id}`}
-        className={`space-between flex-row btn-dull section-sidebar-playlist ${
+        className={`${button.btn_round_half} ${flex.space_between} ${flex.row} ${sidebar.playlist} ${
           route.name === routeName && route.id === id ? 'active' : ''
         }`}
       >
-        <button type="button" className="btn-dull" onClick={e => this.navigateTo(e, routeName, id)}>
+        <button type="button" className={`${button.btn}`} onClick={e => this.navigateTo(e, routeName, id)}>
           <i className="material-icons">{icon}</i>
           {name}
         </button>
-        <div className="flex-row">
+        <div className={`${flex.row}`}>
           <button
-            type="submit"
+            type="button"
+            className={`${button.btn}`}
             onClick={() =>
               this.setState({
                 id,
@@ -111,7 +113,7 @@ class Sidebar extends React.Component<Props, State> {
               edit
             </i>
           </button>
-          <button type="button" onClick={e => this.deletePlaylist(e, id)}>
+          <button type="button" className={`${button.btn}`} onClick={e => this.deletePlaylist(e, id)}>
             <i title="Delete from Library" className="material-icons">
               delete
             </i>
@@ -125,7 +127,7 @@ class Sidebar extends React.Component<Props, State> {
     const { playlists, showCreatePlaylistModal, showEditPlaylistModal, name, id } = this.state
 
     return (
-      <div className="section-sidebar">
+      <div className={`${sidebar.sidebar}`}>
         {showCreatePlaylistModal && (
           <CreateNewPlaylist handleClose={() => this.setState({ showCreatePlaylistModal: false })} />
         )}
@@ -142,7 +144,7 @@ class Sidebar extends React.Component<Props, State> {
             }
           />
         )}
-        <input id="sidebar-search-input" type="text" placeholder="Search" />
+        <Picker />
         <h3>Library</h3>
         {this.renderNavigationItem('access_time', 'RecentlyPlayed', 'Recently Played')}
         {this.renderNavigationItem('music_note', 'Songs')}
@@ -152,8 +154,6 @@ class Sidebar extends React.Component<Props, State> {
         <h3>PlayLists</h3>
         {this.renderNavigationItem('playlist_add', 'NewPlaylist', 'New')}
         {playlists.map(playlist => this.renderPlaylists('playlist_play', 'Playlist', playlist.name, playlist.id))}
-        <Picker />
-        <Logout />
       </div>
     )
   }

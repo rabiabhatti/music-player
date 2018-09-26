@@ -6,12 +6,20 @@
   background: 0;
   display: flex;
   cursor: pointer;
+  color: inherit;
   font-size: 0.9rem;
   align-items: center;
   letter-spacing: 0.5px;
+  transition: color 0.4s ease, background-color 0.4s ease;
 
   &:active {
     outline: 0;
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
   }
 
   &:disabled {
@@ -22,7 +30,6 @@
 .btn_round {
   padding: 0.5rem;
   border-radius: 50%;
-  transition: color 0.4s ease, background-color 0.4s ease;
 
   &:hover {
     background-color: @hoverBackground;
@@ -31,8 +38,24 @@
       color: @hoverColor;
     }
   }
+}
+.btn_round_half {
+  font-weight: 500;
+  color: @iconColor;
+  border-top-right-radius: 1.3rem;
+  border-bottom-right-radius: 1.3rem;
 
-  &:active {
+  i {
+    color: @iconColor;
+  }
+
+  &:hover {
+    background-color: @hoverBackground;
+  }
+
+  &:focus {
+    outline: 0;
+    color: @activeColor;
     background-color: @activeBackground;
 
     i {
@@ -40,14 +63,29 @@
     }
   }
 }
-.dull {
-  color: #757575;
-}
-.blue {
-  color: #2f75ff;
-}
-.white {
-  color: #ffffff;
+
+.add_music {
+  height: 3rem;
+  font-weight: 500;
+  min-width: 10rem;
+  color: @iconColor;
+  padding-left: 1rem;
+  margin-left: 1.8rem;
+  border-radius: 24px;
+  background-color: @backgroundColor;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 1px 3px 1px rgba(60, 64, 67, 0.149);
+
+  i {
+    font-size: 2rem;
+    color: @activeColor;
+  }
+
+  &:hover {
+    outline: none;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.302), 0 4px 8px 3px rgba(60, 64, 67, 0.149);
+  }
 }
 .blue_border {
   color: #2f75ff;
@@ -62,5 +100,14 @@
   &:hover:not([disabled]),
   &:active:not([disabled]) {
     background-color: #eff4fe;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .add_music {
+    padding: 0;
+    height: 2.2rem;
+    min-width: 8rem;
+    font-size: 0.8rem;
+    margin-left: 0.6rem;
   }
 }
