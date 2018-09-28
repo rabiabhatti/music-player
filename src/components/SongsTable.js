@@ -14,6 +14,7 @@ import SongDropdown from '~/components/Dropdown/SongDropdown'
 type Props = {|
   title: string,
   playlist?: Object,
+  songState: string,
   songs: Array<Object>,
   activeSong: number | null,
   setSongPlaylist: setSongPlaylist,
@@ -31,7 +32,7 @@ class SongsTable extends React.Component<Props, State> {
   }
 
   render() {
-    const { activeSong, songs, title, playlist } = this.props
+    const { activeSong, songs, title, playlist, songState } = this.props
 
     return (
       <div className={`${table.section_songs} bound`}>
@@ -56,23 +57,29 @@ class SongsTable extends React.Component<Props, State> {
               <tr
                 key={song.id}
                 onDoubleClick={() => this.playAtIndex(index)}
-                className={song.id === activeSong ? 'active-song' : ''}
+                className={song.id === activeSong ? `${table.active_song}` : ''}
               >
                 <td>{song.meta.name || song.filename}</td>
                 <td>{song.duration ? humanizeDuration(song.duration) : ''}</td>
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>
-                <td className={`${table.song_wrapper_btns} ${flex.space_between}`}>
-                  <button
-                    type="button"
-                    className={`${button.btn} ${button.btn_round}`}
-                    onClick={() => this.playAtIndex(index)}
-                  >
-                    <i className="material-icons btn-blue">play_arrow</i>
-                  </button>
-                  <SongDropdown song={song} playlist={playlist} />
-                </td>
+                {song.id === activeSong && songState === 'playing' ? (
+                  <td className={`${table.playingSongIcon} ${flex.align_center}`}>
+                    <i className={`${button.btn_blue} material-icons`}>volume_up</i>
+                  </td>
+                ) : (
+                  <td className={`${table.song_wrapper_btns} ${flex.space_between}`}>
+                    <button
+                      type="button"
+                      onClick={() => this.playAtIndex(index)}
+                      className={`${button.btn} ${button.btn_blue}`}
+                    >
+                      <i className="material-icons">play_arrow</i>
+                    </button>
+                    <SongDropdown song={song} playlist={playlist} />
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -84,6 +91,7 @@ class SongsTable extends React.Component<Props, State> {
 
 export default connect(
   ({ songs }) => ({
+    songState: songs.songState,
     activeSong: songs.playlist[songs.songIndex] || null,
   }),
   { setSongPlaylist },

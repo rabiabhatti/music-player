@@ -1,10 +1,12 @@
-.section-contect-card {
+@import 'variables.less';
+
+.contect_card {
   left: 19.1%;
   width: 80.9%;
+  height: auto;
   position: relative;
-  background-color: #f8f8f6;
-  height: calc(100vh - 8rem);
-  max-height: calc(100vh - 8rem);
+  background-color: @hoverBackground;
+  min-height: calc(100vh - @playerHeight - @headerHeight);
 
   & > :first-child {
     position: relative;
@@ -13,7 +15,7 @@
     align-items: baseline;
     background-color: #ffffff;
 
-    .dropdown-content {
+    .dropdown_content {
       top: 0.9rem;
       right: 1.3rem;
     }

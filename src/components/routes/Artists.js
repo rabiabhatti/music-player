@@ -7,7 +7,10 @@ import db from '~/db'
 import { getArtistsFromSongs } from '~/common/songs'
 import type { File } from '~/types'
 
-import '~/styles/artists.less'
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import artists from '~/less/artists.less'
+
 import ContentCard from '../ContentCard'
 import EmptyMusicText from '../EmptyMusicText'
 
@@ -46,24 +49,24 @@ class Artists extends React.Component<Props, State> {
 
   render() {
     const { songs, selected } = this.state
-    const artists = getArtistsFromSongs(songs)
+    const artistsFromSongs = getArtistsFromSongs(songs)
 
     return songs.length ? (
-      <div className="flex-row bound">
-        <div className="artists-bar">
+      <div className={`${flex.row} bound`}>
+        <div className={`${artists.artists_bar}`}>
           <button
             type="submit"
-            className={`align-center btn-dull ${!selected ? 'active' : ''}`}
+            className={`${flex.align_center} ${button.btn} ${button.btn_round_half} ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
             <i className="material-icons">mic</i>
             All Artists
           </button>
-          {Object.keys(artists).map(artist => (
+          {Object.keys(artistsFromSongs).map(artist => (
             <button
               type="submit"
               key={artist}
-              className={`align-center btn-dull ${
+              className={`${flex.align_center} ${button.btn} ${button.btn_round_half} ${
                 selected && selected.type === 'artist' && selected.identifier === artist ? 'active' : ''
               }`}
               onClick={() =>

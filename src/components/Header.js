@@ -39,7 +39,7 @@ export default class Header extends React.Component<Props, State> {
             }}
             onInput={this.handleChange}
             placeholder="Type to search..."
-            className={`${input.input_text} ${input.input_search}`}
+            className={`${input.input} ${input.input_search}`}
           />
           <i title="Search" className={`${header.input_trigger} material-icons`}>
             search
