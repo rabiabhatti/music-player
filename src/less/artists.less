@@ -1,10 +1,13 @@
-.artists-bar {
+@import 'variables.less';
+
+.artists_bar {
+  top: 0;
   width: 16%;
-  height: 100vh;
-  position: fixed;
   min-width: 16%;
+  position: fixed;
   overflow-y: auto;
-  max-height: calc(100vh - 8rem);
+  height: calc(100vh - @playerHeight);
+  max-height: calc(100vh - @playerHeight);
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 
   & > button {

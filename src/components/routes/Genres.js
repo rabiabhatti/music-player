@@ -7,7 +7,10 @@ import db from '~/db'
 import type { File } from '~/types'
 import { getGenresFromSongs } from '~/common/songs'
 
-import '~/styles/artists.less'
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import artists from '~/less/artists.less'
+
 import ContentCard from '../ContentCard'
 import EmptyMusicText from '../EmptyMusicText'
 
@@ -49,11 +52,11 @@ class Genres extends React.Component<Props, State> {
     const genres = getGenresFromSongs(songs)
 
     return songs.length ? (
-      <div className="flex-row bound">
-        <div className="artists-bar">
+      <div className={`${flex.row} bound`}>
+        <div className={`${artists.artists_bar}`}>
           <button
             type="button"
-            className={`align-center btn-dull ${!selected ? 'active' : ''}`}
+            className={`${flex.align_center} ${button.btn} ${button.btn_round_half} ${!selected ? 'active' : ''}`}
             onClick={() => this.setState({ selected: null })}
           >
             <i className="material-icons">queue_music</i>
@@ -64,7 +67,7 @@ class Genres extends React.Component<Props, State> {
             <button
               type="button"
               key={genre}
-              className={`align-center btn-dull ${
+              className={`${flex.align_center} ${button.btn} ${button.btn_round_half} ${
                 selected && selected.type === 'genre' && selected.identifier === genre ? 'active' : ''
               }`}
               onClick={() =>

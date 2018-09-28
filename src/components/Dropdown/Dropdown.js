@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import '~/styles/dropdown.less'
+import '~/less/dropdown.less'
 import getEventPath from '~/common/getEventPath'
 
 type Props = {|
@@ -59,7 +59,7 @@ export default class Dropdown extends React.Component<Props, State> {
         }}
       >
         <i className="material-icons btn-blue">more_horiz</i>
-        <div className={`dropdown-content ${opened ? '' : 'hidden'}`}>{children}</div>
+        <div className={`dropdown_content ${opened ? '' : 'hidden'}`}>{children}</div>
       </div>
     )
   }

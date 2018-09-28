@@ -15,16 +15,10 @@
 
   &:active {
     outline: 0;
-    color: @activeColor;
-    background-color: @activeBackground;
-
-    i {
-      color: @activeColor;
-    }
   }
 
   &:disabled {
-    color: #9e9e9e;
+    color: lighten(@iconColor, 60%);
     pointer-events: none;
   }
 }
@@ -39,6 +33,15 @@
       color: @hoverColor;
     }
   }
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
 }
 .btn_round_half {
   font-weight: 500;
@@ -48,6 +51,7 @@
 
   i {
     color: @iconColor;
+    margin-right: 0.5rem;
   }
 
   &:hover {
@@ -56,6 +60,15 @@
 
   &:focus {
     outline: 0;
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+
+  &:active {
     color: @activeColor;
     background-color: @activeBackground;
 
@@ -80,6 +93,7 @@
 
   i {
     font-size: 2rem;
+    margin-right: 0.5rem;
   }
 
   &:hover {
@@ -99,6 +113,23 @@
   }
 }
 
+.btn_blue {
+  color: @activeColor;
+
+  i {
+    color: @activeColor;
+  }
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+}
+
 .btn_blue_border {
   margin-top: 1rem;
   font-size: 0.8rem;
@@ -108,6 +139,15 @@
   text-transform: uppercase;
   border: 1px solid @activeBackground;
   transition: background-color 0.3s ease-out;
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
 
   &:hover:not([disabled]),
   &:active:not([disabled]) {

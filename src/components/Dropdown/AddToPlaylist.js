@@ -52,7 +52,7 @@ class AddToPlaylist extends React.Component<Props, State> {
           Add to Playlist
           <i className="material-icons">add</i>
         </button>
-        <div className="sub-dropdown dropdown-content hidden">
+        <div className="sub-dropdown dropdown_content hidden">
           <button type="button" onClick={() => this.setState({ showCreatePlaylistModal: true })}>
             New Playlist
           </button>

@@ -1,24 +1,29 @@
-.section-album-info {
+@import 'variables.less';
+
+.album_info {
   width: 100%;
   min-width: 100%;
   padding: 2rem 1.3rem;
   align-items: flex-start;
-  background-color: #f8f8f6;
-  border-top: 1px solid rgba(0, 0, 0, 0.13);
+  border-top: 1px solid @borderColor;
 
-  .album-title {
+  .album_title {
     width: 28%;
   }
 
-  .album-info-content {
+  .album_info_content {
     width: 67%;
+
+    .activeSong_row {
+      width: 100%;
+    }
 
     h2 {
       margin-top: 0;
       margin-bottom: 0.5rem;
     }
 
-    .btn-blue {
+    .artistLink {
       text-align: left;
       font-size: 1.5rem;
     }
@@ -34,30 +39,29 @@
       & > div {
         cursor: pointer;
         position: relative;
-        border-top: 1px solid rgba(0, 0, 0, 0.13);
+        border-top: 1px solid @borderColor;
 
         p {
           transition: opacity 0.1s ease-in-out;
-
-          &:nth-child(2) {
-            width: 87%;
-          }
+        }
+        .song_title {
+          width: 87%;
         }
 
-        .song-btns {
+        .song_btns {
           opacity: 0;
           width: 100%;
           height: 100%;
           position: absolute;
           transition: opacity 0.1s ease-in-out;
 
-          .btn-blue {
-            margin-left: -0.5rem;
+          & > button {
+            margin-left: -0.4rem;
           }
         }
 
         &:last-child {
-          border-bottom: 1px solid rgba(0, 0, 0, 0.13);
+          border-bottom: 1px solid @borderColor;
         }
 
         &:hover {
@@ -65,7 +69,7 @@
             opacity: 0;
           }
 
-          .song-btns {
+          .song_btns {
             opacity: 1;
           }
         }
@@ -74,7 +78,7 @@
   }
 }
 
-.album-cover {
+.album_cover {
   width: 100%;
   height: 74.7%;
   position: relative;
@@ -98,19 +102,19 @@
     opacity: 0;
     width: 100%;
     height: 100%;
-    color: #ffffff;
     position: absolute;
     justify-content: center;
+    color: @backgroundColor;
     transition: opacity 0.4s ease-in-out;
 
     i {
       margin: 0;
-      color: #ffffff;
+      color: @backgroundColor;
       font-size: 3rem;
     }
   }
 
-  .album-play-btn {
+  .album_play_btn {
     font-size: 4.5rem !important;
   }
 
@@ -130,10 +134,13 @@
 }
 
 @media screen and (max-width: 768px) {
-  .album-title {
+  .album_title {
     width: 50%;
   }
-  .album-cover {
+  .album_cover {
     height: 67%;
+  }
+  .song_title {
+    width: 81% !important;
   }
 }
