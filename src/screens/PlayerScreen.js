@@ -5,9 +5,10 @@ import connect from '~/common/connect'
 
 import type { RouteName, RouterRoute } from '~/redux/router'
 
-import '~/styles/general.less'
+import '~/less/general.less'
 
 import Player from '~/components/Player'
+import Header from '~/components/Header'
 import Sidebar from '~/components/Sidebar'
 import Songs from '~/components/routes/Songs'
 import Genres from '~/components/routes/Genres'
@@ -37,6 +38,7 @@ function PlayerScreen(props: Props) {
   return (
     <React.Fragment>
       <Downloader />
+      <Header />
       <div className="space-between align-stretch">
         <Sidebar />
         <ActiveRoute />

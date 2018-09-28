@@ -11,9 +11,9 @@ import Picker from '~/components/Picker'
 import EditPlaylist from '~/components/Popup/EditPlaylist'
 import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
-import flex from '~/styles/flex.less'
-import button from '~/styles/button.less'
-import sidebar from '~/styles/sidebar.less'
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import sidebar from '~/less/sidebar.less'
 
 type Props = {|
   nonce: number,

@@ -1,12 +1,14 @@
-.section-songs {
-  padding: 0.5rem 2rem;
+@import 'variables.less';
+
+.section_songs {
+  padding: 0.5rem 1.6rem;
 
   table {
     width: 100%;
     max-width: 100%;
     text-align: left;
     border-radius: 2px;
-    border: 1px solid #00000017;
+    border: 1px solid @borderColor;
 
     tr {
       width: 100%;
@@ -15,12 +17,12 @@
 
       th {
         width: 23.25%;
-        color: #9e9e9e;
         padding: 0.8rem;
         font-weight: 400;
+        color: @iconColor;
         font-size: 0.85rem;
-        background-color: #f8f8f6;
-        border-bottom: 1px solid #00000017;
+        background-color: @hoverBackground;
+        border-bottom: 1px solid @borderColor;
 
         &:first-child {
           padding-left: 2rem;
@@ -35,7 +37,7 @@
         width: 23.25%;
         padding: 0.8rem;
         font-size: 0.9rem;
-        border-bottom: 1px solid #00000017;
+        border-bottom: 1px solid @borderColor;
 
         &:first-child {
           padding-left: 2rem;
@@ -48,16 +50,17 @@
     }
 
     tbody {
-      height: 65vh;
       display: block;
       overflow-y: scroll;
+      height: calc(100vh - 14rem);
 
       tr {
         cursor: pointer;
         position: relative;
+        background-color: @backgroundColor;
         transition: background-color 0.1s ease-in-out;
 
-        .song-wrapper-btns {
+        .song_wrapper_btns {
           left: 0;
           top: 0;
           bottom: 0;
@@ -70,9 +73,9 @@
         }
 
         &:hover {
-          background-color: #f8f8f6;
+          background-color: @hoverBackground;
 
-          .song-wrapper-btns {
+          .song_wrapper_btns {
             opacity: 1;
           }
         }

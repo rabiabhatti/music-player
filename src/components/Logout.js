@@ -3,9 +3,11 @@
 import React from 'react'
 import { compose } from 'recompose'
 
-import services from '../services'
-import connect from '../common/connect'
-import { unauthorizeService, type UserAuthorization } from '../redux/user'
+import services from '~/services'
+import connect from '~/common/connect'
+import { unauthorizeService, type UserAuthorization } from '~/redux/user'
+
+import button from '~/less/button.less'
 
 type Props = {|
   authorizations: Array<UserAuthorization>,
@@ -31,8 +33,9 @@ class Logout extends React.Component<Props, State> {
 
   render() {
     return (
-      <button type="button" className="logout" onClick={this.handleSignoutClick}>
-        Logout
+      <button type="button" className={`${button.btn} ${button.btn_header}`} onClick={this.handleSignoutClick}>
+        <i className="material-icons">account_circle</i>
+        Account
       </button>
     )
   }
