@@ -3,6 +3,7 @@
 .header {
   left: 32%;
   width: 68%;
+  z-index: 1;
   position: relative;
   padding: 1rem 1.6% 0 1.6%;
   background-color: @backgroundColor;
@@ -13,15 +14,14 @@
 
     .input_trigger {
       padding: 0.3rem;
-      font-size: 1.9rem;
       position: absolute;
       border-radius: 22px;
+      font-size: 1.9rem !important;
       background-color: @searchBackground;
     }
 
     &:hover input {
       width: 100%;
-      display: inline-block;
     }
   }
 }

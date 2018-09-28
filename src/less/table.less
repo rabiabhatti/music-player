@@ -29,7 +29,7 @@
         }
 
         &:nth-child(2) {
-          width: 7%;
+          width: 8%;
         }
       }
 
@@ -44,7 +44,7 @@
         }
 
         &:nth-child(2) {
-          width: 7%;
+          width: 8%;
         }
       }
     }
@@ -52,7 +52,7 @@
     tbody {
       display: block;
       overflow-y: scroll;
-      height: calc(100vh - 14rem);
+      height: calc(100vh - 16rem);
 
       tr {
         cursor: pointer;
@@ -81,5 +81,11 @@
         }
       }
     }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .section_songs {
+    padding: 0.5rem 0.6rem;
   }
 }
