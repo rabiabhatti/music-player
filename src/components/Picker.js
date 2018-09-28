@@ -10,8 +10,7 @@ import type { UserAuthorization } from '~/redux/user'
 import services from '~/services'
 import connect from '~/common/connect'
 
-import flex from '~/styles/flex.less'
-import button from '~/styles/button.less'
+import button from '~/less/button.less'
 
 type Props = {|
   authorizations: Array<UserAuthorization>,
@@ -47,7 +46,7 @@ class Picker extends React.Component<Props, State> {
 
   render() {
     return (
-      <button type="button" className={`${button.btn} ${button.add_music} ${flex.align_center}`} onClick={this.createPicker}>
+      <button type="button" className={`${button.btn} ${button.btn_header}`} onClick={this.createPicker}>
         <i title="Add Music" className="material-icons">
           add
         </i>

@@ -1,0 +1,43 @@
+@import 'variables.less';
+
+.input_text {
+  border: 0;
+  outline: none;
+  max-width: 100%;
+  padding: 0.5rem;
+  box-shadow: none;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  color: @paraghraphColor;
+  background-color: @backgroundColor;
+  transition: width 1s ease-in, color 0.5s ease-in, display 1s ease-in;
+
+  &:focus {
+    border: 0;
+    outline-offset: 0;
+  }
+
+  &::placeholder {
+    color: lighten(@paraghraphColor, 30%);
+  }
+}
+
+.input_search {
+  width: 0;
+  border: 0;
+  position: absolute;
+  border-radius: 22px;
+  padding: 0.7rem 1rem;
+  transition: width 0.8s ease-in-out;
+  background-color: @searchBackground;
+
+  &:focus {
+    width: 100%;
+    border: 0;
+  }
+
+  &:active {
+    width: 100%;
+    border: 0;
+  }
+}

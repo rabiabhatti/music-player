@@ -4,9 +4,9 @@ import React from 'react'
 import debounce from 'lodash/debounce'
 import { humanizeDuration } from '~/common/songs'
 
-import flex from '~/styles/flex.less'
-import slider from '~/styles/slider.less'
-import player from '~/styles/player.less'
+import flex from '~/less/flex.less'
+import slider from '~/less/slider.less'
+import player from '~/less/player.less'
 
 type Props = {|
   title: string,

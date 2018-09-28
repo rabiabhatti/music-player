@@ -3,10 +3,12 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import '~/styles/table.less'
 import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
 
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import table from '~/less/table.less'
 import SongDropdown from '~/components/Dropdown/SongDropdown'
 
 type Props = {|
@@ -32,10 +34,10 @@ class SongsTable extends React.Component<Props, State> {
     const { activeSong, songs, title, playlist } = this.props
 
     return (
-      <div className="section-songs bound">
+      <div className={`${table.section_songs} bound`}>
         <div className="align-center space-between">
           <h2>{title}</h2>
-          <button type="button" className="btn-blue" onClick={() => this.playAtIndex(0)}>
+          <button type="button" className={`${button.btn} ${button.btn_playall}`} onClick={() => this.playAtIndex(0)}>
             Play All
           </button>
         </div>
@@ -61,8 +63,12 @@ class SongsTable extends React.Component<Props, State> {
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>
-                <td className="song-wrapper-btns space-between">
-                  <button type="button" onClick={() => this.playAtIndex(index)}>
+                <td className={`${table.song_wrapper_btns} ${flex.space_between}`}>
+                  <button
+                    type="button"
+                    className={`${button.btn} ${button.btn_round}`}
+                    onClick={() => this.playAtIndex(index)}
+                  >
                     <i className="material-icons btn-blue">play_arrow</i>
                   </button>
                   <SongDropdown song={song} playlist={playlist} />
