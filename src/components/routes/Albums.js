@@ -7,7 +7,11 @@ import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'
 
-import '~/styles/albums.less'
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import albumsDesign from '~/less/albums.less'
+import albumInfo from '~/less/album-info.less'
+
 import cover from '~/static/img/alter-img.png'
 
 import AlbumInfo from '../AlbumInfo'
@@ -99,17 +103,21 @@ class Albums extends React.Component<Props, State> {
         coverImg = cover
       }
       return (
-        <div className="album-content" key={album}>
-          <div className="album-cover">
-            <div className="filter" />
+        <div className={`${albumsDesign.album_content}`} key={album}>
+          <div className={`${albumInfo.album_cover}`}>
+            <div className={`${albumInfo.filter}`} />
             <img alt={cover} src={coverImg} />
-            <button type="button" onClick={() => this.playAtIndex(albumSongs, 0)}>
+            <button
+              type="button"
+              className={`${button.btn} ${flex.align_center}`}
+              onClick={() => this.playAtIndex(albumSongs, 0)}
+            >
               <i className="material-icons">play_circle_outline</i>
             </button>
           </div>
           <button
             type="button"
-            className="flex-column"
+            className={`${button.btn} ${flex.column}`}
             onClick={e => this.openAlbumInfo(e, album)}
             onDoubleClick={() => this.playAtIndex(albumSongs, 0)}
           >
@@ -143,7 +151,7 @@ class Albums extends React.Component<Props, State> {
     }
 
     return songs.length ? (
-      <div className="section-albums bound flex-row flex-wrap" id="albums">
+      <div className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`} id="albums">
         {renderedAlbums}
       </div>
     ) : (
