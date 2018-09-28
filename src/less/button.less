@@ -10,6 +10,7 @@
   font-size: 0.9rem;
   align-items: center;
   letter-spacing: 0.5px;
+  background-color: transparent;
   transition: color 0.4s ease, background-color 0.4s ease;
 
   &:active {
@@ -65,9 +66,10 @@
 }
 
 .btn_header {
+  width: 8.5rem;
   height: 2.7rem;
   font-weight: 500;
-  min-width: 8.5rem;
+  min-width: 7.5rem;
   color: @iconColor;
   padding-left: 0.5rem;
   margin-left: 1.8rem;
@@ -87,27 +89,44 @@
   }
 }
 
-.blue_border {
-  color: #2f75ff;
+.btn_playall {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: @paraghraphColor;
+
+  &:hover {
+    background-color: @hoverBackground;
+  }
+}
+
+.btn_blue_border {
   margin-top: 1rem;
   font-size: 0.8rem;
   border-radius: 5px;
+  color: @activeColor;
   padding: 0.5rem 2rem;
   text-transform: uppercase;
-  border: 1px solid rgba(0, 0, 0, 0.13);
+  border: 1px solid @activeBackground;
   transition: background-color 0.3s ease-out;
 
   &:hover:not([disabled]),
   &:active:not([disabled]) {
-    background-color: #eff4fe;
+    background-color: @activeBackground;
   }
 }
 @media screen and (max-width: 1024px) {
-  .add_music {
-    padding: 0;
-    height: 2.2rem;
-    min-width: 8rem;
-    font-size: 0.8rem;
+  .btn_header {
+    width: 7.5rem;
+    font-size: 0.7rem;
+
+    i {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .btn_header {
     margin-left: 0.6rem;
   }
 }

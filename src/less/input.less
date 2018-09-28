@@ -1,6 +1,6 @@
 @import 'variables.less';
 
-.input_text {
+.input {
   border: 0;
   outline: none;
   max-width: 100%;
@@ -23,8 +23,9 @@
 }
 
 .input_search {
-  width: 0;
+  width: 0%;
   border: 0;
+  right: 0.4rem;
   position: absolute;
   border-radius: 22px;
   padding: 0.7rem 1rem;
@@ -32,12 +33,12 @@
   background-color: @searchBackground;
 
   &:focus {
-    width: 100%;
     border: 0;
+    width: 100%;
   }
 
   &:active {
-    width: 100%;
     border: 0;
+    width: 100%;
   }
 }
