@@ -6,6 +6,9 @@ import connect from '~/common/connect'
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 
+import input from '~/less/input.less'
+import button from '~/less/button.less'
+
 import Popup from './Popup'
 
 type Props = {|
@@ -47,9 +50,21 @@ class EditPlaylist extends React.Component<Props, State> {
       <Popup handleClose={handleClose}>
         <label htmlFor="name">
           Name
-          <input id="name" type="text" name="name" value={name} onInput={this.handleChange} placeholder={playlistName} />
+          <input
+            type="text"
+            name="name"
+            value={name}
+            placeholder={playlistName}
+            onInput={this.handleChange}
+            className={`${input.input} ${input.input_popup}`}
+          />
         </label>
-        <button type="submit" className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
+        <button
+          type="submit"
+          disabled={!enable}
+          onClick={this.savePlaylist}
+          className={`${button.btn} ${button.btn_blue_border}`}
+        >
           Save
         </button>
       </Popup>

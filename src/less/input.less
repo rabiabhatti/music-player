@@ -42,3 +42,12 @@
     width: 100%;
   }
 }
+
+.input_popup {
+  min-width: 100%;
+  border: 1px solid @borderColor;
+
+  &:focus {
+    border: 1px solid lighten(@activeColor, 40%);
+  }
+}

@@ -6,6 +6,9 @@ import connect from '~/common/connect'
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 
+import input from '~/less/input.less'
+import button from '~/less/button.less'
+
 import Popup from './Popup'
 
 type Props = {|
@@ -43,8 +46,26 @@ class CreateNewPlaylist extends React.Component<Props, State> {
 
     return (
       <Popup handleClose={handleClose}>
-        <input type="text" name="name" value={name} onInput={this.handleChange} placeholder="Choose name" />
-        <button type="submit" className="btn-blue-border" onClick={this.savePlaylist} disabled={!enable}>
+        <input
+          type="text"
+          name="name"
+          value={name}
+          placeholder="Choose name"
+          onFocus={e => {
+            e.target.placeholder = ''
+          }}
+          onBlur={e => {
+            e.target.placeholder = 'Choose name'
+          }}
+          onInput={this.handleChange}
+          className={`${input.input} ${input.input_popup}`}
+        />
+        <button
+          type="submit"
+          disabled={!enable}
+          onClick={this.savePlaylist}
+          className={`${button.btn} ${button.btn_blue_border}`}
+        >
           Save
         </button>
       </Popup>
