@@ -3,8 +3,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import '~/styles/popup.less'
 import getEventPath from '~/common/getEventPath'
+
+import flex from '~/less/flex.less'
+import popup from '~/less/popup.less'
+import button from '~/less/button.less'
 
 type Props = {|
   children: React$Node,
@@ -51,15 +54,17 @@ export default class Popup extends React.Component<Props> {
     const { children, handleClose } = this.props
 
     return ReactDOM.createPortal(
-      <div className="section-popup">
+      <div className={`${popup.popup}`}>
         <div
-          className="popup-content flex-wrap"
           ref={element => {
             this.ref = element
           }}
+          className={`${flex.wrap} ${popup.popup_content}`}
         >
-          <button type="button" className="close" onClick={handleClose}>
-            ×
+          <button type="button" className={`${button.btn} ${button.btn_round} ${popup.close}`} onClick={handleClose}>
+            <i title="Close" className="material-icons">
+              close
+            </i>
           </button>
           {children}
         </div>

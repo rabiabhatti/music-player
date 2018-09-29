@@ -8,6 +8,9 @@ import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 import { normalizeArtist } from '~/parser'
 
+import input from '~/less/input.less'
+import button from '~/less/button.less'
+
 import Popup from './Popup'
 
 function validateField(field: string, fields: Object, song: Object) {
@@ -109,56 +112,57 @@ class EditSong extends React.Component<Props, State> {
         <label htmlFor="name">
           Name
           <input
-            id="name"
             type="text"
             name="fields.name"
             value={fields.name}
             onChange={this.handleChange}
             onBlur={this.handleBlur('name')}
             placeholder={song.meta && song.meta.name}
-            className={shouldMarkError('name') ? 'error' : ''}
+            className={`${input.input} ${input.input_popup} ${shouldMarkError('name') ? 'error' : ''}`}
           />
         </label>
         <label htmlFor="album">
           Album
           <input
-            id="album"
             type="text"
             name="fields.album"
             value={fields.album}
             onChange={this.handleChange}
             onBlur={this.handleBlur('album')}
             placeholder={song.meta && song.meta.album}
-            className={shouldMarkError('album') ? 'error' : ''}
+            className={`${input.input} ${input.input_popup} ${shouldMarkError('album') ? 'error' : ''}`}
           />
         </label>
         <label htmlFor="genre">
           Genre
           <input
-            id="genre"
             type="text"
             name="fields.genre"
             value={fields.genre}
             onChange={this.handleChange}
             onBlur={this.handleBlur('genre')}
             placeholder={song.meta && song.meta.genre}
-            className={shouldMarkError('genre') ? 'error' : ''}
+            className={`${input.input} ${input.input_popup} ${shouldMarkError('genre') ? 'error' : ''}`}
           />
         </label>
         <label htmlFor="artists">
           Artists
           <input
             type="text"
-            id="artists"
             name="fields.artists"
             value={fields.artists}
             onChange={this.handleChange}
             onBlur={this.handleBlur('artists')}
             placeholder={song.meta && song.meta.artists_original}
-            className={shouldMarkError('artists') ? 'error' : ''}
+            className={`${input.input} ${input.input_popup} ${shouldMarkError('artists') ? 'error' : ''}`}
           />
         </label>
-        <button type="submit" className="btn-blue-border" onClick={this.saveSongInfo} disabled={isDisabled}>
+        <button
+          type="submit"
+          disabled={isDisabled}
+          onClick={this.saveSongInfo}
+          className={`${button.btn} ${button.btn_blue_border}`}
+        >
           Save
         </button>
       </Popup>

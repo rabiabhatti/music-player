@@ -7,6 +7,9 @@ import connect from '~/common/connect'
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 
+import input from '~/less/input.less'
+import button from '~/less/button.less'
+
 import Popup from './Popup'
 
 type Props = {|
@@ -70,13 +73,32 @@ class EditAlbum extends React.Component<Props, State> {
       <Popup handleClose={handleClose}>
         <label htmlFor="name">
           Name
-          <input type="text" id="name" name="name" value={name} placeholder={name} onChange={this.handleChange} />
+          <input
+            type="text"
+            name="name"
+            value={name}
+            placeholder={name}
+            onChange={this.handleChange}
+            className={`${input.input} ${input.input_popup}`}
+          />
         </label>
         <label htmlFor="year">
           Year
-          <input type="text" id="name" name="year" value={year} placeholder={year} onChange={this.handleChange} />
+          <input
+            type="text"
+            name="year"
+            value={year}
+            placeholder={year}
+            onInput={this.handleChange}
+            className={`${input.input} ${input.input_popup}`}
+          />
         </label>
-        <button type="submit" className="btn-blue-border" onClick={this.saveAlbumInfo} disabled={!enable}>
+        <button
+          type="submit"
+          disabled={!enable}
+          onClick={this.saveAlbumInfo}
+          className={`${button.btn} ${button.btn_blue_border}`}
+        >
           Save
         </button>
       </Popup>
