@@ -11,8 +11,9 @@ import type { SongsStateFields } from '~/redux/songs'
 import { deleteSongsFromLibrary } from '~/common/songs'
 import { playNext, playPrevious, songPlay, songPause, incrementNonce, addToRecentlyPlayed } from '~/redux/songs'
 
-import '~/styles/slider.less'
-import '~/styles/player.less'
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import player from '~/less/player.less'
 import cover from '~/static/img/alter-img.png'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
@@ -51,9 +52,11 @@ class Player extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps({ activeSong, songs }) {
+    const { activeSong: currentActiveSong, songs: currentSongs } = this.props
+
     let promise = Promise.resolve()
-    if (this.props.activeSong !== activeSong) {
-      if (this.props.activeSong) {
+    if (currentActiveSong !== activeSong) {
+      if (currentActiveSong) {
         this.internalPause()
       }
       if (activeSong) {
@@ -62,13 +65,13 @@ class Player extends React.Component<Props, State> {
         this.internalPause()
         this.setState({ activeSong: null })
       }
-    } else if (this.props.songs.songState !== songs.songState) {
+    } else if (currentSongs.songState !== songs.songState) {
       if (songs.songState === 'playing') {
         promise.then(() => this.internalPlay())
       } else {
         promise.then(() => this.internalPause())
       }
-      if (this.props.songs.nonce !== songs.nonce && activeSong) {
+      if (currentSongs.nonce !== songs.nonce && activeSong) {
         promise = promise.then(() => this.loadSong(activeSong, songs.songState))
       }
     }
@@ -86,29 +89,53 @@ class Player extends React.Component<Props, State> {
     }
   }
   handleEnded = () => {
-    const { songsRepeat, songIndex, playlist } = this.props.songs
+    const { dispatch, songs } = this.props
+    const { songsRepeat, songIndex, playlist } = songs
     if (songsRepeat === 'single') {
       this.audioElement.play()
     } else {
       const isLastSong = songIndex === playlist.length - 1
       if (!isLastSong || songsRepeat === 'all') {
-        this.props.dispatch(playNext())
+        dispatch(playNext())
       }
     }
   }
 
-  playPrevious = () => {
-    this.props.dispatch(playPrevious())
-  }
-  playNext = () => {
-    this.props.dispatch(playNext())
-  }
   playPause = () => {
-    const { songs } = this.props
-    this.props.dispatch(songs.songState === 'playing' ? songPause() : songPlay())
+    const { songs, dispatch } = this.props
+    dispatch(songs.songState === 'playing' ? songPause() : songPlay())
   }
 
-  audioElement: HTMLAudioElement
+  updateDuration = () => {
+    const { dispatch } = this.props
+    const { activeSong } = this.state
+    if (activeSong) {
+      dispatch(addToRecentlyPlayed(activeSong.id))
+      if (!activeSong.duration) {
+        db.songs.update(activeSong.id, {
+          duration: this.audioElement.duration,
+        })
+        dispatch(incrementNonce())
+      }
+    }
+  }
+
+  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
+    e.preventDefault()
+    const { dispatch } = this.props
+    const { activeSong } = this.state
+    if (activeSong) {
+      deleteSongsFromLibrary([activeSong.id])
+      dispatch(playNext())
+      dispatch(incrementNonce())
+    }
+  }
+  internalPlay() {
+    this.audioElement.play()
+  }
+  internalPause() {
+    this.audioElement.pause()
+  }
 
   async loadSong(songId: number, songState) {
     const { authorizations } = this.props
@@ -141,38 +168,11 @@ class Player extends React.Component<Props, State> {
     }
   }
 
-  updateDuration = () => {
-    const song = this.state.activeSong
-    if (song) {
-      this.props.dispatch(addToRecentlyPlayed(song.id))
-      if (!song.duration) {
-        db.songs.update(song.id, {
-          duration: this.audioElement.duration,
-        })
-        this.props.dispatch(incrementNonce())
-      }
-    }
-  }
-
-  internalPause() {
-    this.audioElement.pause()
-  }
-  internalPlay() {
-    this.audioElement.play()
-  }
-
-  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    if (this.state.activeSong) {
-      deleteSongsFromLibrary([this.state.activeSong.id])
-      this.props.dispatch(playNext())
-      this.props.dispatch(incrementNonce())
-    }
-  }
+  audioElement: HTMLAudioElement
 
   render() {
-    const { songs } = this.props
     const { activeSong } = this.state
+    const { songs, dispatch } = this.props
 
     let songName = activeSong ? activeSong.filename : ''
     let coverImg
@@ -193,46 +193,44 @@ class Player extends React.Component<Props, State> {
     }
 
     return (
-      <div className="section-player flex-column">
-        <div className="flex-row space-between">
-          <div className="flex-row section-player-cover">
-            <img src={coverImg} alt={cover} />
-            <div>
-              <h1 className="btn-white">{activeSong ? songName : ''}</h1>
-              <h3 className="btn-white">{activeSong ? songArtist : ''}</h3>
-            </div>
-          </div>
-          <button onClick={this.deleteSong}>
-            <i title="Delete from Library" className="material-icons btn-white">
-              delete
+      <div className={`${player.section_player} ${flex.row} ${flex.baseline}`}>
+        <div className={`${player.right_btns} ${flex.align_center}`}>
+          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={() => dispatch(playPrevious())}>
+            <i title="Previous" className="material-icons">
+              fast_rewind
+            </i>
+          </button>
+          <button
+            type="button"
+            className={`${button.btn} ${button.btn_round} ${songs.songState === 'playing' ? 'active' : ''}`}
+            onClick={this.playPause}
+          >
+            <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons">
+              {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
+            </i>
+          </button>
+          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={() => dispatch(playNext())}>
+            <i title="Next" className="material-icons">
+              fast_forward
             </i>
           </button>
         </div>
-        <div className="section-player-controls align-center space-between">
-          <div className="section-player-btns align-center">
-            <button onClick={this.playPrevious}>
-              <i title="Previous" className="material-icons btn-white">
-                fast_rewind
-              </i>
-            </button>
-            <button onClick={this.playPause}>
-              <i title={songs.songState === 'playing' ? 'Pause' : 'Play'} className="material-icons btn-white">
-                {songs.songState === 'playing' ? 'pause_circle_outline' : 'play_circle_outline'}
-              </i>
-            </button>
-            <button onClick={this.playNext}>
-              <i title="Previous" className="material-icons btn-white">
-                fast_forward
-              </i>
-            </button>
-          </div>
-          <div className="section-progress align-center space-between">
-            <PlayerControlDuration audioElement={this.audioElement} />
-          </div>
-          <div className="section-volume align-center">
-            <PlayerControlsVolume audioElement={this.audioElement} />
-            <PlayerControlsRepeat />
-          </div>
+        <div className={`${player.section_progress} ${flex.align_center} ${flex.space_around}`}>
+          <img className={player.img} src={coverImg} alt={cover} />
+          <PlayerControlDuration
+            audioElement={this.audioElement}
+            title={activeSong ? songName : ''}
+            artist={activeSong ? songArtist : ''}
+          />
+        </div>
+        <div className={`${player.section_volume} ${flex.align_center}`}>
+          <PlayerControlsVolume audioElement={this.audioElement} />
+          <PlayerControlsRepeat />
+          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={this.deleteSong}>
+            <i title="Delete from Library" className="material-icons">
+              delete
+            </i>
+          </button>
         </div>
       </div>
     )

@@ -4,7 +4,13 @@ import React from 'react'
 import debounce from 'lodash/debounce'
 import { humanizeDuration } from '~/common/songs'
 
+import flex from '~/less/flex.less'
+import slider from '~/less/slider.less'
+import player from '~/less/player.less'
+
 type Props = {|
+  title: string,
+  artist: string,
   audioElement: HTMLAudioElement,
 |}
 type State = {|
@@ -15,52 +21,71 @@ type State = {|
 
 class PlayerControlDuration extends React.Component<Props, State> {
   state = { currentSeekTime: null, currentTime: 0, duration: 0 }
-
-  componentDidMount() {
-    this.props.audioElement.addEventListener('timeupdate', this.handleDurationChange)
-  }
-  componentWillUnmount() {
-    this.props.audioElement.removeEventListener('timeupdate', this.handleDurationChange)
-  }
-
   dragging = false
 
+  handleDurationSlideFlush = debounce(() => {
+    const { audioElement } = this.props
+    const { currentSeekTime } = this.state
+    if (currentSeekTime !== null) {
+      audioElement.currentTime = currentSeekTime
+    }
+    this.dragging = false
+  }, 50)
+
+  componentDidMount() {
+    const { audioElement } = this.props
+    audioElement.addEventListener('timeupdate', this.handleDurationChange)
+  }
+  componentWillUnmount() {
+    const { audioElement } = this.props
+    audioElement.removeEventListener('timeupdate', this.handleDurationChange)
+  }
+
   handleDurationChange = () => {
+    const { audioElement } = this.props
     this.setState({
-      currentTime: this.props.audioElement.currentTime || 0,
-      duration: this.props.audioElement.duration || 0,
+      currentTime: audioElement.currentTime || 0,
+      duration: audioElement.duration || 0,
     })
   }
 
   handleDurationSlide = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ currentSeekTime: parseInt(e.target.value, 10) })
-
     this.dragging = true
     this.handleDurationSlideFlush()
   }
-  handleDurationSlideFlush = debounce(() => {
-    const { currentSeekTime } = this.state
-    if (currentSeekTime !== null) {
-      this.props.audioElement.currentTime = currentSeekTime
-    }
-    this.dragging = false
-  }, 50)
 
   render() {
+    const { title, artist } = this.props
     const { currentTime, currentSeekTime, duration } = this.state
 
     const currentTimeToUse = currentSeekTime !== null && this.dragging ? currentSeekTime : currentTime
-    const percentage = duration === 0 ? 0 : currentTimeToUse / duration * 100
+    const percentage = duration === 0 ? 0 : (currentTimeToUse / duration) * 100
 
     return (
-      <React.Fragment>
-        <span>{humanizeDuration(currentTime)}</span>
-        <div>
-          <div className="progress-fill" style={{ width: `${percentage + 0.5}%` }} />
-          <input type="range" onChange={this.handleDurationSlide} value={currentTimeToUse} min={0} max={duration} />
+      <div className={player.progress_bar_info}>
+        <div className={player.progress_bar}>
+          <input
+            min={0}
+            type="range"
+            max={duration}
+            className={slider.range}
+            value={currentTimeToUse}
+            onChange={this.handleDurationSlide}
+          />
+          <div className={player.progress_fill} style={{ width: `${percentage + 0.5}%` }} />
         </div>
-        <span>{humanizeDuration(duration)}</span>
-      </React.Fragment>
+        <div className={`${flex.row} ${flex.align_center} ${flex.space_between}`}>
+          <h1 className={flex.baseline}>
+            {title}
+            <span className={player.lighten}> &bull; {artist}</span>
+          </h1>
+          <p>
+            <span>{humanizeDuration(currentTime)}</span> /{' '}
+            <span className={player.lighten}>{humanizeDuration(duration)}</span>
+          </p>
+        </div>
+      </div>
     )
   }
 }

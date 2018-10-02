@@ -4,16 +4,16 @@ import * as React from 'react'
 import connect from '~/common/connect'
 
 import db from '~/db'
-import { deletePlaylist } from '~/common/songs'
 import { incrementNonce } from '~/redux/songs'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
-import '~/styles/sidebar.less'
-import Picker from '~/components/utilities/Picker'
-import EditPlaylist from '~/components/utilities/Popup/EditPlaylist'
-import CreateNewPlaylist from '~/components/utilities/Popup/CreateNewPlaylist'
+import Picker from '~/components/Picker'
+import EditPlaylist from '~/components/Popup/EditPlaylist'
+import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
-import Logout from './Logout'
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import sidebar from '~/less/sidebar.less'
 
 type Props = {|
   nonce: number,
@@ -42,7 +42,8 @@ class Sidebar extends React.Component<Props, State> {
     this.fetchPlaylists()
   }
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce) {
+    const { nonce } = this.props
+    if (prevProps.nonce !== nonce) {
       this.fetchPlaylists()
     }
   }
@@ -52,30 +53,19 @@ class Sidebar extends React.Component<Props, State> {
     })
   }
 
-  deletePlaylist = (e: SyntheticEvent<HTMLButtonElement>, id: number) => {
-    deletePlaylist(id)
-    this.props.incrementNonce()
+  navigateTo = (e: SyntheticEvent<HTMLButtonElement>, name: string, id: ?number) => {
+    const { navigateTo: navigateToProp } = this.props
+    navigateToProp({ name, id })
   }
 
-  showEditPlaylistModal = (e: SyntheticEvent<HTMLButtonElement>, name: string, id: number) => {
-    this.setState({
-      id,
-      name,
-      showEditPlaylistModal: true,
-    })
+  deletePlaylist = async (e: SyntheticEvent<HTMLButtonElement>, id: number) => {
+    const { incrementNonce: incrementNonceProp } = this.props
+    await db.playlists.delete(id)
+    incrementNonceProp()
   }
-  hideEditPlaylistModal = () => {
-    this.setState({
-      id: null,
-      name: null,
-      showEditPlaylistModal: false,
-    })
-  }
+
   showCreatePlaylistModal = () => {
     this.setState({ showCreatePlaylistModal: true })
-  }
-  hideCreatePlaylistModal = () => {
-    this.setState({ showCreatePlaylistModal: false })
   }
 
   renderNavigationItem(icon: string, routeName: RouteName, name: string = routeName) {
@@ -83,11 +73,10 @@ class Sidebar extends React.Component<Props, State> {
 
     return (
       <button
+        type="button"
         key={`route-${name}`}
-        className={`btn-dull ${route.name === routeName ? 'active' : ''}`}
-        onClick={() =>
-          routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.props.navigateTo({ name: routeName })
-        }
+        className={`${button.btn} ${button.btn_round_half} ${sidebar.row_btn} ${route.name === routeName ? 'active' : ''}`}
+        onClick={e => (routeName === 'NewPlaylist' ? this.showCreatePlaylistModal() : this.navigateTo(e, routeName))}
       >
         <i className="material-icons">{icon}</i>
         {name}
@@ -100,21 +89,31 @@ class Sidebar extends React.Component<Props, State> {
     return (
       <div
         key={`route-${name}-${id}`}
-        className={`space-between flex-row btn-dull section-sidebar-playlist ${
+        className={`${button.btn_round_half} ${flex.space_between} ${flex.row} ${sidebar.playlist} ${
           route.name === routeName && route.id === id ? 'active' : ''
         }`}
       >
-        <button className="btn-dull" onClick={() => this.props.navigateTo({ name: routeName, id })}>
+        <button type="button" className={`${button.btn}`} onClick={e => this.navigateTo(e, routeName, id)}>
           <i className="material-icons">{icon}</i>
           {name}
         </button>
-        <div className="flex-row">
-          <button onClick={e => this.showEditPlaylistModal(e, name, id)}>
+        <div className={`${flex.row}`}>
+          <button
+            type="button"
+            className={`${button.btn}`}
+            onClick={() =>
+              this.setState({
+                id,
+                name,
+                showEditPlaylistModal: true,
+              })
+            }
+          >
             <i title="Edit Playlist" className="material-icons">
               edit
             </i>
           </button>
-          <button onClick={e => this.deletePlaylist(e, id)}>
+          <button type="button" className={`${button.btn}`} onClick={e => this.deletePlaylist(e, id)}>
             <i title="Delete from Library" className="material-icons">
               delete
             </i>
@@ -128,10 +127,24 @@ class Sidebar extends React.Component<Props, State> {
     const { playlists, showCreatePlaylistModal, showEditPlaylistModal, name, id } = this.state
 
     return (
-      <div className="section-sidebar">
-        {showCreatePlaylistModal && <CreateNewPlaylist handleClose={this.hideCreatePlaylistModal} />}
-        {showEditPlaylistModal && <EditPlaylist handleClose={this.hideEditPlaylistModal} name={name} id={id} />}
-        <input id="sidebar-search-input" type="text" placeholder="Search" />
+      <div className={`${sidebar.sidebar}`}>
+        {showCreatePlaylistModal && (
+          <CreateNewPlaylist handleClose={() => this.setState({ showCreatePlaylistModal: false })} />
+        )}
+        {showEditPlaylistModal && (
+          <EditPlaylist
+            name={name}
+            id={id}
+            handleClose={() =>
+              this.setState({
+                id: null,
+                name: null,
+                showEditPlaylistModal: false,
+              })
+            }
+          />
+        )}
+        <Picker />
         <h3>Library</h3>
         {this.renderNavigationItem('access_time', 'RecentlyPlayed', 'Recently Played')}
         {this.renderNavigationItem('music_note', 'Songs')}
@@ -141,14 +154,15 @@ class Sidebar extends React.Component<Props, State> {
         <h3>PlayLists</h3>
         {this.renderNavigationItem('playlist_add', 'NewPlaylist', 'New')}
         {playlists.map(playlist => this.renderPlaylists('playlist_play', 'Playlist', playlist.name, playlist.id))}
-        <Picker />
-        <Logout />
       </div>
     )
   }
 }
 
-export default connect(({ router, songs }) => ({ route: router.route, nonce: songs.nonce }), {
-  navigateTo,
-  incrementNonce,
-})(Sidebar)
+export default connect(
+  ({ router, songs }) => ({ route: router.route, nonce: songs.nonce }),
+  {
+    navigateTo,
+    incrementNonce,
+  },
+)(Sidebar)

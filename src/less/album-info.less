@@ -1,0 +1,146 @@
+@import 'variables.less';
+
+.album_info {
+  width: 100%;
+  min-width: 100%;
+  padding: 2rem 1.3rem;
+  align-items: flex-start;
+  border-top: 1px solid @borderColor;
+
+  .album_title {
+    width: 28%;
+  }
+
+  .album_info_content {
+    width: 67%;
+
+    .activeSong_row {
+      width: 100%;
+    }
+
+    h2 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .artistLink {
+      text-align: left;
+      font-size: 1.5rem;
+    }
+
+    & > :first-child {
+      position: relative;
+      align-items: flex-start;
+    }
+
+    & > :last-child {
+      padding-top: 1.5rem;
+
+      & > div {
+        cursor: pointer;
+        position: relative;
+        border-top: 1px solid @borderColor;
+
+        p {
+          transition: opacity 0.1s ease-in-out;
+        }
+        .song_title {
+          width: 87%;
+        }
+
+        .song_btns {
+          opacity: 0;
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          transition: opacity 0.1s ease-in-out;
+
+          & > button {
+            margin-left: -0.4rem;
+          }
+        }
+
+        &:last-child {
+          border-bottom: 1px solid @borderColor;
+        }
+
+        &:hover {
+          p:nth-child(odd) {
+            opacity: 0;
+          }
+
+          .song_btns {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+}
+
+.album_cover {
+  width: 100%;
+  height: 74.7%;
+  position: relative;
+  margin-bottom: 0.5rem;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    border-radius: 5px;
+    backface-visibility: hidden;
+  }
+  .filter {
+    opacity: 0;
+    background-color: black;
+    transition: opacity 0.4s ease-in-out;
+  }
+
+  button {
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    justify-content: center;
+    color: @backgroundColor;
+    transition: opacity 0.4s ease-in-out;
+
+    i {
+      margin: 0;
+      color: @backgroundColor;
+      font-size: 3rem;
+    }
+  }
+
+  .album_play_btn {
+    font-size: 4.5rem !important;
+  }
+
+  &:hover {
+    .filter {
+      width: 100%;
+      height: 100%;
+      opacity: 0.3;
+      position: absolute;
+      border-radius: 5px;
+    }
+
+    button {
+      opacity: 1;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .album_title {
+    width: 50%;
+  }
+  .album_cover {
+    height: 67%;
+  }
+  .song_title {
+    width: 81% !important;
+  }
+}

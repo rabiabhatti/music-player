@@ -80,13 +80,13 @@ export function getGenresFromSongs(songs: Array<File>): { [string]: Array<File> 
 
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {
   const playlist = await db.playlists.get(playlistId)
-  const localSongs = playlist.songs
+  const playlistSongs = playlist.songs
   songsIds.forEach(id => {
-    if (!localSongs.includes(id)) {
-      localSongs.push(id)
+    if (!playlistSongs.includes(id)) {
+      playlistSongs.push(id)
     }
   })
-  await db.playlists.update(playlistId, { songs: localSongs })
+  await db.playlists.update(playlistId, { songs: playlistSongs })
 }
 
 export function deleteSongFromPlaylist(playlist: Object, id: number) {
@@ -111,10 +111,6 @@ export function deleteSongsFromLibrary(songsIds: Array<number>) {
       deleteSongFromPlaylist(playlist, id)
     })
   })
-}
-
-export function deletePlaylist(id: number) {
-  db.playlists.delete(id)
 }
 
 export function humanizeDuration(duration: number): string {

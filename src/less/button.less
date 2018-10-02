@@ -1,0 +1,173 @@
+@import 'variables.less';
+
+.btn {
+  border: 0;
+  padding: 0;
+  width: auto;
+  background: 0;
+  display: flex;
+  cursor: pointer;
+  color: inherit;
+  font-size: 0.9rem;
+  align-items: center;
+  letter-spacing: 0.5px;
+  background-color: transparent;
+  transition: color 0.4s ease, background-color 0.4s ease;
+
+  &:active {
+    outline: 0;
+  }
+
+  &:disabled {
+    color: lighten(@iconColor, 30%);
+    pointer-events: none;
+  }
+}
+.btn_round {
+  padding: 0.5rem;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: @hoverBackground;
+
+    i {
+      color: @hoverColor;
+    }
+  }
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+}
+.btn_round_half {
+  font-weight: 500;
+  color: @iconColor;
+  border-top-right-radius: 1.3rem;
+  border-bottom-right-radius: 1.3rem;
+
+  i {
+    color: @iconColor;
+    margin-right: 0.5rem;
+  }
+
+  &:hover {
+    background-color: @hoverBackground;
+  }
+
+  &:focus {
+    outline: 0;
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+}
+
+.btn_header {
+  width: 8.5rem;
+  height: 2.7rem;
+  font-weight: 500;
+  min-width: 7.5rem;
+  color: @iconColor;
+  padding-left: 0.5rem;
+  margin-left: 1.8rem;
+  border-radius: 24px;
+  background-color: @backgroundColor;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 1px 3px 1px rgba(60, 64, 67, 0.149);
+
+  i {
+    font-size: 2rem;
+    margin-right: 0.5rem;
+  }
+
+  &:hover {
+    outline: none;
+    background-color: #f8f9fa;
+    box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.302), 0 4px 8px 3px rgba(60, 64, 67, 0.149);
+  }
+}
+
+.btn_playall {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  color: @paraghraphColor;
+
+  &:hover {
+    background-color: @hoverBackground;
+  }
+}
+
+.btn_blue {
+  color: @activeColor;
+
+  i {
+    color: @activeColor;
+  }
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+}
+
+.btn_blue_border {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  border-radius: 5px;
+  color: @activeColor;
+  padding: 0.5rem 2rem;
+  text-transform: uppercase;
+  border: 1px solid @activeBackground;
+  transition: background-color 0.3s ease-out;
+
+  &:active {
+    color: @activeColor;
+    background-color: @activeBackground;
+
+    i {
+      color: @activeColor;
+    }
+  }
+
+  &:hover:not([disabled]),
+  &:active:not([disabled]) {
+    background-color: @activeBackground;
+  }
+}
+@media screen and (max-width: 1024px) {
+  .btn_header {
+    width: 7.5rem;
+    font-size: 0.7rem;
+
+    i {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .btn_header {
+    margin-left: 0.6rem;
+  }
+}
