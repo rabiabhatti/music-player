@@ -6,6 +6,10 @@ const pundleConfig = {
   components: presetDefault({
     transform: {
       babel: 7,
+      postcss: {
+        plugins: [require('autoprefixer')],
+        extensions: ['.css', '.less'],
+      },
     },
   }),
   rootDirectory: __dirname,

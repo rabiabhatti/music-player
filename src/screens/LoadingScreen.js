@@ -2,11 +2,12 @@
 
 import React from 'react'
 
-import '~/styles/loading.less'
+import flex from '~/less/flex.less'
+import loading from '~/less/loading.less'
 
 export default () => (
-  <div className="section-loading align-center">
-    <svg viewBox="-25 -25 100 100" id="loading-icon">
+  <div className={`${loading.loading} ${flex.align_center}`}>
+    <svg viewBox="-25 -25 100 100" className={`${loading.loading_icon}`}>
       <circle fill="#2f75ff" stroke="none" cx="6" cy="25" r="6">
         <animateTransform
           attributeName="transform"

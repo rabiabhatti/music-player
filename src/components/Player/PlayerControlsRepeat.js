@@ -4,6 +4,8 @@ import React from 'react'
 import connect from '~/common/connect'
 import { setSongRepeat, type RepeatMode } from '~/redux/songs'
 
+import button from '~/less/button.less'
+
 const BUTTONS_CONFIG = {
   none: {
     dim: true,
@@ -36,11 +38,13 @@ const PlayerControlsRepeat = ({
 
   return (
     <button
+      type="button"
+      className={`${button.btn} ${button.btn_round}`}
       onClick={() => {
         setSongRepeatProp(newState)
       }}
     >
-      <i title={title} className="material-icons btn-white" {...(dim ? { style: { color: '#ffffff7a' } } : {})}>
+      <i title={title} className="material-icons" {...(dim ? { style: { color: '#5959595e' } } : {})}>
         {icon}
       </i>
     </button>

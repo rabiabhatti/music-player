@@ -1,0 +1,23 @@
+@import 'variables.less';
+
+.contect_card {
+  left: 19.1%;
+  width: 80.9%;
+  height: auto;
+  position: relative;
+  background-color: @hoverBackground;
+  min-height: calc(100vh - @playerHeight - @headerHeight);
+
+  & > :first-child {
+    position: relative;
+    padding-left: 1.3rem;
+    padding-right: 1.3rem;
+    align-items: baseline;
+    background-color: #ffffff;
+
+    .dropdown_content {
+      top: 0.9rem;
+      right: 1.3rem;
+    }
+  }
+}

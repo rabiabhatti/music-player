@@ -89,12 +89,16 @@ export default handleActions(
         songIndex: (state.songIndex + 1) % state.playlist.length,
       }),
     [PLAY_LATER]: (state: SongsState, { payload }) => {
-      const localplaylist = state.playlist
+      const playList = state.playlist.slice()
       payload.forEach(id => {
-        localplaylist.splice(state.songIndex + 1, 0, id)
+        const index = playList.indexOf(id)
+        if (index !== -1) {
+          playList.splice(index, 1)
+        }
+        playList.splice(state.songIndex + 1, 0, id)
       })
       return state.merge({
-        playlist: localplaylist,
+        playlist: playList,
       })
     },
     [PLAY_PREVIOUS]: (state: SongsState) => {

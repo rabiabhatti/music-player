@@ -1,0 +1,132 @@
+@import 'variables.less';
+.section_player {
+  left: 0;
+  bottom: 0;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  position: fixed;
+  max-height: 8rem;
+  border-top: 1px solid @borderColor;
+  background-color: @backgroundColor;
+
+  i {
+    color: @iconColor;
+  }
+
+  .right_btns {
+    min-width: 16%;
+    justify-content: space-evenly;
+
+    & > :nth-child(even) i {
+      font-size: 2.5rem;
+    }
+  }
+
+  .section_progress {
+    width: 68%;
+
+    .img {
+      width: 7%;
+      border-radius: 3px;
+    }
+
+    h1 {
+      padding-top: 1rem;
+      font-weight: 400;
+      font-size: 1.5rem;
+    }
+
+    span {
+      font-size: 0.8rem;
+      color: @paraghraphColor;
+    }
+    .lighten {
+      color: lighten(@paraghraphColor, 35%);
+    }
+
+    .progress_bar_info {
+      width: 85%;
+
+      .progress_bar {
+        top: 1rem;
+        width: 100%;
+        position: relative;
+      }
+    }
+  }
+
+  .section_volume {
+    min-width: 16%;
+    justify-content: space-evenly;
+
+    .volume_slider {
+      width: 6rem;
+      max-width: 6rem;
+      position: relative;
+    }
+  }
+
+  .progress_fill {
+    top: 0;
+    left: 0;
+    height: 3px;
+    position: absolute;
+    border-radius: 10px;
+    background-color: @activeColor;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .section_progress {
+    width: 65% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .img {
+    width: 9% !important;
+  }
+  .volume {
+    .volume_slider {
+      top: -20%;
+      right: 12.5%;
+      display: none;
+      transform: rotate(270deg);
+      max-width: 4rem !important;
+      position: absolute !important;
+    }
+
+    &:hover,
+    &:focus {
+      .volume_slider {
+        display: block;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  i {
+    font-size: 1.5rem !important;
+  }
+  .right_btns {
+    & > :nth-child(even) i {
+      font-size: 2rem !important;
+    }
+  }
+  .progress_bar_info {
+    width: 95% !important;
+  }
+
+  h1 {
+    font-size: 1rem !important;
+  }
+  .img {
+    display: none !important;
+  }
+
+  .volume_slider {
+    top: -30% !important;
+  }
+}

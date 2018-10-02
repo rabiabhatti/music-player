@@ -1,0 +1,27 @@
+@import 'variables.less';
+
+.header {
+  left: 32%;
+  width: 68%;
+  z-index: 1;
+  position: relative;
+  padding: 1rem 1.6% 0 1.6%;
+  background-color: @backgroundColor;
+
+  .search {
+    width: 70%;
+    position: relative;
+
+    .input_trigger {
+      padding: 0.3rem;
+      position: absolute;
+      border-radius: 22px;
+      font-size: 1.9rem !important;
+      background-color: @searchBackground;
+    }
+
+    &:hover input {
+      width: 100%;
+    }
+  }
+}

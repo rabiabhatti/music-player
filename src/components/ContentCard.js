@@ -6,10 +6,12 @@ import flatten from 'lodash/flatten'
 import connect from '~/common/connect'
 
 import db from '~/db'
-import '~/styles/content-card.less'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
+import ContentCardDropdown from '~/components/Dropdown/ContentCardDropdown'
 
-import Dropdown from './utilities/Dropdown'
+import flex from '~/less/flex.less'
+import contentCard from '~/less/content-card.less'
+
 import AlbumInfo from './AlbumInfo'
 
 type Props = {|
@@ -27,12 +29,14 @@ class ContentCard extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.fetchSongs(this.props.selected)
+    const { selected } = this.props
+    this.fetchSongs(selected)
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.nonce !== this.props.nonce || prevProps.selected !== this.props.selected) {
-      this.fetchSongs(this.props.selected)
+    const { nonce, selected } = this.props
+    if (prevProps.nonce !== nonce || prevProps.selected !== selected) {
+      this.fetchSongs(selected)
     }
   }
 
@@ -65,15 +69,15 @@ class ContentCard extends React.Component<Props, State> {
     const songsIds = songs.map(s => s.id)
 
     return (
-      <div className="section-contect-card">
-        <div className="space-between">
+      <div className={`${contentCard.contect_card}`}>
+        <div className={`${flex.space_between}`}>
           <div>
             <h2>{!selected ? `All` : selected.identifier}</h2>
             <p>
               {Object.keys(songsByAlbums).length} albums, {songs.length} songs
             </p>
           </div>
-          <Dropdown songsIds={songsIds} />
+          <ContentCardDropdown songsIds={songsIds} />
         </div>
         {Object.keys(songsByAlbums).map(albumName => (
           <AlbumInfo name={albumName} key={albumName} songs={songsByAlbums[albumName]} />
@@ -83,4 +87,7 @@ class ContentCard extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ songs }) => ({ nonce: songs.nonce }), null)(ContentCard)
+export default connect(
+  ({ songs }) => ({ nonce: songs.nonce }),
+  null,
+)(ContentCard)

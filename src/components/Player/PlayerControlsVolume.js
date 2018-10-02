@@ -6,6 +6,11 @@ import connect from '~/common/connect'
 
 import { setSongMute, setSongVolume } from '~/redux/songs'
 
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import slider from '~/less/slider.less'
+import player from '~/less/player.less'
+
 type State = {|
   currentSeekVolume: number | null,
 |}
@@ -18,10 +23,26 @@ type Props = {|
 
 class PlayerControlsVolume extends React.Component<Props, State> {
   state = { currentSeekVolume: null }
+  dragging = false
+
+  handleVolumeSlideFlush = debounce(() => {
+    const { dispatch, audioElement, songMuted } = this.props
+    const { currentSeekVolume } = this.state
+    if (currentSeekVolume !== null) {
+      audioElement.volume = currentSeekVolume / 100
+      if (audioElement.volume < 0.01) {
+        dispatch(setSongMute(false))
+      } else if (songMuted) {
+        dispatch(setSongMute(false))
+      }
+    }
+    this.dragging = false
+  }, 10)
 
   componentDidMount() {
-    this.props.audioElement.volume = this.props.songMuted ? 0 : this.props.songVolume / 100
-    this.props.audioElement.addEventListener('volumechange', this.handleVolumeChange)
+    const { audioElement, songMuted, songVolume } = this.props
+    audioElement.volume = songMuted ? 0 : songVolume / 100
+    audioElement.addEventListener('volumechange', this.handleVolumeChange)
   }
   componentWillReceiveProps(newProps) {
     const { songMuted: oldMuted, songVolume: oldVolume, audioElement } = this.props
@@ -37,7 +58,8 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     }
   }
   componentWillUnmount() {
-    this.props.audioElement.removeEventListener('volumechange', this.handleVolumeChange)
+    const { audioElement } = this.props
+    audioElement.removeEventListener('volumechange', this.handleVolumeChange)
   }
   getVolumeToUse() {
     const { songVolume } = this.props
@@ -46,14 +68,14 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     return currentSeekVolume !== null && this.dragging ? currentSeekVolume : songVolume
   }
 
-  dragging = false
   handleVolumeChange = () => {
-    const newValue = this.props.audioElement.volume
-    if (newValue === 0 && this.props.songMuted) {
+    const { audioElement, songMuted, dispatch } = this.props
+    const newValue = audioElement.volume
+    if (newValue === 0 && songMuted) {
       // Don't let mutes destroy local volume state
       return
     }
-    this.props.dispatch(setSongVolume(newValue * 100))
+    dispatch(setSongVolume(newValue * 100))
   }
   handleVolumeSlide = (e: SyntheticInputEvent<HTMLInputElement>) => {
     this.setState({ currentSeekVolume: parseInt(e.target.value, 10) })
@@ -61,23 +83,11 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     this.dragging = true
     this.handleVolumeSlideFlush()
   }
-  handleVolumeSlideFlush = debounce(() => {
-    const { dispatch, audioElement, songMuted } = this.props
-    const { currentSeekVolume } = this.state
-    if (currentSeekVolume !== null) {
-      audioElement.volume = currentSeekVolume / 100
-      if (audioElement.volume < 0.01) {
-        dispatch(setSongMute(false))
-      } else if (songMuted) {
-        dispatch(setSongMute(false))
-      }
-    }
-    this.dragging = false
-  }, 10)
-  handleMuteUnmute = (mute: boolean) => {
-    const { dispatch } = this.props
 
-    if (this.props.songMuted || mute) {
+  handleMuteUnmute = (mute: boolean) => {
+    const { dispatch, songMuted } = this.props
+
+    if (songMuted || mute) {
       dispatch(setSongMute(mute))
     } else {
       dispatch(setSongVolume(50))
@@ -97,28 +107,31 @@ class PlayerControlsVolume extends React.Component<Props, State> {
     }
 
     return (
-      <React.Fragment>
+      <div className={`${player.volume} ${flex.align_center} ${flex.row}`}>
         <button
+          type="button"
+          className={`${button.btn} ${button.btn_round}`}
           onClick={() => {
             this.handleMuteUnmute(icon !== 'volume_off')
           }}
         >
-          <i title="Volume" className="material-icons btn-white">
+          <i title="Volume" className="material-icons">
             {icon}
           </i>
         </button>
-        <div>
-          <div className="progress-fill" style={{ width: `${currentVolumeToUse}%` }} />
+        <div className={player.volume_slider}>
           <input
-            onChange={this.handleVolumeSlide}
-            title="Volume"
-            type="range"
-            value={currentVolumeToUse}
             min="0"
             max="100"
+            type="range"
+            title="Volume"
+            className={slider.range}
+            value={currentVolumeToUse}
+            onChange={this.handleVolumeSlide}
           />
+          <div className={player.progress_fill} style={{ width: `${currentVolumeToUse}%` }} />
         </div>
-      </React.Fragment>
+      </div>
     )
   }
 }
