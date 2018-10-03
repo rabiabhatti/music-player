@@ -61,8 +61,6 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     },
   })
 
-  const picture = Buffer.from(metadata.common.picture[0].data).toString('base64')
-
   return {
     duration: metadata.format.duration,
     meta: {
@@ -79,7 +77,7 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     },
     artwork: {
       album: {
-        uri: picture ? `data:image/jpeg;base64,${picture}` : null,
+        uri: metadata.common && metadata.common.picture ? `data:image/jpeg;base64,${Buffer.from(metadata.common.picture[0].data).toString('base64')}` : null,
       },
     },
   }
