@@ -8,6 +8,9 @@ import { deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 
 import EditSong from '~/components/Popup/EditSong'
 
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+
 import Dropdown from './Dropdown'
 import AddToPlaylist from './AddToPlaylist'
 
@@ -51,18 +54,22 @@ class SongDropdown extends React.Component<Props, State> {
       <Dropdown handleClose={handleClose}>
         {showEditSongModal && <EditSong handleClose={() => this.setState({ showEditSongModal: false })} song={song} />}
         <AddToPlaylist songsIds={[song.id]} />
-        <button type="button" onClick={() => this.setState({ showEditSongModal: true })}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.setState({ showEditSongModal: true })}>
+          <i className="material-icons">edit</i>
           Edit
         </button>
-        <button type="button" onClick={() => playLaterProp([song.id])}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => playLaterProp([song.id])}>
+          <i className="material-icons">watch_later</i>
           Play Later
         </button>
         {playlist !== null && (
-          <button type="button" onClick={e => this.deleteSong(e, song.id, playlist)}>
+          <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={e => this.deleteSong(e, song.id, playlist)}>
+            <i className="material-icons">close</i>
             Remove from Playlist
           </button>
         )}
-        <button type="button" onClick={e => this.deleteSong(e, song.id)}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={e => this.deleteSong(e, song.id)}>
+          <i className="material-icons">delete</i>
           Delete from Library
         </button>
       </Dropdown>

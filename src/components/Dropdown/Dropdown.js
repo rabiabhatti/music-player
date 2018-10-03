@@ -2,8 +2,11 @@
 
 import React from 'react'
 
-import '~/less/dropdown.less'
 import getEventPath from '~/common/getEventPath'
+
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+import dropdown from '~/less/dropdown.less'
 
 type Props = {|
   children: React$Node,
@@ -53,13 +56,15 @@ export default class Dropdown extends React.Component<Props, State> {
 
     return (
       <div
-        className="section-dropdown align-center"
+        className={`${flex.align_center}`}
         ref={element => {
           this.ref = element
         }}
       >
-        <i className="material-icons btn-blue">more_horiz</i>
-        <div className={`dropdown_content ${opened ? '' : 'hidden'}`}>{children}</div>
+        <button className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
+          <i className="material-icons">more_horiz</i>
+        </button>
+        <div className={`${dropdown.dropdown_content} ${opened ? '' : 'hidden'}`}>{children}</div>
       </div>
     )
   }

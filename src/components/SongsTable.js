@@ -36,7 +36,7 @@ class SongsTable extends React.Component<Props, State> {
 
     return (
       <div className={`${table.section_songs} bound`}>
-        <div className="align-center space-between">
+        <div className={`${flex.align_center} ${flex.space_between}`}>
           <h2>{title}</h2>
           <button type="button" className={`${button.btn} ${button.btn_playall}`} onClick={() => this.playAtIndex(0)}>
             Play All

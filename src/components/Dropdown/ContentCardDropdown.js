@@ -6,6 +6,9 @@ import connect from '~/common/connect'
 import { incrementNonce, playLater } from '~/redux/songs'
 import { deleteSongsFromLibrary } from '~/common/songs'
 
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+
 import Dropdown from './Dropdown'
 import AddToPlaylist from './AddToPlaylist'
 
@@ -30,10 +33,12 @@ class ContentCardDropdown extends React.Component<Props, State> {
     return (
       <Dropdown handleClose={handleClose}>
         <AddToPlaylist songsIds={songsIds} />
-        <button type="button" onClick={() => playLaterProp(songsIds)}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => playLaterProp(songsIds)}>
+          <i className="material-icons">watch_later</i>
           Play Later
         </button>
-        <button type="button" onClick={() => this.deleteSong(songsIds)}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.deleteSong(songsIds)}>
+          <i className="material-icons">delete</i>
           Delete from Library
         </button>
       </Dropdown>
