@@ -77,7 +77,7 @@ class AlbumInfo extends React.Component<Props, State> {
             <div>
               <h2>{name === 'undefined' ? 'Unkown' : name}</h2>
               <button type="button" className={`${button.btn} ${button.btn_blue} ${albumInfo.artistLink}`}>
-                {songs[0].meta && songs[0].meta.album_artists.join(', ')}
+                {songs[0].meta && songs[0].meta.artists_original}
               </button>
               <p>
                 {songs[0].meta && songs[0].meta.genre ? songs[0].meta.genre : 'Unkown'} &bull;{' '}
@@ -86,44 +86,30 @@ class AlbumInfo extends React.Component<Props, State> {
             </div>
             <AlbumDropdown songsIds={songsIds} />
           </div>
-          <div className={`${flex.column}`}>
+          <div className={`${flex.column} ${albumInfo.songs_container}`}>
             {songs.map((song, index) => (
               <div
                 key={song.sourceId}
                 onDoubleClick={() => this.playAtIndex(index, songsIds)}
-                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${song.id === activeSong ? `${albumInfo.active_song}` : ''}`}
+                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${albumInfo.song_row} ${song.id === activeSong ? `${albumInfo.active_song}` : ''}`}
               >
-                {song.id === activeSong && songState === 'playing' ? (
-                  <div className={`${flex.space_between} ${albumInfo.activeSong_row} ${flex.align_center}`}>
-                    <i className={`${button.btn_blue} material-icons`}>volume_up</i>
-                    <p className={`${albumInfo.song_title}`}>
-                      {song.meta && typeof song.meta.name !== 'undefined'
-                        ? song.meta.name
-                        : song.filename.replace('.mp3', '')}
-                    </p>
-                    <p>{humanizeDuration(song.duration)}</p>
+                  {song.id === activeSong && songState === 'playing' ? <i className={`${button.btn_blue} ${albumInfo.active_song_icon} material-icons`}>volume_up</i> : <p>{index + 1}</p>}
+                  <p className={`${albumInfo.song_title}`}>
+                    {song.meta && typeof song.meta.name !== 'undefined'
+                      ? song.meta.name
+                      : song.filename.replace('.mp3', '')}
+                  </p>
+                  <p>{song.duration ? humanizeDuration(song.duration) : ''}</p>
+                  <div className={`${flex.space_between} ${albumInfo.song_btns}`}>
+                    <button
+                      type="button"
+                      className={`${button.btn} ${button.btn_blue}`}
+                      onClick={() => this.playAtIndex(index, songsIds)}
+                    >
+                      <i className="material-icons">play_arrow</i>
+                    </button>
+                    <SongDropdown song={song} />
                   </div>
-                ) : (
-                  <React.Fragment>
-                    <p>{index + 1}</p>
-                    <p className={`${albumInfo.song_title}`}>
-                      {song.meta && typeof song.meta.name !== 'undefined'
-                        ? song.meta.name
-                        : song.filename.replace('.mp3', '')}
-                    </p>
-                    <p>{song.duration ? humanizeDuration(song.duration) : ''}</p>
-                    <div className={`${flex.space_between} ${albumInfo.song_btns}`}>
-                      <button
-                        type="button"
-                        className={`${button.btn} ${button.btn_blue}`}
-                        onClick={() => this.playAtIndex(index, songsIds)}
-                      >
-                        <i className="material-icons">play_arrow</i>
-                      </button>
-                      <SongDropdown song={song} />
-                    </div>
-                  </React.Fragment>
-                )}
               </div>
             ))}
           </div>

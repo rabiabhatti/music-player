@@ -35,14 +35,19 @@
       align-items: flex-start;
     }
 
-    & > :last-child {
+    .songs_container {
       padding-top: 1.5rem;
 
-      & > div {
+      .song_row {
         cursor: pointer;
         position: relative;
         padding: 0 10px;
         border-top: 1px solid @borderColor;
+
+        .active_song_icon {
+          margin-left: -6px;
+          transition: opacity 0.1s ease-in-out;
+        }
 
         p {
           transition: opacity 0.1s ease-in-out;
@@ -69,7 +74,7 @@
         }
 
         &:hover {
-          p:nth-child(odd) {
+          p:nth-child(odd), .active_song_icon {
             opacity: 0;
           }
 
