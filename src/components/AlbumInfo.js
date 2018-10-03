@@ -91,7 +91,7 @@ class AlbumInfo extends React.Component<Props, State> {
               <div
                 key={song.sourceId}
                 onDoubleClick={() => this.playAtIndex(index, songsIds)}
-                className={`${flex.space_between} ${flex.align_center} ${flex.wrap}`}
+                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${song.id === activeSong ? `${albumInfo.active_song}` : ''}`}
               >
                 {song.id === activeSong && songState === 'playing' ? (
                   <div className={`${flex.space_between} ${albumInfo.activeSong_row} ${flex.align_center}`}>

@@ -7,6 +7,7 @@ import Logout from '~/components/Logout'
 import flex from '~/less/flex.less'
 import input from '~/less/input.less'
 import header from '~/less/header.less'
+import button from '~/less/button.less'
 
 type Props = {||}
 type State = {|
@@ -41,9 +42,12 @@ export default class Header extends React.Component<Props, State> {
             placeholder="Type to search..."
             className={`${input.input} ${input.input_search}`}
           />
-          <i title="Search" className={`${header.input_trigger} material-icons`}>
-            search
-          </i>
+          <button type="button" className={`${header.input_search_icon} ${button.btn}`}>
+            <i title="Search" className='material-icons'>
+              search
+            </i>
+          </button>
+
         </div>
         <Logout />
       </div>

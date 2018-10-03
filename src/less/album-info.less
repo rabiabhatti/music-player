@@ -6,6 +6,8 @@
   padding: 2rem 1.3rem;
   align-items: flex-start;
   border-top: 1px solid @borderColor;
+  border-bottom: 1px solid @borderColor;
+  background-color: @albumInfoBackground;
 
   .album_title {
     width: 28%;
@@ -39,6 +41,7 @@
       & > div {
         cursor: pointer;
         position: relative;
+        padding: 0 10px;
         border-top: 1px solid @borderColor;
 
         p {
@@ -76,6 +79,13 @@
       }
     }
   }
+}
+
+
+.active_song {
+  color: @activeColor;
+  background-color: @activeBackground;
+  border-radius: 3px;
 }
 
 .album_cover {
