@@ -8,6 +8,9 @@ import { deleteSongsFromLibrary } from '~/common/songs'
 
 import EditAlbum from '~/components/Popup/EditAlbum'
 
+import flex from '~/less/flex.less'
+import button from '~/less/button.less'
+
 import Dropdown from './Dropdown'
 import AddToPlaylist from './AddToPlaylist'
 
@@ -42,13 +45,16 @@ class AlbumDropdown extends React.Component<Props, State> {
           <EditAlbum handleClose={() => this.setState({ showEditAlbumModal: false })} songs={songsIds} />
         )}
         <AddToPlaylist songsIds={songsIds} />
-        <button type="button" onClick={() => this.setState({ showEditAlbumModal: true })}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.setState({ showEditAlbumModal: true })}>
+          <i className="material-icons">edit</i>
           Edit Album
         </button>
-        <button type="button" onClick={() => playLaterProp(songsIds)}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => playLaterProp(songsIds)}>
+          <i className="material-icons">watch_later</i>
           Play Later
         </button>
-        <button type="button" onClick={e => this.deleteSong(e, songsIds)}>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={e => this.deleteSong(e, songsIds)}>
+          <i className="material-icons">delete</i>
           Delete from Library
         </button>
       </Dropdown>
