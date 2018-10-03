@@ -23,13 +23,12 @@
 }
 
 .input_search {
-  width: 0%;
   border: 0;
+  width: 100%;
   right: 0.4rem;
   position: absolute;
   border-radius: 22px;
   padding: 0.7rem 1rem;
-  transition: width 0.8s ease-in-out;
   background-color: @searchBackground;
 
   &:focus {
@@ -40,6 +39,11 @@
   &:active {
     border: 0;
     width: 100%;
+  }
+
+  &:-webkit-autofill {
+    -webkit-text-fill-color: @paraghraphColor !important;
+    -webkit-box-shadow: 0 0 0 30px @searchBackground inset;
   }
 }
 

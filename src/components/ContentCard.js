@@ -70,7 +70,7 @@ class ContentCard extends React.Component<Props, State> {
 
     return (
       <div className={`${contentCard.contect_card}`}>
-        <div className={`${flex.space_between}`}>
+        <div className={`${flex.space_between} ${contentCard.heading}`}>
           <div>
             <h2>{!selected ? `All` : selected.identifier}</h2>
             <p>

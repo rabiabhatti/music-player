@@ -117,7 +117,7 @@ class Albums extends React.Component<Props, State> {
           </div>
           <button
             type="button"
-            className={`${button.btn} ${flex.column}`}
+            className={`${button.btn} ${flex.column} ${albumsDesign.desc}`}
             onClick={e => this.openAlbumInfo(e, album)}
             onDoubleClick={() => this.playAtIndex(albumSongs, 0)}
           >
