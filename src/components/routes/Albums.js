@@ -82,7 +82,7 @@ class Albums extends React.Component<Props, State> {
   }
 
   handleBodyResize = () => {
-    const elt = document.getElementById('albums')
+    const elt = document.getElementById('root')
     if (elt) {
       this.setState({ viewWidth: elt.getClientRects()[0].width })
     }
@@ -151,7 +151,7 @@ class Albums extends React.Component<Props, State> {
     }
 
     return songs.length ? (
-      <div className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`} id="albums">
+      <div className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`}>
         {renderedAlbums}
       </div>
     ) : (

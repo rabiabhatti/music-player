@@ -9,7 +9,7 @@
   padding-top: 1rem;
   height: calc(100vh - @playerHeight);
   background-color: @backgroundColor;
-  max-height: calc(100vh - @playerHeight);
+  max-height: calc(100vh);
   border-right: 1px solid rgba(0, 0, 0, 0.13);
 
   .row_btn {
@@ -71,26 +71,21 @@
 }
 
 @media screen and (max-width: 1024px) {
-  .sidebar {
-    .row_btn,
-    .playlist {
-      font-size: 0.7rem;
-    }
+  .row_btn,
+  .playlist {
+    font-size: 0.7rem !important;
+    padding: 0.6rem 0 0.6rem 0.6rem !important;
   }
-}
-
-@media screen and (max-width: 768px) {
-  .sidebar {
-    .row_btn,
-    .playlist,
-    h3 {
-      padding: 0.6rem 0 0.6rem 0.6rem !important;
-    }
+  .playlist button {
+    font-size: 0.7rem !important;
+  }
+  .sidebar h3 {
+    padding: 0.6rem 0 0.6rem 0.6rem !important;
   }
 }
 
 @media screen and (max-width: 480px) {
   .sidebar {
-    display: none;
+    width: 0;
   }
 }
