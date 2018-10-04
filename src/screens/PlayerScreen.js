@@ -12,6 +12,7 @@ import Header from '~/components/Header'
 import Sidebar from '~/components/Sidebar'
 import Songs from '~/components/routes/Songs'
 import Genres from '~/components/routes/Genres'
+import ResponsiveHeader from '~/components/Header/ResponsiveHeader'
 import Albums from '~/components/routes/Albums'
 import Downloader from '~/components/Downloader'
 import Artists from '~/components/routes/Artists'
@@ -26,26 +27,51 @@ const ROUTES: { [RouteName]: $FlowFixMe } = {
   Songs,
   RecentlyPlayed,
 }
-
 type Props = {|
   route: RouterRoute,
 |}
+type State = {|
+  viewWidth: number,
+|}
+const DEFAULT_WIDTH = 1024
 
-function PlayerScreen(props: Props) {
-  const { route } = props
-  const ActiveRoute = ROUTES[route.name]
+class PlayerScreen extends React.Component<Props, State> {
+  state = {
+    viewWidth: DEFAULT_WIDTH,
+  }
 
-  return (
-    <React.Fragment>
-      <Downloader />
-      <Header />
-      <div className="space-between align-stretch">
-        <Sidebar />
+  componentDidMount() {
+    window.addEventListener('load', this.handleBodyResize)
+    window.addEventListener('resize', this.handleBodyResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('load', this.handleBodyResize)
+    window.removeEventListener('resize', this.handleBodyResize)
+  }
+
+  handleBodyResize = () => {
+    const elt = document.getElementById('root')
+    if (elt) {
+      this.setState({ viewWidth: elt.getClientRects()[0].width })
+    }
+  }
+
+  render() {
+    const { route } = this.props
+    const { viewWidth } = this.state
+    const ActiveRoute = ROUTES[route.name]
+
+    return (
+      <React.Fragment>
+        <Downloader />
+        {viewWidth <= 480 ? <ResponsiveHeader /> : <Header />}
+        {viewWidth > 480 && <Sidebar />}
         <ActiveRoute />
-      </div>
-      <Player />
-    </React.Fragment>
-  )
+        <Player />
+      </React.Fragment>
+    )
+  }
 }
 
 export default connect(({ router }) => ({

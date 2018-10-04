@@ -61,7 +61,7 @@ export default class Dropdown extends React.Component<Props, State> {
           this.ref = element
         }}
       >
-        <button className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
+        <button type='button' className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
           <i className="material-icons">more_horiz</i>
         </button>
         <div className={`${dropdown.dropdown_content} ${opened ? '' : 'hidden'}`}>{children}</div>

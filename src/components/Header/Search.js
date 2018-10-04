@@ -2,8 +2,6 @@
 
 import React from 'react'
 
-import Logout from '~/components/Logout'
-
 import flex from '~/less/flex.less'
 import input from '~/less/input.less'
 import header from '~/less/header.less'
@@ -14,7 +12,7 @@ type State = {|
   value: string,
 |}
 
-export default class Header extends React.Component<Props, State> {
+export default class Search extends React.Component<Props, State> {
   state = {
     value: '',
   }
@@ -25,7 +23,6 @@ export default class Header extends React.Component<Props, State> {
   render() {
     const { value } = this.state
     return (
-      <div className={`${header.header} ${flex.row} ${flex.justify_end}`}>
         <div className={`${flex.align_center} ${header.search} ${flex.justify_end}`}>
           <input
             name="q"
@@ -47,10 +44,7 @@ export default class Header extends React.Component<Props, State> {
               search
             </i>
           </button>
-
         </div>
-        <Logout />
-      </div>
     )
   }
 }

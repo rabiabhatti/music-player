@@ -13,6 +13,7 @@ import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'
+import header from '~/less/header.less'
 import sidebar from '~/less/sidebar.less'
 
 type Props = {|
@@ -127,7 +128,7 @@ class Sidebar extends React.Component<Props, State> {
     const { playlists, showCreatePlaylistModal, showEditPlaylistModal, name, id } = this.state
 
     return (
-      <div className={`${sidebar.sidebar}`}>
+      <div className={`${sidebar.sidebar} ${header.sidebar}`}>
         {showCreatePlaylistModal && (
           <CreateNewPlaylist handleClose={() => this.setState({ showCreatePlaylistModal: false })} />
         )}

@@ -8,7 +8,7 @@ import loading from '~/less/loading.less'
 export default () => (
   <div className={`${loading.loading} ${flex.align_center}`}>
     <svg viewBox="-25 -25 100 100" className={`${loading.loading_icon}`}>
-      <circle fill="#2f75ff" stroke="none" cx="6" cy="25" r="6">
+      <circle fill="#1967d2" stroke="none" cx="6" cy="25" r="6">
         <animateTransform
           attributeName="transform"
           dur="0.7s"
@@ -19,7 +19,7 @@ export default () => (
         />
         <animate attributeName="opacity" dur="0.7s" values="0;1;0" repeatCount="indefinite" begin="0.1s" />
       </circle>
-      <circle fill="#2f75ff" stroke="none" cx="30" cy="25" r="6">
+      <circle fill="#1967d2" stroke="none" cx="30" cy="25" r="6">
         <animateTransform
           attributeName="transform"
           dur="0.7s"
@@ -30,7 +30,7 @@ export default () => (
         />
         <animate attributeName="opacity" dur="0.7s" values="0;1;0" repeatCount="indefinite" begin="0.2" />
       </circle>
-      <circle fill="#2f75ff" stroke="none" cx="54" cy="25" r="6">
+      <circle fill="#1967d2" stroke="none" cx="54" cy="25" r="6">
         <animateTransform
           attributeName="transform"
           dur="0.7s"
