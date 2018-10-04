@@ -29,7 +29,11 @@
 }
 
 @media screen and (max-width: 480px) {
-  .artists-bar {
-    display: none;
+  .artists_bar {
+    width: 30% !important;
+    top: @headerHeight;
+    margin-bottom: @playerHeight;
+    height: calc(100vh - @playerHeight - @headerHeight);
+    max-height: calc(100vh - @playerHeight - @headerHeight);
   }
 }
