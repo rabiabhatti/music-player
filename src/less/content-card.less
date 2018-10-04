@@ -1,6 +1,6 @@
 @import 'variables.less';
 
-.contect_card {
+.content_card {
   left: 19.1%;
   width: 80.9%;
   height: auto;
@@ -18,5 +18,13 @@
 
   &:not(:first-child) > div {
     border-bottom: 0 !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .content_card {
+    left: 30% !important;
+    width: 70% !important;
+    margin-bottom: @playerHeight;
   }
 }

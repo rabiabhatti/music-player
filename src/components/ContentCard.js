@@ -69,7 +69,7 @@ class ContentCard extends React.Component<Props, State> {
     const songsIds = songs.map(s => s.id)
 
     return (
-      <div className={`${contentCard.contect_card}`}>
+      <div className={`${contentCard.content_card}`}>
         <div className={`${flex.space_between} ${contentCard.heading}`}>
           <div>
             <h2>{!selected ? `All` : selected.identifier}</h2>
