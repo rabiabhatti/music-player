@@ -14,8 +14,8 @@ export type ArtWork =
 export type FileMeta = {|
   name: string,
   artists: Array<string>,
-  artists_original: string,
   album: string,
+  artists_original: string,
   album_artists: Array<string>,
   album_artists_original: string,
   year: string,

@@ -76,7 +76,7 @@ class PlayerControlDuration extends React.Component<Props, State> {
           <div className={player.progress_fill} style={{ width: `${percentage + 0.5}%` }} />
         </div>
         <div className={`${flex.row} ${flex.align_center} ${flex.space_between}`}>
-          <h1 className={flex.baseline}>
+          <h1 className={flex.align_baseline}>
             {title}
             <span className={player.lighten}> &bull; {artist}</span>
           </h1>
