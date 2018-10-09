@@ -193,7 +193,7 @@ class Player extends React.Component<Props, State> {
     }
 
     return (
-      <div className={`${player.section_player} ${flex.row} ${flex.baseline}`}>
+      <div className={`${player.section_player} ${flex.row} ${flex.align_center}`}>
         <div className={`${player.right_btns} ${flex.align_center}`}>
           <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={() => dispatch(playPrevious())}>
             <i title="Previous" className="material-icons">

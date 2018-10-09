@@ -7,7 +7,7 @@ import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
 
-import Picker from '~/components/Picker'
+import AddMusic from '~/components/AddMusic'
 import EditPlaylist from '~/components/Popup/EditPlaylist'
 import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
@@ -145,7 +145,7 @@ class Sidebar extends React.Component<Props, State> {
             }
           />
         )}
-        <Picker />
+        <AddMusic />
         <h3>Library</h3>
         {this.renderNavigationItem('access_time', 'RecentlyPlayed', 'Recently Played')}
         {this.renderNavigationItem('music_note', 'Songs')}
