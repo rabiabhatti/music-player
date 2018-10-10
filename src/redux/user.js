@@ -10,6 +10,8 @@ const UNAUTHORIZE_SERVICE = 'USER/UNAUTHORIZE_SERVICEs'
 export type UserAuthorization = {|
   uid: string,
   meta: Object,
+  email: string,
+  user_name: string,
   service: ServiceName,
 |}
 export type UserStateFields = {|
