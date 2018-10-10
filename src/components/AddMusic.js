@@ -22,7 +22,7 @@ type Props = {|
   authorizations: Array<UserAuthorization>,
 |}
 type State = {|
-  authorizationServices: Array<string>,
+  authorizationServices: Array<UserAuthorization>,
 |}
 
 class AddMusic extends React.Component<Props, State> {
@@ -45,9 +45,9 @@ class AddMusic extends React.Component<Props, State> {
       return
     }
 
-    authorizations.forEach(authorization => {
+    authorizations.map(authorization => {
       const { authorizationServices: authorizationServicesState } = this.state
-      this.setState({ authorizationServices: [...authorizationServicesState, authorization.service] })
+      return this.setState({ authorizationServices: [...authorizationServicesState, authorization] })
     })
   }
 
@@ -78,12 +78,16 @@ class AddMusic extends React.Component<Props, State> {
 
   addService(name: string, img: string, alt: string) {
     const { authorizationServices } = this.state
+    const auth = authorizationServices.find(item => item.service === name)
 
     return (
-      authorizationServices.find(item => item === name) && (
+      auth && (
         <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={this.createPicker}>
           <img className={`${addMusic.serviceImg}`} src={img} alt={alt} />
-          {name}
+          <div className={`${flex.column} ${flex.align_start}`}>
+            <span className={`${addMusic.service_name}`}>{name}</span>
+            <span className={`${addMusic.service_email}`}>{auth.email}</span>
+          </div>
         </button>
       )
     )

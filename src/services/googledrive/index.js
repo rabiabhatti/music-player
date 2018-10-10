@@ -84,8 +84,10 @@ const googleDriveService: Service = {
     const authResponse = auth.getAuthResponse()
 
     return {
-      uid: basicProfile.getId(),
       service: SERVICE_NAME,
+      email: basicProfile.U3,
+      uid: basicProfile.getId(),
+      user_name: basicProfile.ig,
       meta: {
         expiresAt: authResponse.expires_at,
         accessToken: authResponse.access_token,

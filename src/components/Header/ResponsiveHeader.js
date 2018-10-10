@@ -8,7 +8,7 @@ import flex from '~/less/flex.less'
 import header from '~/less/header.less'
 import button from '~/less/button.less'
 
-import Logout from '~/components/Logout'
+import Accounts from '~/components/Accounts'
 import Sidebar from '~/components/Sidebar'
 import Search from './Search'
 
@@ -65,7 +65,7 @@ export default class ResponsiveHeader extends React.Component<Props, State> {
         </button>
         <div className={`${flex.row} ${header.search_wrapper}`}>
           <Search />
-          <Logout />
+          <Accounts />
         </div>
         <div className={`${showSidebarState ? header.show_sidebar : ''} ${header.sidebar_trigger}`} ref={element => {
           this.ref = element
