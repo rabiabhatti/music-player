@@ -82,10 +82,10 @@ class AddMusic extends React.Component<Props, State> {
 
     return (
       auth && (
-        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={this.createPicker}>
+        <button title={name} className={`${button.btn} ${flex.justify_start}`} type="button" onClick={this.createPicker}>
           <img className={`${addMusic.serviceImg}`} src={img} alt={alt} />
           <div className={`${flex.column} ${flex.align_start}`}>
-            <span className={`${addMusic.service_name}`}>{name}</span>
+            <span className={`${addMusic.service_user_name}`}>{auth.user_name}</span>
             <span className={`${addMusic.service_email}`}>{auth.email}</span>
           </div>
         </button>
