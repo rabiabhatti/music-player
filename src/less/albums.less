@@ -10,23 +10,28 @@
     .desc {
       width: 100%;
       text-align: left;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
       align-items: flex-start !important;
 
       b {
         margin: 0;
+        width: 12rem;
         color: #515151;
         font-weight: 600;
         font-size: 0.8rem;
         padding: 0.5rem 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       span {
         margin: 0;
+        width: 12rem;
         color: #757575;
         font-size: 0.8rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
     }
   }
@@ -34,6 +39,11 @@
 @media screen and (max-width: 768px) {
   .album_content {
     margin: 1rem 4% !important;
+
+    b,
+    span {
+      width: 7.4rem !important;
+    }
   }
 }
 @media screen and (max-width: 480px) {
