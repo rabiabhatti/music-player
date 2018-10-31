@@ -8,7 +8,6 @@ import services from '~/services'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
-import { deleteSongsFromLibrary } from '~/common/songs'
 import { playNext, playPrevious, songPlay, songPause, incrementNonce, addToRecentlyPlayed } from '~/redux/songs'
 
 import flex from '~/less/flex.less'
@@ -120,16 +119,6 @@ class Player extends React.Component<Props, State> {
     }
   }
 
-  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    const { dispatch } = this.props
-    const { activeSong } = this.state
-    if (activeSong) {
-      deleteSongsFromLibrary([activeSong.id])
-      dispatch(playNext())
-      dispatch(incrementNonce())
-    }
-  }
   internalPlay() {
     this.audioElement.play()
   }
@@ -226,11 +215,6 @@ class Player extends React.Component<Props, State> {
         <div className={`${player.section_volume} ${flex.align_center}`}>
           <PlayerControlsVolume audioElement={this.audioElement} />
           <PlayerControlsRepeat />
-          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={this.deleteSong}>
-            <i title="Delete from Library" className="material-icons">
-              delete
-            </i>
-          </button>
         </div>
       </div>
     )
