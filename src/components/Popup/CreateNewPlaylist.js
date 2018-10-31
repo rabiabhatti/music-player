@@ -24,16 +24,24 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   state = {
     name: '',
   }
+  ref: ?HTMLInputElement = null
+
+  componentDidMount() {
+    if (this.ref) {
+      this.ref.focus()
+    }
+  }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ name: event.target.value.trim() })
+    this.setState({ name: event.target.value })
   }
 
   savePlaylist = () => {
     const { name } = this.state
+    const albumName = name.trim()
     const { songsIds, handleClose, incrementNonce: incrementNonceProp } = this.props
 
-    db.playlists.add({ name, songs: songsIds })
+    db.playlists.add({ name: albumName, songs: songsIds })
     incrementNonceProp()
     handleClose()
   }
@@ -45,7 +53,7 @@ class CreateNewPlaylist extends React.Component<Props, State> {
     const enable = name !== ''
 
     return (
-      <Popup handleClose={handleClose}>
+      <Popup handleClose={handleClose} title="New Playlist">
         <input
           type="text"
           name="name"
@@ -56,6 +64,9 @@ class CreateNewPlaylist extends React.Component<Props, State> {
           }}
           onBlur={e => {
             e.target.placeholder = 'Choose name'
+          }}
+          ref={i => {
+            this.ref = i
           }}
           onInput={this.handleChange}
           className={`${input.input} ${input.input_popup}`}
