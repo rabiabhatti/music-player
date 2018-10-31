@@ -12,7 +12,7 @@
   background-color: @darkScreenBackground;
 
   .popup_content {
-    top: -15%;
+    top: -10%;
     width: 30%;
     margin: auto;
     border-radius: 5px;
@@ -25,5 +25,16 @@
     .close {
       margin-bottom: 0.5rem;
     }
+
+    .title {
+      font-weight: 400;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .popup_content {
+    width: 80% !important;
   }
 }

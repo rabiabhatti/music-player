@@ -27,8 +27,23 @@ class EditAlbum extends React.Component<Props, State> {
     name: '',
     year: '',
   }
+  ref: ?HTMLInputElement = null
+
   componentDidMount() {
     this.getInfo()
+    if (this.ref) {
+      this.ref.focus()
+    }
+    document.addEventListener('keydown', this.handleKeyPress)
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress)
+  }
+
+  handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      this.saveAlbumInfo()
+    }
   }
 
   getInfo = async () => {
@@ -43,7 +58,7 @@ class EditAlbum extends React.Component<Props, State> {
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.persist()
-    this.setState(state => set(state, event.target.name, event.target.value.trim()))
+    this.setState(state => set(state, event.target.name, event.target.value))
   }
 
   saveAlbumInfo = () => {
@@ -53,8 +68,8 @@ class EditAlbum extends React.Component<Props, State> {
       songs.map(async id => {
         const song = await db.songs.get(id)
         db.songs.update(song.id, {
-          'meta.album': name !== '' ? name : song.meta.album,
-          'meta.year': year !== '' ? parseInt(year, 10) : song.meta.year,
+          'meta.album': name !== '' ? name.trim() : song.meta.album,
+          'meta.year': year !== '' ? parseInt(year.trim(), 10) : song.meta.year,
         })
       }),
     ).then(() => {
@@ -70,12 +85,15 @@ class EditAlbum extends React.Component<Props, State> {
     const enable = name !== '' && year !== ''
 
     return (
-      <Popup handleClose={handleClose}>
+      <Popup title="Edit Album" handleClose={handleClose}>
         <label htmlFor="name">
           Name
           <input
             type="text"
             name="name"
+            ref={i => {
+              this.ref = i
+            }}
             value={name}
             placeholder={name}
             onChange={this.handleChange}

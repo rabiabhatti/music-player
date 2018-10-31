@@ -10,6 +10,7 @@ import popup from '~/less/popup.less'
 import button from '~/less/button.less'
 
 type Props = {|
+  title: string,
   children: React$Node,
   handleClose: () => void,
 |}
@@ -51,7 +52,7 @@ export default class Popup extends React.Component<Props> {
   }
 
   render() {
-    const { children, handleClose } = this.props
+    const { children, handleClose, title } = this.props
 
     return ReactDOM.createPortal(
       <div className={`${popup.popup}`}>
@@ -59,13 +60,14 @@ export default class Popup extends React.Component<Props> {
           ref={element => {
             this.ref = element
           }}
-          className={`${flex.wrap} ${popup.popup_content}`}
+          className={`${flex.wrap} ${flex.space_between} ${popup.popup_content}`}
         >
           <button type="button" className={`${button.btn} ${button.btn_round} ${popup.close}`} onClick={handleClose}>
             <i title="Close" className="material-icons">
               close
             </i>
           </button>
+          <h3 className={`${popup.title}`}>{title}</h3>
           {children}
         </div>
       </div>,
