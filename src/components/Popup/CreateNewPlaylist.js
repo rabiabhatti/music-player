@@ -12,7 +12,7 @@ import button from '~/less/button.less'
 import Popup from './Popup'
 
 type Props = {|
-  songsIds?: Array<number>,
+  songsIds?: ?Array<number>,
   handleClose: () => void,
   incrementNonce: () => void,
 |}
@@ -21,6 +21,9 @@ type State = {|
 |}
 
 class CreateNewPlaylist extends React.Component<Props, State> {
+  static defaultProps = {
+    songsIds: null,
+  }
   state = {
     name: '',
   }
@@ -29,6 +32,20 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   componentDidMount() {
     if (this.ref) {
       this.ref.focus()
+    }
+    document.addEventListener('keydown', this.handleKeyPress)
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress)
+  }
+
+  handleKeyPress = (e: KeyboardEvent) => {
+    const { name } = this.state
+    const { handleClose } = this.props
+    if (e.key === 'Enter' && name !== '') {
+      this.savePlaylist()
+    } else if (e.key === 'Enter' && name === '') {
+      handleClose()
     }
   }
 

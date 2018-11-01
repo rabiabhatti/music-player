@@ -19,9 +19,9 @@ import PlayerControlsVolume from './PlayerControlsVolume'
 import PlayerControlDuration from './PlayerControlsDuration'
 
 type Props = {|
-  songs: SongsStateFields,
   dispatch: Function,
   activeSong: number,
+  songs: SongsStateFields,
   authorizations: Array<UserAuthorization>,
 |}
 type State = {|
