@@ -1,7 +1,9 @@
 // @flow
 
 import * as React from 'react'
+import isEqual from 'lodash/isEqual'
 import connect from '~/common/connect'
+import intersection from 'lodash/intersection'
 
 import db from '~/db'
 import { addSongsToPlaylist } from '~/common/songs'
@@ -72,9 +74,10 @@ class AddToPlaylist extends React.Component<Props, State> {
           {playlists &&
             playlists.map(playList => (
               <button
-                className={`${button.btn} ${flex.justify_start}`}
                 type="button"
                 key={playList.id}
+                className={`${button.btn} ${flex.justify_start}`}
+                disabled={isEqual(intersection(playList.songs, songsIds), songsIds)}
                 onClick={() => addSongsToPlaylist(songsIds, playList.id)}
               >
                 <i className="material-icons">queue_music</i>
