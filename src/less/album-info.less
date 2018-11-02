@@ -56,6 +56,13 @@
           width: 87%;
         }
 
+        .active_song_btns {
+          right: 2%;
+          width: 97%;
+          height: 100%;
+          position: absolute;
+        }
+
         .song_btns {
           right: 2%;
           opacity: 0;
@@ -74,7 +81,8 @@
         }
 
         &:hover {
-          p:nth-child(odd), .active_song_icon {
+          p:nth-child(odd),
+          .active_song_icon {
             opacity: 0;
           }
 
@@ -86,7 +94,6 @@
     }
   }
 }
-
 
 .active_song {
   color: @activeColor;

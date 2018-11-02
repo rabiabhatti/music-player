@@ -3,8 +3,8 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
+import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
 
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'
@@ -13,22 +13,33 @@ import SongDropdown from '~/components/Dropdown/SongDropdown'
 
 type Props = {|
   title: string,
-  playlist?: Object,
   songState: string,
+  dispatch: Function,
+  playlist?: ?Object,
   songs: Array<Object>,
   activeSong: number | null,
-  setSongPlaylist: setSongPlaylist,
 |}
 
 type State = {||}
 
 class SongsTable extends React.Component<Props, State> {
+  static defaultProps = {
+    playlist: null,
+  }
+
   playAtIndex = (index: number) => {
-    const { songs, setSongPlaylist: setSongPlaylistProp } = this.props
-    setSongPlaylistProp({
-      songs: songs.map(song => song.id),
-      index,
-    })
+    const { songs, dispatch } = this.props
+    dispatch(
+      setSongPlaylist({
+        songs: songs.map(song => song.id),
+        index,
+      }),
+    )
+  }
+
+  playPause = () => {
+    const { songState, dispatch } = this.props
+    dispatch(songState === 'playing' ? songPause() : songPlay())
   }
 
   render() {
@@ -64,9 +75,14 @@ class SongsTable extends React.Component<Props, State> {
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>
-                {song.id === activeSong && songState === 'playing' ? (
-                  <td className={`${table.playingSongIcon} ${flex.align_center}`}>
-                    <i className={`${button.btn_blue} material-icons`}>volume_up</i>
+                {song.id === activeSong ? (
+                  <td className={`${table.playingSongIcon} ${flex.align_center} ${flex.space_between}`}>
+                    <button type="button" className={`${button.btn} ${button.btn_blue}`} onClick={() => this.playPause()}>
+                      <i title={songState === 'playing' ? 'Pause' : 'Play'} className="material-icons">
+                        {songState === 'playing' ? 'pause' : 'play_arrow'}
+                      </i>
+                    </button>
+                    <SongDropdown song={song} playlist={playlist} />
                   </td>
                 ) : (
                   <td className={`${table.song_wrapper_btns} ${flex.space_between}`}>
@@ -89,10 +105,7 @@ class SongsTable extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({
-    songState: songs.songState,
-    activeSong: songs.playlist[songs.songIndex] || null,
-  }),
-  { setSongPlaylist },
-)(SongsTable)
+export default connect(({ songs }) => ({
+  songState: songs.songState,
+  activeSong: songs.playlist[songs.songIndex] || null,
+}))(SongsTable)

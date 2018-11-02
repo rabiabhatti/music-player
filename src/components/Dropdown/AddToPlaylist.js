@@ -52,18 +52,31 @@ class AddToPlaylist extends React.Component<Props, State> {
 
     return (
       <div className={`${dropdown.sub_dropdown_trigger}`}>
-        <button type="button" className={`${button.btn} ${flex.space_between} ${flex.justify_start}`} onClick={e => e.preventDefault()}>
+        <button
+          type="button"
+          className={`${button.btn} ${flex.space_between} ${flex.justify_start}`}
+          onClick={e => e.preventDefault()}
+        >
           <i className="material-icons">add</i>
           Add to Playlist
         </button>
         <div className={`${dropdown.sub_dropdown} ${dropdown.dropdown_content} hidden`}>
-          <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.setState({ showCreatePlaylistModal: true })}>
+          <button
+            className={`${button.btn} ${flex.justify_start}`}
+            type="button"
+            onClick={() => this.setState({ showCreatePlaylistModal: true })}
+          >
             <i className="material-icons">playlist_add</i>
             New Playlist
           </button>
           {playlists &&
             playlists.map(playList => (
-              <button className={`${button.btn} ${flex.justify_start}`} type="button" key={playList.id} onClick={() => addSongsToPlaylist(songsIds, playList.id)}>
+              <button
+                className={`${button.btn} ${flex.justify_start}`}
+                type="button"
+                key={playList.id}
+                onClick={() => addSongsToPlaylist(songsIds, playList.id)}
+              >
                 <i className="material-icons">queue_music</i>
                 {playList.name}
               </button>
@@ -74,9 +87,6 @@ class AddToPlaylist extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({
-    nonce: songs.nonce,
-  }),
-  null,
-)(AddToPlaylist)
+export default connect(({ songs }) => ({
+  nonce: songs.nonce,
+}))(AddToPlaylist)
