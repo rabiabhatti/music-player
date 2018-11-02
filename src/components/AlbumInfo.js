@@ -102,7 +102,8 @@ class AlbumInfo extends React.Component<Props, State> {
                   song.id === activeSong ? `${albumInfo.active_song}` : ''
                 }`}
               >
-                {song.id !== activeSong && <p>{index + 1}</p>}
+                <p>{index + 1}</p>
+
                 <p className={`${albumInfo.song_title}`}>
                   {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
                 </p>
