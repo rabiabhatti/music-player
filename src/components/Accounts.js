@@ -61,7 +61,10 @@ class Accounts extends React.Component<Props, State> {
       if (service) {
         return (
           <div className={`${flex.space_between} ${flex.align_baseline}`} key={`unauthorize-${authorization.uid}`}>
-            <span>{service.name}</span>
+            <div className={`${flex.column} ${authServices.auth_desc}`}>
+              <span className={`${authServices.service_name}`}>{service.name}</span>
+              <span className={`${authServices.service_email}`}>{authorization.email}</span>
+            </div>
             <button
               type="button"
               className={`${button.btn} ${button.btn_blue_border} ${authServices.auth_btn} ${flex.justify_center}`}
@@ -102,7 +105,7 @@ class Accounts extends React.Component<Props, State> {
   render() {
     return (
       <HeaderDropdown buttonTitle="Account" buttonIcon="account_circle" className={`${authServices.services_content}`}>
-        <h3>Services</h3>
+        <h3>Accounts</h3>
         {this.renderAuthBtn()}
         {this.renderUnuthBtn()}
       </HeaderDropdown>

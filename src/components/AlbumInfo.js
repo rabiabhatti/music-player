@@ -3,8 +3,8 @@
 import React from 'react'
 import connect from '~/common/connect'
 
-import { setSongPlaylist } from '~/redux/songs'
 import { humanizeDuration } from '~/common/songs'
+import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
 
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'
@@ -18,19 +18,26 @@ import AlbumDropdown from '~/components/Dropdown/AlbumDropdown'
 type Props = {|
   name: string,
   songState: string,
+  dispatch: Function,
   songs: Array<Object>,
   activeSong: number | null,
-  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {||}
 
 class AlbumInfo extends React.Component<Props, State> {
   playAtIndex = (index: number, ids: Array<number>) => {
-    const { setSongPlaylist: setSongPlaylistProp } = this.props
-    setSongPlaylistProp({
-      songs: ids,
-      index,
-    })
+    const { dispatch } = this.props
+    dispatch(
+      setSongPlaylist({
+        songs: ids,
+        index,
+      }),
+    )
+  }
+
+  playPause = () => {
+    const { songState, dispatch } = this.props
+    dispatch(songState === 'playing' ? songPause() : songPlay())
   }
 
   render() {
@@ -91,15 +98,28 @@ class AlbumInfo extends React.Component<Props, State> {
               <div
                 key={song.sourceId}
                 onDoubleClick={() => this.playAtIndex(index, songsIds)}
-                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${albumInfo.song_row} ${song.id === activeSong ? `${albumInfo.active_song}` : ''}`}
+                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${albumInfo.song_row} ${
+                  song.id === activeSong ? `${albumInfo.active_song}` : ''
+                }`}
               >
-                  {song.id === activeSong && songState === 'playing' ? <i className={`${button.btn_blue} ${albumInfo.active_song_icon} material-icons`}>volume_up</i> : <p>{index + 1}</p>}
-                  <p className={`${albumInfo.song_title}`}>
-                    {song.meta && typeof song.meta.name !== 'undefined'
-                      ? song.meta.name
-                      : song.filename.replace('.mp3', '')}
-                  </p>
-                  <p>{song.duration ? humanizeDuration(song.duration) : ''}</p>
+                {song.id !== activeSong && <p>{index + 1}</p>}
+                <p className={`${albumInfo.song_title}`}>
+                  {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
+                </p>
+                <p>{song.duration ? humanizeDuration(song.duration) : ''}</p>
+                {song.id === activeSong ? (
+                  <div className={`${flex.space_between} ${albumInfo.active_song_btns}`}>
+                    <button type="button" className={`${button.btn} ${button.btn_blue}`} onClick={() => this.playPause()}>
+                      <i
+                        title={songState === 'playing' ? 'Pause' : 'Play'}
+                        className={`${albumInfo.active_song_icon} material-icons`}
+                      >
+                        {songState === 'playing' ? 'pause' : 'play_arrow'}
+                      </i>
+                    </button>
+                    <SongDropdown song={song} />
+                  </div>
+                ) : (
                   <div className={`${flex.space_between} ${albumInfo.song_btns}`}>
                     <button
                       type="button"
@@ -110,6 +130,7 @@ class AlbumInfo extends React.Component<Props, State> {
                     </button>
                     <SongDropdown song={song} />
                   </div>
+                )}
               </div>
             ))}
           </div>
@@ -119,10 +140,7 @@ class AlbumInfo extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({
-    activeSong: songs.playlist[songs.songIndex] || null,
-    songState: songs.songState,
-  }),
-  { setSongPlaylist },
-)(AlbumInfo)
+export default connect(({ songs }) => ({
+  activeSong: songs.playlist[songs.songIndex] || null,
+  songState: songs.songState,
+}))(AlbumInfo)
