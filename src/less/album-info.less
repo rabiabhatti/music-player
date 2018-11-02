@@ -81,8 +81,7 @@
         }
 
         &:hover {
-          p:nth-child(odd),
-          .active_song_icon {
+          p:nth-child(odd) {
             opacity: 0;
           }
 
@@ -99,6 +98,10 @@
   color: @activeColor;
   background-color: @activeBackground;
   border-radius: 3px;
+
+  p:nth-child(odd) {
+    opacity: 0;
+  }
 }
 
 .album_cover {
