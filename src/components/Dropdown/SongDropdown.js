@@ -3,8 +3,8 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import { incrementNonce, playNext, playLater } from '~/redux/songs'
 import { deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
+import { incrementNonce, playNext, playLater, setSongPlaylist } from '~/redux/songs'
 
 import EditSong from '~/components/Popup/EditSong'
 
@@ -22,6 +22,7 @@ type Props = {|
   handleClose: () => void,
   incrementNonce: () => void,
   playLater: typeof playLater,
+  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {|
   showEditSongModal: boolean,
@@ -30,6 +31,14 @@ type State = {|
 class SongDropdown extends React.Component<Props, State> {
   state = {
     showEditSongModal: false,
+  }
+
+  playAtIndex = (index: number) => {
+    const { setSongPlaylist: setSongPlaylistProp, song } = this.props
+    setSongPlaylistProp({
+      songs: [song.id],
+      index,
+    })
   }
 
   deleteSong = (e: SyntheticEvent<HTMLButtonElement>, id: number, playlist?: Object) => {
@@ -54,6 +63,14 @@ class SongDropdown extends React.Component<Props, State> {
       <Dropdown handleClose={handleClose}>
         {showEditSongModal && <EditSong handleClose={() => this.setState({ showEditSongModal: false })} song={song} />}
         <AddToPlaylist songsIds={[song.id]} />
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.playAtIndex(0)}>
+          <i className="material-icons">music_note</i>
+          Play now
+        </button>
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => playLaterProp([song.id])}>
+          <i className="material-icons">watch_later</i>
+          Play Later
+        </button>
         <button
           className={`${button.btn} ${flex.justify_start}`}
           type="button"
@@ -61,10 +78,6 @@ class SongDropdown extends React.Component<Props, State> {
         >
           <i className="material-icons">edit</i>
           Edit
-        </button>
-        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => playLaterProp([song.id])}>
-          <i className="material-icons">watch_later</i>
-          Play Later
         </button>
         {playlist && (
           <button
@@ -90,5 +103,5 @@ export default connect(
     activeSong: songs.playlist[songs.songIndex],
     nonce: songs.nonce,
   }),
-  { incrementNonce, playNext, playLater },
+  { incrementNonce, playNext, playLater, setSongPlaylist },
 )(SongDropdown)

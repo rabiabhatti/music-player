@@ -3,7 +3,7 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import { incrementNonce, playLater } from '~/redux/songs'
+import { incrementNonce, playLater, setSongPlaylist } from '~/redux/songs'
 import { deleteSongsFromLibrary } from '~/common/songs'
 
 import flex from '~/less/flex.less'
@@ -17,10 +17,19 @@ type Props = {|
   handleClose: () => void,
   incrementNonce: () => void,
   playLater: typeof playLater,
+  setSongPlaylist: typeof setSongPlaylist,
 |}
 type State = {||}
 
 class ContentCardDropdown extends React.Component<Props, State> {
+  playAtIndex = (index: number) => {
+    const { setSongPlaylist: setSongPlaylistProp, songsIds } = this.props
+    setSongPlaylistProp({
+      songs: songsIds,
+      index,
+    })
+  }
+
   deleteSong = (ids: Array<number>) => {
     const { incrementNonce: incrementNonceProp } = this.props
     deleteSongsFromLibrary(ids)
@@ -33,6 +42,10 @@ class ContentCardDropdown extends React.Component<Props, State> {
     return (
       <Dropdown handleClose={handleClose}>
         <AddToPlaylist songsIds={songsIds} />
+        <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.playAtIndex(0)}>
+          <i className="material-icons">music_note</i>
+          Play Now
+        </button>
         <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => playLaterProp(songsIds)}>
           <i className="material-icons">watch_later</i>
           Play Later
@@ -48,5 +61,5 @@ class ContentCardDropdown extends React.Component<Props, State> {
 
 export default connect(
   null,
-  { incrementNonce, playLater },
+  { incrementNonce, playLater, setSongPlaylist },
 )(ContentCardDropdown)
