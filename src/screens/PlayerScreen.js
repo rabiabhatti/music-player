@@ -12,12 +12,12 @@ import Header from '~/components/Header'
 import Sidebar from '~/components/Sidebar'
 import Songs from '~/components/routes/Songs'
 import Genres from '~/components/routes/Genres'
-import ResponsiveHeader from '~/components/Header/ResponsiveHeader'
 import Albums from '~/components/routes/Albums'
 import Downloader from '~/components/Downloader'
 import Artists from '~/components/routes/Artists'
 import Playlist from '~/components/routes/Playlist'
 import RecentlyPlayed from '~/components/routes/RecentlyPlayed'
+import ResponsiveHeader from '~/components/Header/ResponsiveHeader'
 
 const ROUTES: { [RouteName]: $FlowFixMe } = {
   Albums,

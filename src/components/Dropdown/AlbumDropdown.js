@@ -16,7 +16,6 @@ import AddToPlaylist from './AddToPlaylist'
 
 type Props = {|
   songsIds: Array<number>,
-  handleClose: () => void,
   incrementNonce: () => void,
   playLater: typeof playLater,
   setSongPlaylist: typeof setSongPlaylist,
@@ -46,10 +45,10 @@ class AlbumDropdown extends React.Component<Props, State> {
 
   render() {
     const { showEditAlbumModal } = this.state
-    const { handleClose, songsIds, playLater: playLaterProp } = this.props
+    const { songsIds, playLater: playLaterProp } = this.props
 
     return (
-      <Dropdown handleClose={handleClose}>
+      <Dropdown>
         {showEditAlbumModal && (
           <EditAlbum handleClose={() => this.setState({ showEditAlbumModal: false })} songs={songsIds} />
         )}

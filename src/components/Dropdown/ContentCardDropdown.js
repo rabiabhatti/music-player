@@ -14,7 +14,6 @@ import AddToPlaylist from './AddToPlaylist'
 
 type Props = {|
   songsIds: Array<number>,
-  handleClose: () => void,
   incrementNonce: () => void,
   playLater: typeof playLater,
   setSongPlaylist: typeof setSongPlaylist,
@@ -37,10 +36,10 @@ class ContentCardDropdown extends React.Component<Props, State> {
   }
 
   render() {
-    const { handleClose, songsIds, playLater: playLaterProp } = this.props
+    const { songsIds, playLater: playLaterProp } = this.props
 
     return (
-      <Dropdown handleClose={handleClose}>
+      <Dropdown>
         <AddToPlaylist songsIds={songsIds} />
         <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.playAtIndex(0)}>
           <i className="material-icons">music_note</i>

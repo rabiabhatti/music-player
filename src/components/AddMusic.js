@@ -22,11 +22,12 @@ type Props = {|
   authorizations: Array<UserAuthorization>,
 |}
 type State = {|
+  handleClose: boolean,
   authorizationServices: Array<UserAuthorization>,
 |}
 
 class AddMusic extends React.Component<Props, State> {
-  state = { authorizationServices: [] }
+  state = { authorizationServices: [], handleClose: false }
 
   componentDidMount() {
     this.loadServices()
@@ -69,10 +70,14 @@ class AddMusic extends React.Component<Props, State> {
       service
         .addFiles(authorization)
         .then(filesChosen => {
+          console.log(filesChosen)
           db.songs.bulkAdd(filesChosen)
           incrementNonceProp()
         })
         .catch(console.error)
+    })
+    this.setState({
+      handleClose: true,
     })
   }
 
@@ -94,8 +99,10 @@ class AddMusic extends React.Component<Props, State> {
   }
 
   render() {
+    const { handleClose } = this.state
+
     return (
-      <HeaderDropdown buttonTitle="Add Music" buttonIcon="add" className={`${addMusic.add_music}`}>
+      <HeaderDropdown handleClose={handleClose} buttonTitle="Add Music" buttonIcon="add" className={`${addMusic.add_music}`}>
         <h3>Choose Service</h3>
         {this.addService('GoogleDrive', googleDriveIcon, 'google_drive_icon')}
       </HeaderDropdown>
