@@ -19,7 +19,6 @@ type Props = {|
   playlist: ?Object,
   activeSong: number,
   playNext: typeof playNext,
-  handleClose: () => void,
   incrementNonce: () => void,
   playLater: typeof playLater,
   setSongPlaylist: typeof setSongPlaylist,
@@ -57,10 +56,10 @@ class SongDropdown extends React.Component<Props, State> {
 
   render() {
     const { showEditSongModal } = this.state
-    const { handleClose, playlist, song, playLater: playLaterProp } = this.props
+    const { playlist, song, playLater: playLaterProp } = this.props
 
     return (
-      <Dropdown handleClose={handleClose}>
+      <Dropdown>
         {showEditSongModal && <EditSong handleClose={() => this.setState({ showEditSongModal: false })} song={song} />}
         <AddToPlaylist songsIds={[song.id]} />
         <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.playAtIndex(0)}>

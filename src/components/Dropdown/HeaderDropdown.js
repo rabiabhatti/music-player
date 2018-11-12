@@ -13,12 +13,17 @@ type Props = {|
   buttonIcon: string,
   buttonTitle: string,
   children: React$Node,
+  handleClose?: boolean,
 |}
 type State = {|
   opened: boolean,
 |}
 
 export default class HeaderDropdown extends React.Component<Props, State> {
+  static defaultProps = {
+    handleClose: false,
+  }
+
   state = { opened: false }
   ref: ?HTMLDivElement = null
 
@@ -26,6 +31,14 @@ export default class HeaderDropdown extends React.Component<Props, State> {
     document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleKeyPress)
   }
+
+  componentDidUpdate(prevProps: Props) {
+    const { handleClose } = this.props
+    if (prevProps.handleClose !== handleClose) {
+      this.close()
+    }
+  }
+
   componentWillUnmount() {
     document.removeEventListener('click', this.handleBodyClick)
     document.removeEventListener('keydown', this.handleKeyPress)
@@ -33,9 +46,7 @@ export default class HeaderDropdown extends React.Component<Props, State> {
 
   handleKeyPress = (e: KeyboardEvent) => {
     if (e.key === 'Escape') {
-      this.setState({
-        opened: false,
-      })
+      this.close()
     }
   }
   handleBodyClick = (e: MouseEvent) => {
@@ -44,10 +55,14 @@ export default class HeaderDropdown extends React.Component<Props, State> {
     }
     const firedOnSelf = getEventPath(e).includes(this.ref)
     if (!firedOnSelf) {
-      this.setState({
-        opened: false,
-      })
+      this.close()
     }
+  }
+
+  close = () => {
+    this.setState({
+      opened: false,
+    })
   }
 
   render() {

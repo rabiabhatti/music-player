@@ -10,7 +10,6 @@ import dropdown from '~/less/dropdown.less'
 
 type Props = {|
   children: React$Node,
-  handleClose: () => void,
 |}
 
 type State = {|
@@ -31,9 +30,10 @@ export default class Dropdown extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    const { handleClose } = this.props
     if (e.key === 'Escape') {
-      handleClose()
+      this.setState({
+        opened: false,
+      })
     }
   }
   handleBodyClick = (e: MouseEvent) => {
@@ -61,7 +61,7 @@ export default class Dropdown extends React.Component<Props, State> {
           this.ref = element
         }}
       >
-        <button type='button' className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
+        <button type="button" className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
           <i className="material-icons">more_horiz</i>
         </button>
         <div className={`${dropdown.dropdown_content} ${opened ? '' : 'hidden'}`}>{children}</div>
