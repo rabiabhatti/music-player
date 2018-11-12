@@ -20,7 +20,7 @@ export default class Popup extends React.Component<Props> {
   element = document.createElement('div')
 
   componentDidMount() {
-    const modalRootRef = document.getElementById('modal-root')
+    const modalRootRef = document.getElementById('modal-popup-root')
     if (modalRootRef) {
       modalRootRef.appendChild(this.element)
     }
