@@ -205,7 +205,7 @@ class Player extends React.Component<Props, State> {
           </button>
         </div>
         <div className={`${player.section_progress} ${flex.align_center} ${flex.space_around}`}>
-          <img className={player.img} src={coverImg} alt={cover} />
+          <img className={player.img} src={coverImg === undefined ? cover : coverImg} alt="player_cover_img" />
           <PlayerControlDuration
             audioElement={this.audioElement}
             title={activeSong ? songName : ''}
