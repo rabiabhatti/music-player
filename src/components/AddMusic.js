@@ -70,7 +70,6 @@ class AddMusic extends React.Component<Props, State> {
       service
         .addFiles(authorization)
         .then(filesChosen => {
-          console.log(filesChosen)
           db.songs.bulkAdd(filesChosen)
           incrementNonceProp()
         })
