@@ -121,3 +121,8 @@ export function humanizeDuration(duration: number): string {
 
   return `${minutes}:${seconds}`
 }
+
+export function fibonacci(num: number) {
+  if (num <= 1) return 1
+  return fibonacci(num - 1) + fibonacci(num - 2)
+}
