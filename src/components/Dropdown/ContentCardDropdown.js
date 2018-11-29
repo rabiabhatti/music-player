@@ -3,8 +3,8 @@
 import * as React from 'react'
 import connect from '~/common/connect'
 
-import { incrementNonce, playLater, setSongPlaylist } from '~/redux/songs'
 import { deleteSongsFromLibrary } from '~/common/songs'
+import { incrementNonce, playLater, setSongPlaylist } from '~/redux/songs'
 
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'

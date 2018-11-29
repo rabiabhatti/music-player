@@ -1,16 +1,15 @@
 // @flow
 
 import * as React from 'react'
-import connect from '~/common/connect'
 
-import getEventPath from '~/common/getEventPath'
+import connect from '~/common/connect'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
 
 import flex from '~/less/flex.less'
-import button from '~/less/button.less'
 import table from '~/less/table.less'
-// import ContextMenu from '~/components/ContextMenu'
+import button from '~/less/button.less'
+import ContextMenu from '~/components/ContextMenu'
 import SongDropdown from '~/components/Dropdown/SongDropdown'
 
 type Props = {|
@@ -23,6 +22,7 @@ type Props = {|
 |}
 
 type State = {|
+  focusedSong: ?Object,
   selected: Array<number>,
   showContextMenu: boolean,
 |}
@@ -35,20 +35,8 @@ class SongsTable extends React.Component<Props, State> {
 
   state = {
     selected: [],
+    focusedSong: null,
     showContextMenu: false,
-  }
-
-  componentDidMount() {
-    document.addEventListener('click', this.handleClick)
-  }
-  componentWillUnmount() {
-    document.removeEventListener('click', this.handleClick)
-  }
-
-  handleClick = (e: MouseEvent) => {
-    this.nodes.forEach(a => {
-      console.log(getEventPath(e).includes(a))
-    })
   }
 
   playAtIndex = (index: number) => {
@@ -69,12 +57,41 @@ class SongsTable extends React.Component<Props, State> {
   onContextMenu = (song, e) => {
     e.preventDefault()
     e.persist()
-    console.log(e.nativeEvent, e)
-    const { showContextMenu } = this.state
-    // const ele = getEventPath(e).includes(this.ref)
-    this.setState({
-      showContextMenu: !showContextMenu,
-    })
+    const elt = document.getElementById('modal-contextmenu-root')
+    if (elt) {
+      const clickX = e.clientX
+      const clickY = e.clientY
+      const screenW = window.innerWidth
+      const screenH = window.innerHeight
+
+      const eltW = elt.offsetWidth
+      const eltH = elt.offsetHeight
+
+      const right = screenW - clickX > eltW
+      const left = !right
+      const top = screenH - clickY > eltH
+      const bottom = !top
+
+      if (right) {
+        this.left = `${clickX}px`
+      }
+
+      if (left) {
+        this.left = `${clickX - eltW}px`
+      }
+
+      if (top) {
+        this.top = `${clickY - 5}px`
+      }
+
+      if (bottom) {
+        this.top = `${clickY - eltH - 15}px`
+      }
+      this.setState({
+        focusedSong: song,
+        showContextMenu: true,
+      })
+    }
   }
 
   selectRow = (e, id: number) => {
@@ -85,9 +102,9 @@ class SongsTable extends React.Component<Props, State> {
     const index = selected.indexOf(id)
     if (index === -1) {
       if (e.shiftKey) {
-        this.setState(prevState => ({
-          selected: [...prevState.selected, id],
-        }))
+        this.setState({
+          selected: [...selected, id],
+        })
         return
       }
       this.setState({
@@ -107,12 +124,24 @@ class SongsTable extends React.Component<Props, State> {
     }
   }
 
+  top: string
+  left: string
+
   render() {
-    const { selected } = this.state
+    const { selected, showContextMenu, focusedSong } = this.state
     const { activeSong, songs, title, playlist, songState } = this.props
 
     return (
       <div className={`${table.section_songs} bound`}>
+        {showContextMenu &&
+          focusedSong && (
+            <ContextMenu
+              top={this.top}
+              left={this.left}
+              songsIds={selected.length ? selected : [focusedSong.id]}
+              handleClose={() => this.setState({ showContextMenu: false, focusedSong: null, selected: [] })}
+            />
+          )}
         <div className={`${flex.align_center} ${flex.space_between}`}>
           <h2>{title}</h2>
           <button type="button" className={`${button.btn} ${button.btn_playall}`} onClick={() => this.playAtIndex(0)}>
@@ -131,7 +160,7 @@ class SongsTable extends React.Component<Props, State> {
               <th />
             </tr>
           </thead>
-          <tbody>
+          <tbody style={{ overflow: `${showContextMenu ? 'hidden' : 'scroll'}` }}>
             {songs.map((song, index) => (
               <tr
                 key={song.id}
