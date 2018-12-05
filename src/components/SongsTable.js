@@ -3,6 +3,8 @@
 import * as React from 'react'
 
 import connect from '~/common/connect'
+import contextMenu from '~/common/contextMenu'
+import getEventPath from '~/common/getEventPath'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
 
@@ -28,7 +30,7 @@ type State = {|
 |}
 
 class SongsTable extends React.Component<Props, State> {
-  nodes = new Map()
+  ref: ?HTMLTableSectionElement = null
   static defaultProps = {
     playlist: null,
   }
@@ -37,6 +39,25 @@ class SongsTable extends React.Component<Props, State> {
     selected: [],
     focusedSong: null,
     showContextMenu: false,
+  }
+
+  componentDidMount() {
+    document.addEventListener('click', this.handleBodyClick)
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleBodyClick)
+  }
+
+  handleBodyClick = (e: MouseEvent) => {
+    if (e.defaultPrevented) {
+      return
+    }
+    const firedOnSelf = getEventPath(e).includes(this.ref)
+    if (!firedOnSelf) {
+      this.setState({
+        selected: [],
+      })
+    }
   }
 
   playAtIndex = (index: number) => {
@@ -54,39 +75,14 @@ class SongsTable extends React.Component<Props, State> {
     dispatch(songState === 'playing' ? songPause() : songPlay())
   }
 
-  onContextMenu = (song, e) => {
+  contextMenu = async (song, e) => {
     e.preventDefault()
     e.persist()
     const elt = document.getElementById('modal-contextmenu-root')
     if (elt) {
-      const clickX = e.clientX
-      const clickY = e.clientY
-      const screenW = window.innerWidth
-      const screenH = window.innerHeight
-
-      const eltW = elt.offsetWidth
-      const eltH = elt.offsetHeight
-
-      const right = screenW - clickX > eltW
-      const left = !right
-      const top = screenH - clickY > eltH
-      const bottom = !top
-
-      if (right) {
-        this.left = `${clickX}px`
-      }
-
-      if (left) {
-        this.left = `${clickX - eltW}px`
-      }
-
-      if (top) {
-        this.top = `${clickY - 5}px`
-      }
-
-      if (bottom) {
-        this.top = `${clickY - eltH - 15}px`
-      }
+      const { elementLeft, elementTop } = await contextMenu(e, elt)
+      this.left = elementLeft
+      this.top = elementTop
       this.setState({
         focusedSong: song,
         showContextMenu: true,
@@ -97,8 +93,6 @@ class SongsTable extends React.Component<Props, State> {
   selectRow = (e, id: number) => {
     const { selected } = this.state
     const selectedItems = selected.slice()
-    // const node = this.nodes.get(i)
-    // console.log(node)
     const index = selected.indexOf(id)
     if (index === -1) {
       if (e.shiftKey) {
@@ -160,16 +154,18 @@ class SongsTable extends React.Component<Props, State> {
               <th />
             </tr>
           </thead>
-          <tbody style={{ overflow: `${showContextMenu ? 'hidden' : 'scroll'}` }}>
+          <tbody
+            ref={element => {
+              this.ref = element
+            }}
+            style={{ overflow: `${showContextMenu ? 'hidden' : 'scroll'}` }}
+          >
             {songs.map((song, index) => (
               <tr
                 key={song.id}
-                ref={c => {
-                  this.nodes.set(index, c)
-                }}
                 onClick={e => this.selectRow(e, song.id)}
                 onDoubleClick={() => this.playAtIndex(index)}
-                onContextMenu={e => this.onContextMenu(song, e)}
+                onContextMenu={e => this.contextMenu(song, e)}
                 className={`${song.id === activeSong ? `${table.active_song}` : ''} ${
                   selected.includes(song.id) ? `${table.selected}` : ''
                 }`}
@@ -183,7 +179,7 @@ class SongsTable extends React.Component<Props, State> {
                     </button>
                   </td>
                 ) : (
-                  <td className={selected.includes(song.id) ? `${table.selected_row}` : `${table.hover_btns}`}>
+                  <td className={`${table.hover_btns}`}>
                     <button
                       type="button"
                       onClick={() => this.playAtIndex(index)}
@@ -198,7 +194,7 @@ class SongsTable extends React.Component<Props, State> {
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>
-                <td className={selected.includes(song.id) ? `${table.selected_row}` : `${table.hover_btns}`}>
+                <td className={`${table.hover_btns}`}>
                   <SongDropdown song={song} playlist={playlist} />
                 </td>
               </tr>
