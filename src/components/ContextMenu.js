@@ -13,7 +13,6 @@ import AddToPlaylist from './Dropdown/AddToPlaylist'
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'
 import dropdown from '~/less/dropdown.less'
-import contextmenu from '~/less/context-menu.less'
 
 type Props = {|
   top: string,
@@ -80,7 +79,7 @@ class ContextMenu extends React.Component<Props, State> {
     const { songsIds, playLater: playLaterProp, top, left } = this.props
 
     return ReactDOM.createPortal(
-      <div className={`${contextmenu.contextmenu}`} style={{ top: `${top}`, left: `${left}` }}>
+      <div style={{ position: 'relative', top: `${top}`, left: `${left}` }}>
         <div
           ref={element => {
             this.ref = element
