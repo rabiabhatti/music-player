@@ -9,6 +9,7 @@ import button from '~/less/button.less'
 import dropdown from '~/less/dropdown.less'
 
 type Props = {|
+  classname?: ?string,
   children: React$Node,
 |}
 
@@ -17,6 +18,9 @@ type State = {|
 |}
 
 export default class Dropdown extends React.Component<Props, State> {
+  static defaultProps = {
+    classname: null,
+  }
   state = { opened: false }
   ref: ?HTMLDivElement = null
 
@@ -37,10 +41,6 @@ export default class Dropdown extends React.Component<Props, State> {
     }
   }
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
-
     const { opened } = this.state
     const firedOnSelf = getEventPath(e).includes(this.ref)
     if (opened || firedOnSelf) {
@@ -52,11 +52,11 @@ export default class Dropdown extends React.Component<Props, State> {
 
   render() {
     const { opened } = this.state
-    const { children } = this.props
+    const { children, classname } = this.props
 
     return (
       <div
-        className={`${flex.align_center}`}
+        className={`${flex.align_center} ${classname ? `${classname}` : ''}`}
         ref={element => {
           this.ref = element
         }}

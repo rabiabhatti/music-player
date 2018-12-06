@@ -65,9 +65,6 @@ class ContextMenu extends React.Component<Props, State> {
   }
 
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
     const { handleClose } = this.props
     const firedOnSelf = getEventPath(e).includes(this.ref)
     if (!firedOnSelf) {
