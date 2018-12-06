@@ -1,6 +1,6 @@
 // @flow
 
-export default async function contextMenu(e: Event, element: HTMLElement): Promise<Object> {
+export default async function contextMenu(e: MouseEvent, element: HTMLElement): Promise<Object> {
   const clickX = e.clientX
   const clickY = e.clientY
   const screenW = window.innerWidth

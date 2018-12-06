@@ -17,6 +17,7 @@ import AddToPlaylist from './AddToPlaylist'
 type Props = {|
   song: Object,
   playlist: ?Object,
+  classname?: ?string,
   activeSong: number,
   playNext: typeof playNext,
   incrementNonce: () => void,
@@ -28,6 +29,10 @@ type State = {|
 |}
 
 class SongDropdown extends React.Component<Props, State> {
+  static defaultProps = {
+    classname: null,
+  }
+
   state = {
     showEditSongModal: false,
   }
@@ -56,10 +61,10 @@ class SongDropdown extends React.Component<Props, State> {
 
   render() {
     const { showEditSongModal } = this.state
-    const { playlist, song, playLater: playLaterProp } = this.props
+    const { playlist, song, playLater: playLaterProp, classname } = this.props
 
     return (
-      <Dropdown>
+      <Dropdown classname={classname}>
         {showEditSongModal && <EditSong handleClose={() => this.setState({ showEditSongModal: false })} song={song} />}
         <AddToPlaylist songsIds={[song.id]} />
         <button className={`${button.btn} ${flex.justify_start}`} type="button" onClick={() => this.playAtIndex(0)}>

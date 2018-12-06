@@ -194,7 +194,7 @@ class SongsTable extends React.Component<Props, State> {
                 <td>{song.meta.artists_original || 'Unknown'}</td>
                 <td>{song.meta.album || 'Unknown'}</td>
                 <td>{song.meta.genre || 'Unknown'} </td>
-                <td className={`${table.hover_btns}`}>
+                <td className={` ${selected.includes(song.id) ? `${table.selected_row}` : `${table.hover_btns}`}`}>
                   <SongDropdown song={song} playlist={playlist} />
                 </td>
               </tr>
