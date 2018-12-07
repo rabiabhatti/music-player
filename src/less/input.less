@@ -23,22 +23,20 @@
 }
 
 .input_search {
-  border: 0;
   width: 100%;
-  right: 0.4rem;
   position: absolute;
   border-radius: 22px;
   padding: 0.7rem 1rem;
+  border: 1px solid @searchBackground;
   background-color: @searchBackground;
+  transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out, border-radius 0.2s ease-in-out;
 
   &:focus {
     border: 0;
-    width: 100%;
   }
 
   &:active {
     border: 0;
-    width: 100%;
   }
 
   &:-webkit-autofill {
