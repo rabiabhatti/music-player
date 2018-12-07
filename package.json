@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "fuse.js": "^3.3.0",
     "immutable": "4.0.0-rc.9",
     "lodash": "^4.17.10",
     "music-metadata": "^2.4.2",
