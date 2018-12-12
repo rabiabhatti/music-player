@@ -4,34 +4,45 @@ import React from 'react'
 import Fuse from 'fuse.js'
 
 import db from '~/db'
-// import type { File } from '~/types'
+import connect from '~/common/connect'
+import { navigateTo } from '~/redux/router'
+import getEventPath from '~/common/getEventPath'
 
 import flex from '~/less/flex.less'
 import input from '~/less/input.less'
 import header from '~/less/header.less'
 import button from '~/less/button.less'
 
-type Props = {||}
+type Props = {|
+  navigateTo: navigateTo,
+|}
 type State = {|
   value: string,
-  results: Array<Object>,
+  selected: number,
   emptyResult: boolean,
+  results: Array<Object>,
 |}
 
 const ATTRIBUTES_TO_SEARCH_IN = ['meta.name', 'meta.album_artists', 'meta.album', 'meta.artists', 'meta.genre']
 
-export default class Search extends React.Component<Props, State> {
+class Search extends React.Component<Props, State> {
+  fuseInstance = null
+  ref: ?HTMLDivElement = null
+  nodes: Array<number> = []
+
   state = {
     value: '',
     results: [],
+    selected: 0,
     emptyResult: false,
   }
-  fuseInstance = null
 
   componentDidMount() {
+    document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleKeyPress)
   }
   componentWillUnmount() {
+    document.removeEventListener('click', this.handleBodyClick)
     document.removeEventListener('keydown', this.handleKeyPress)
   }
 
@@ -53,11 +64,30 @@ export default class Search extends React.Component<Props, State> {
     return fuseInstance
   }
 
+  handleBodyClick = (e: MouseEvent) => {
+    if (e.defaultPrevented) {
+      return
+    }
+    const firedOnSelf = getEventPath(e).includes(this.ref)
+    if (!firedOnSelf) {
+      this.setState({ results: [], emptyResult: false, value: '' })
+    }
+  }
+
   handleKeyPress = (e: KeyboardEvent) => {
-    const { value } = this.state
+    const { value, selected } = this.state
     if (e.key === 'Enter' && value !== '') {
       this.searchItem()
+    } else if (e.key === 'ArrowDown') {
+      this.setState({ selected: selected + 1 })
     }
+  }
+
+  navigateTo = (e: SyntheticEvent<HTMLButtonElement>, name: string, id: number) => {
+    const { navigateTo: navigateToProp } = this.props
+
+    navigateToProp({ name, id })
+    this.setState({ results: [], emptyResult: false, value: '' })
   }
 
   searchItem = async () => {
@@ -80,11 +110,17 @@ export default class Search extends React.Component<Props, State> {
     }
     this.setState({ value: event.target.value })
   }
+
   render() {
-    const { value, results, emptyResult } = this.state
+    const { value, selected, results, emptyResult } = this.state
 
     return (
-      <div className={`${flex.wrap} ${header.search}`}>
+      <div
+        ref={element => {
+          this.ref = element
+        }}
+        className={`${flex.wrap} ${header.search}`}
+      >
         <div className={`${flex.align_center} ${header.input_container}`}>
           <input
             name="q"
@@ -118,9 +154,15 @@ export default class Search extends React.Component<Props, State> {
         {results.length !== 0 &&
           value !== '' && (
             <div className={`${header.serach_result_container}`}>
-              {results.map(song => (
-                <button type="button" key={song.id} className={`${button.btn} ${header.search_btn}`}>
-                  {`${song.meta.name || song.filename} ___ ${song.meta.artists_original || 'Unknown'}`}
+              {results.map((song, i) => (
+                <button
+                  type="button"
+                  key={song.id}
+                  onClick={e => this.navigateTo(e, 'Songs', song.id)}
+                  className={`${button.btn} ${header.search_btn} ${selected === i ? `${header.selected}` : ''}`}
+                >
+                  {`${song.meta.name || song.filename}`}
+                  <span className={`${header.artist}`}> {`${song.meta.artists_original || 'Unknown'}`}</span>
                 </button>
               ))}
             </div>
@@ -129,3 +171,10 @@ export default class Search extends React.Component<Props, State> {
     )
   }
 }
+
+export default connect(
+  null,
+  {
+    navigateTo,
+  },
+)(Search)

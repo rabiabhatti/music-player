@@ -5,6 +5,7 @@ import * as React from 'react'
 import connect from '~/common/connect'
 import contextMenu from '~/common/contextMenu'
 import getEventPath from '~/common/getEventPath'
+import { type RouterRoute } from '~/redux/router'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
 
@@ -15,10 +16,12 @@ import ContextMenu from '~/components/ContextMenu'
 import SongDropdown from '~/components/Dropdown/SongDropdown'
 
 type Props = {|
+  id: number,
   title: string,
   songState: string,
   dispatch: Function,
   playlist?: ?Object,
+  route: RouterRoute,
   songs: Array<Object>,
   activeSong: number | null,
 |}
@@ -28,6 +31,8 @@ type State = {|
   selected: Array<number>,
   showContextMenu: boolean,
 |}
+
+const SHOW_SEARCHED_SONG = 1200
 
 class SongsTable extends React.Component<Props, State> {
   ref: ?HTMLTableSectionElement = null
@@ -42,10 +47,39 @@ class SongsTable extends React.Component<Props, State> {
   }
 
   componentDidMount() {
+    const { route } = this.props
+    if (route.name === 'Songs') {
+      this.briefSelect()
+    }
+
     document.addEventListener('click', this.handleBodyClick)
   }
+
+  componentDidUpdate(prevProps) {
+    const { id, route } = this.props
+    if (route.name === 'Songs' && prevProps.id !== id) {
+      this.briefSelect()
+    }
+  }
+
   componentWillUnmount() {
+    clearTimeout(this.timeoutID)
     document.removeEventListener('click', this.handleBodyClick)
+  }
+
+  briefSelect = () => {
+    const { id } = this.props
+
+    const element = document.getElementById(`${id}`)
+    if (element) element.scrollIntoView()
+
+    this.setState({
+      selected: [id],
+    })
+
+    this.timeoutID = setTimeout(() => {
+      this.setState({ selected: [] })
+    }, SHOW_SEARCHED_SONG)
   }
 
   handleBodyClick = (e: MouseEvent) => {
@@ -120,6 +154,7 @@ class SongsTable extends React.Component<Props, State> {
 
   top: string
   left: string
+  timeoutID: TimeoutID
 
   render() {
     const { selected, showContextMenu, focusedSong } = this.state
@@ -162,6 +197,7 @@ class SongsTable extends React.Component<Props, State> {
           >
             {songs.map((song, index) => (
               <tr
+                id={song.id}
                 key={song.id}
                 onClick={e => this.selectRow(e, song.id)}
                 onDoubleClick={() => this.playAtIndex(index)}
@@ -206,7 +242,9 @@ class SongsTable extends React.Component<Props, State> {
   }
 }
 
-export default connect(({ songs }) => ({
+export default connect(({ router, songs }) => ({
+  id: router.route.id,
+  route: router.route,
   songState: songs.songState,
   activeSong: songs.playlist[songs.songIndex] || null,
 }))(SongsTable)

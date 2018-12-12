@@ -48,12 +48,21 @@
     border: 1px solid @searchBackground;
     box-shadow: 0px 3px 4px 0px rgba(60, 64, 67, 0.302);
 
+    .selected {
+      background-color: @hoverBackground;
+    }
+
     .search_btn {
       width: 100%;
+      overflow-x: hidden;
+      white-space: nowrap;
       padding: 0.7rem 1rem;
+      text-overflow: ellipsis;
 
-      &:first-child {
-        background-color: @hoverBackground;
+      .artist {
+        font-weight: 600;
+        font-size: 0.8rem;
+        margin-left: 0.65rem;
       }
 
       &:hover {
