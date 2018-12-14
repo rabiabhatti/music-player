@@ -28,7 +28,7 @@ const ATTRIBUTES_TO_SEARCH_IN = ['meta.name', 'meta.album_artists', 'meta.album'
 class Search extends React.Component<Props, State> {
   fuseInstance = null
   ref: ?HTMLDivElement = null
-  nodes: Array<number> = []
+  nodes: Map<number, ?HTMLButtonElement> = new Map()
 
   state = {
     value: '',
@@ -76,11 +76,30 @@ class Search extends React.Component<Props, State> {
 
   handleKeyPress = (e: KeyboardEvent) => {
     const { value, selected } = this.state
+    const songsindexes = Array.from(this.nodes.keys())
+
     if (e.key === 'Enter' && value !== '') {
       this.searchItem()
     } else if (e.key === 'ArrowDown') {
-      this.setState({ selected: selected + 1 })
+      if (selected === songsindexes.length - 1) {
+        this.scrollIntoView(0)
+        return
+      }
+      this.scrollIntoView(selected + 1)
+    } else if (e.key === 'ArrowUp') {
+      if (selected === 0) {
+        this.scrollIntoView(songsindexes.length - 1)
+        return
+      }
+      this.scrollIntoView(selected - 1)
     }
+  }
+
+  scrollIntoView = index => {
+    const element = document.getElementById(`searchResult${index}`)
+
+    this.setState({ selected: index })
+    if (element) element.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
   }
 
   navigateTo = (e: SyntheticEvent<HTMLButtonElement>, name: string, id: number) => {
@@ -158,6 +177,8 @@ class Search extends React.Component<Props, State> {
                 <button
                   type="button"
                   key={song.id}
+                  id={`searchResult${i}`}
+                  ref={c => this.nodes.set(i, c)}
                   onClick={e => this.navigateTo(e, 'Songs', song.id)}
                   className={`${button.btn} ${header.search_btn} ${selected === i ? `${header.selected}` : ''}`}
                 >
