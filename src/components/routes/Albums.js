@@ -46,9 +46,7 @@ class Albums extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce } = this.props
-    if (prevProps.nonce !== nonce) {
-      this.fetchSongs()
-    }
+    if (prevProps.nonce !== nonce) this.fetchSongs()
   }
   componentWillUnmount() {
     window.removeEventListener('load', this.handleBodyResize)
@@ -83,9 +81,7 @@ class Albums extends React.Component<Props, State> {
 
   handleBodyResize = () => {
     const elt = document.getElementById('root')
-    if (elt) {
-      this.setState({ viewWidth: elt.getClientRects()[0].width })
-    }
+    if (elt) this.setState({ viewWidth: elt.getClientRects()[0].width })
   }
 
   render() {
@@ -151,9 +147,7 @@ class Albums extends React.Component<Props, State> {
     }
 
     return songs.length ? (
-      <div className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`}>
-        {renderedAlbums}
-      </div>
+      <div className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`}>{renderedAlbums}</div>
     ) : (
       <EmptyMusicText />
     )

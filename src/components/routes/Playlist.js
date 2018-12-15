@@ -30,15 +30,13 @@ class Playlist extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce, route } = this.props
-    if (prevProps.nonce !== nonce || prevProps.route.id !== route.id) {
-      this.getPlaylist(route.id)
-    }
+    if (prevProps.nonce !== nonce || prevProps.route.id !== route.id) this.getPlaylist(route.id)
   }
 
   getPlaylist = async (playlistId: number) => {
     this.setState({ songs: [] })
     const playlist = await db.playlists.get(playlistId)
-    if (playlist.songs.length) {
+    if (playlist.songs && playlist.songs.length) {
       playlist.songs.forEach(async id => {
         const song = await db.songs.get(id)
         if (song) {

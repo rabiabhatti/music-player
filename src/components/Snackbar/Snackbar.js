@@ -21,16 +21,12 @@ export default class Snackbar extends React.Component<Props> {
 
   componentDidMount() {
     const modalRootRef = document.getElementById('modal-snackbar-root')
-    if (modalRootRef) {
-      modalRootRef.appendChild(this.element)
-    }
+    if (modalRootRef) modalRootRef.appendChild(this.element)
   }
 
   componentDidUpdate() {
     const { type } = this.props
-    if (type === 'downloaded') {
-      this.close()
-    }
+    if (type === 'downloaded') this.close()
   }
 
   componentWillUnmount() {
@@ -41,9 +37,7 @@ export default class Snackbar extends React.Component<Props> {
   close = () => {
     this.timeoutID = setTimeout(() => {
       const { handleClose } = this.props
-      if (handleClose) {
-        handleClose()
-      }
+      if (handleClose) handleClose()
     }, 10000)
   }
   timeoutID: TimeoutID

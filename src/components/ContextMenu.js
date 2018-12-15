@@ -31,9 +31,8 @@ class ContextMenu extends React.Component<Props, State> {
 
   componentDidMount() {
     const modalRootRef = document.getElementById('modal-contextmenu-root')
-    if (modalRootRef) {
-      modalRootRef.appendChild(this.element)
-    }
+    if (modalRootRef) modalRootRef.appendChild(this.element)
+
     document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleKeyPress)
   }
@@ -59,17 +58,13 @@ class ContextMenu extends React.Component<Props, State> {
 
   handleKeyPress = (e: KeyboardEvent) => {
     const { handleClose } = this.props
-    if (e.key === 'Escape') {
-      handleClose()
-    }
+    if (e.key === 'Escape') handleClose()
   }
 
   handleBodyClick = (e: MouseEvent) => {
     const { handleClose } = this.props
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) {
-      handleClose()
-    }
+    if (!firedOnSelf) handleClose()
   }
 
   render() {

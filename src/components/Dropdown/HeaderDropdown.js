@@ -34,9 +34,7 @@ export default class HeaderDropdown extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps: Props) {
     const { handleClose } = this.props
-    if (prevProps.handleClose !== handleClose) {
-      this.close()
-    }
+    if (prevProps.handleClose !== handleClose) this.close()
   }
 
   componentWillUnmount() {
@@ -45,18 +43,14 @@ export default class HeaderDropdown extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      this.close()
-    }
+    if (e.key === 'Escape') this.close()
   }
   handleBodyClick = (e: MouseEvent) => {
     if (e.defaultPrevented) {
       return
     }
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) {
-      this.close()
-    }
+    if (!firedOnSelf) this.close()
   }
 
   close = () => {

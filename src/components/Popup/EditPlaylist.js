@@ -28,9 +28,7 @@ class EditPlaylist extends React.Component<Props, State> {
   ref: ?HTMLInputElement = null
 
   componentDidMount() {
-    if (this.ref) {
-      this.ref.focus()
-    }
+    if (this.ref) this.ref.focus()
     document.addEventListener('keydown', this.handleKeyPress)
   }
 
@@ -39,9 +37,7 @@ class EditPlaylist extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      this.savePlaylist()
-    }
+    if (e.key === 'Enter') this.savePlaylist()
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {

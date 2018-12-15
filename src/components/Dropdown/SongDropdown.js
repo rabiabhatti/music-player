@@ -48,14 +48,10 @@ class SongDropdown extends React.Component<Props, State> {
   deleteSong = (e: SyntheticEvent<HTMLButtonElement>, id: number, playlist?: Object) => {
     e.preventDefault()
     const { activeSong, playNext: playNextProp, incrementNonce: incrementNonceProp } = this.props
-    if (id === activeSong) {
-      playNextProp()
-    }
-    if (playlist) {
-      deleteSongFromPlaylist(playlist, id)
-    } else {
-      deleteSongsFromLibrary([id])
-    }
+    if (id === activeSong) playNextProp()
+    if (playlist) deleteSongFromPlaylist(playlist, id)
+    else deleteSongsFromLibrary([id])
+
     incrementNonceProp()
   }
 

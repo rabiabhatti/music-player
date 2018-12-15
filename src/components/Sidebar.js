@@ -44,9 +44,7 @@ class Sidebar extends React.Component<Props, State> {
   }
   componentDidUpdate(prevProps) {
     const { nonce } = this.props
-    if (prevProps.nonce !== nonce) {
-      this.fetchPlaylists()
-    }
+    if (prevProps.nonce !== nonce) this.fetchPlaylists()
   }
   fetchPlaylists = () => {
     db.playlists.toArray().then(playlists => {
@@ -62,6 +60,7 @@ class Sidebar extends React.Component<Props, State> {
   deletePlaylist = async (e: SyntheticEvent<HTMLButtonElement>, id: number) => {
     const { incrementNonce: incrementNonceProp } = this.props
     await db.playlists.delete(id)
+    this.navigateTo(e, 'Songs')
     incrementNonceProp()
   }
 

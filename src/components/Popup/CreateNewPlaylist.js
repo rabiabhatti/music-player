@@ -30,9 +30,7 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   ref: ?HTMLInputElement = null
 
   componentDidMount() {
-    if (this.ref) {
-      this.ref.focus()
-    }
+    if (this.ref) this.ref.focus()
     document.addEventListener('keydown', this.handleKeyPress)
   }
   componentWillUnmount() {
@@ -42,11 +40,8 @@ class CreateNewPlaylist extends React.Component<Props, State> {
   handleKeyPress = (e: KeyboardEvent) => {
     const { name } = this.state
     const { handleClose } = this.props
-    if (e.key === 'Enter' && name !== '') {
-      this.savePlaylist()
-    } else if (e.key === 'Enter' && name === '') {
-      handleClose()
-    }
+    if (e.key === 'Enter' && name !== '') this.savePlaylist()
+    else if (e.key === 'Enter' && name === '') handleClose()
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {

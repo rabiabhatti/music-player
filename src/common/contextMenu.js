@@ -17,20 +17,12 @@ export default async function contextMenu(e: MouseEvent, element: HTMLElement): 
   let elementLeft
   let elementTop
 
-  if (right) {
-    elementLeft = `${clickX}px`
-  }
+  if (right) elementLeft = `${clickX}px`
 
-  if (left) {
-    elementLeft = `${clickX - eltW}px`
-  }
+  if (left) elementLeft = `${clickX - eltW}px`
 
-  if (top) {
-    elementTop = `${clickY - 5}px`
-  }
+  if (top) elementTop = `${clickY - 5}px`
 
-  if (bottom) {
-    elementTop = `${clickY - eltH - 15}px`
-  }
+  if (bottom) elementTop = `${clickY - eltH - 15}px`
   return { elementLeft, elementTop }
 }
