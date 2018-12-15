@@ -35,9 +35,7 @@ class ContentCard extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce, selected } = this.props
-    if (prevProps.nonce !== nonce || prevProps.selected !== selected) {
-      this.fetchSongs(selected)
-    }
+    if (prevProps.nonce !== nonce || prevProps.selected !== selected) this.fetchSongs(selected)
   }
 
   fetchSongs = async (selected: ?Object) => {

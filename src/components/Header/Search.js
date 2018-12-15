@@ -65,22 +65,18 @@ class Search extends React.Component<Props, State> {
   }
 
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
+    if (e.defaultPrevented) return
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) {
-      this.setState({ results: [], emptyResult: false, value: '' })
-    }
+    if (!firedOnSelf) this.cancelSearchResult()
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
     const { value, selected } = this.state
     const songsindexes = Array.from(this.nodes.keys())
 
-    if (e.key === 'Enter' && value !== '') {
-      this.searchItem()
-    } else if (e.key === 'ArrowDown') {
+    if (e.key === 'Enter' && value !== '') this.searchItem()
+    else if (e.key === 'Escape') this.cancelSearchResult()
+    else if (e.key === 'ArrowDown') {
       if (selected === songsindexes.length - 1) {
         this.scrollIntoView(0)
         return
@@ -106,6 +102,10 @@ class Search extends React.Component<Props, State> {
     const { navigateTo: navigateToProp } = this.props
 
     navigateToProp({ name, id })
+    this.cancelSearchResult()
+  }
+
+  cancelSearchResult = () => {
     this.setState({ results: [], emptyResult: false, value: '' })
   }
 
@@ -115,18 +115,12 @@ class Search extends React.Component<Props, State> {
     if (value !== '') {
       const fuseInstance = await this.getFuseInstance()
       const results = fuseInstance.search(value)
-      if (!results.length) {
-        this.setState({ emptyResult: true })
-      } else {
-        this.setState({ results, emptyResult: false })
-      }
+      this.setState({ emptyResult: !results.length, ...(results.length ? { results } : {}) })
     }
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    if (event.target.value === '') {
-      this.setState({ results: [], emptyResult: false })
-    }
+    if (event.target.value === '') this.setState({ results: [], emptyResult: false })
     this.setState({ value: event.target.value })
   }
 

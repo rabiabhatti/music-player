@@ -21,9 +21,8 @@ export default class Popup extends React.Component<Props> {
 
   componentDidMount() {
     const modalRootRef = document.getElementById('modal-popup-root')
-    if (modalRootRef) {
-      modalRootRef.appendChild(this.element)
-    }
+    if (modalRootRef) modalRootRef.appendChild(this.element)
+
     document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleKeyPress)
   }
@@ -35,9 +34,7 @@ export default class Popup extends React.Component<Props> {
 
   handleKeyPress = (e: KeyboardEvent) => {
     const { handleClose } = this.props
-    if (e.key === 'Escape') {
-      handleClose()
-    }
+    if (e.key === 'Escape') handleClose()
   }
 
   handleBodyClick = (e: MouseEvent) => {
@@ -46,9 +43,7 @@ export default class Popup extends React.Component<Props> {
     }
     const { handleClose } = this.props
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) {
-      handleClose()
-    }
+    if (!firedOnSelf) handleClose()
   }
 
   render() {

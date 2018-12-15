@@ -45,9 +45,7 @@ class Downloader extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce } = this.props
-    if (prevProps.nonce !== nonce) {
-      this.startProcessingPendingSongs()
-    }
+    if (prevProps.nonce !== nonce) this.startProcessingPendingSongs()
   }
 
   startProcessingPendingSongs() {

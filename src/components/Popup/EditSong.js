@@ -67,9 +67,7 @@ class EditSong extends React.Component<Props, State> {
   ref: ?HTMLInputElement = null
 
   componentDidMount() {
-    if (this.ref) {
-      this.ref.focus()
-    }
+    if (this.ref) this.ref.focus()
     document.addEventListener('keydown', this.handleKeyPress)
   }
 
@@ -78,9 +76,7 @@ class EditSong extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      this.saveSongInfo()
-    }
+    if (e.key === 'Enter') this.saveSongInfo()
   }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {

@@ -48,18 +48,13 @@ class SongsTable extends React.Component<Props, State> {
 
   componentDidMount() {
     const { route } = this.props
-    if (route.name === 'Songs') {
-      this.briefSelect()
-    }
-
+    if (route.name === 'Songs') this.briefSelect()
     document.addEventListener('click', this.handleBodyClick)
   }
 
   componentDidUpdate(prevProps) {
     const { id, route } = this.props
-    if (route.name === 'Songs' && prevProps.id !== id) {
-      this.briefSelect()
-    }
+    if (route.name === 'Songs' && prevProps.id !== id) this.briefSelect()
   }
 
   componentWillUnmount() {
@@ -70,7 +65,7 @@ class SongsTable extends React.Component<Props, State> {
   briefSelect = () => {
     const { id } = this.props
 
-    const element = document.getElementById(`${id}`)
+    const element = document.getElementById(`song${id}`)
     if (element) element.scrollIntoView()
 
     this.setState({
@@ -83,15 +78,9 @@ class SongsTable extends React.Component<Props, State> {
   }
 
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
+    if (e.defaultPrevented) return
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) {
-      this.setState({
-        selected: [],
-      })
-    }
+    if (!firedOnSelf) this.setState({ selected: [] })
   }
 
   playAtIndex = (index: number) => {
@@ -197,7 +186,7 @@ class SongsTable extends React.Component<Props, State> {
           >
             {songs.map((song, index) => (
               <tr
-                id={song.id}
+                id={`song${song.id}`}
                 key={song.id}
                 onClick={e => this.selectRow(e, song.id)}
                 onDoubleClick={() => this.playAtIndex(index)}

@@ -37,9 +37,7 @@ class PlayerControlDuration extends React.Component<Props, State> {
   handleDurationSlideFlush = debounce(() => {
     const { audioElement } = this.props
     const { currentSeekTime } = this.state
-    if (currentSeekTime !== null) {
-      audioElement.currentTime = currentSeekTime
-    }
+    if (currentSeekTime !== null) audioElement.currentTime = currentSeekTime
     this.dragging = false
   }, 50)
 
@@ -71,9 +69,7 @@ class PlayerControlDuration extends React.Component<Props, State> {
     this.intervalSeek = setInterval(() => {
       seconds += 0.3
       let seekTime = fibonacci(seconds)
-      if (seekType === 'rewind') {
-        seekTime *= -1
-      }
+      if (seekType === 'rewind') seekTime *= -1
       audioElement.currentTime += seekTime
       this.setState({ currentTime: audioElement.currentTime })
     }, 300)
@@ -85,15 +81,11 @@ class PlayerControlDuration extends React.Component<Props, State> {
     if (seekType && this.intervalSeek) {
       if (parseInt(this.intervalSeek, 10) / 1000 < 0.3) {
         let seekTime = 5
-        if (seekType === 'rewind') {
-          seekTime *= -1
-        }
+        if (seekType === 'rewind') seekTime *= -1
         audioElement.currentTime += seekTime
         this.setState({ currentTime: audioElement.currentTime })
       }
-      if (this.intervalSeek) {
-        clearInterval(this.intervalSeek)
-      }
+      if (this.intervalSeek) clearInterval(this.intervalSeek)
       this.intervalSeek = null
     }
   }

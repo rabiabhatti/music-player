@@ -34,9 +34,7 @@ class AddMusic extends React.Component<Props, State> {
   }
   componentDidUpdate(prevProps) {
     const { nonce } = this.props
-    if (prevProps.nonce !== nonce) {
-      this.loadServices()
-    }
+    if (prevProps.nonce !== nonce) this.loadServices()
   }
 
   loadServices = () => {

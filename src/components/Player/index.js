@@ -44,9 +44,7 @@ class Player extends React.Component<Props, State> {
 
   componentDidMount() {
     const { activeSong, songs } = this.props
-    if (activeSong) {
-      this.loadSong(activeSong, songs.songState).catch(console.error)
-    }
+    if (activeSong) this.loadSong(activeSong, songs.songState).catch(console.error)
     document.addEventListener('keypress', this.handleBodyKeypress)
   }
 
@@ -55,9 +53,7 @@ class Player extends React.Component<Props, State> {
 
     let promise = Promise.resolve()
     if (currentActiveSong !== activeSong) {
-      if (currentActiveSong) {
-        this.internalPause()
-      }
+      if (currentActiveSong) this.internalPause()
       if (activeSong) {
         promise = this.loadSong(activeSong, songs.songState)
       } else {
@@ -94,9 +90,7 @@ class Player extends React.Component<Props, State> {
       this.audioElement.play()
     } else {
       const isLastSong = songIndex === playlist.length - 1
-      if (!isLastSong || songsRepeat === 'all') {
-        dispatch(playNext())
-      }
+      if (!isLastSong || songsRepeat === 'all') dispatch(playNext())
     }
   }
 
@@ -152,9 +146,7 @@ class Player extends React.Component<Props, State> {
     const responseBlob = await (await service.getFile(authorization, activeSong.sourceId)).blob()
     this.audioElement.src = URL.createObjectURL(responseBlob)
 
-    if (songState === 'playing') {
-      this.internalPlay()
-    }
+    if (songState === 'playing') this.internalPlay()
   }
 
   audioElement: HTMLAudioElement
@@ -167,18 +159,12 @@ class Player extends React.Component<Props, State> {
     let coverImg
     let songArtist = activeSong ? 'Unknown' : ''
     if (activeSong) {
-      if (activeSong.meta && activeSong.meta.name) {
-        songName = activeSong.meta.name
-      }
-      if (activeSong.meta && activeSong.meta.artists_original) {
-        songArtist = activeSong.meta.artists_original
-      }
+      if (activeSong.meta && activeSong.meta.name) songName = activeSong.meta.name
+      if (activeSong.meta && activeSong.meta.artists_original) songArtist = activeSong.meta.artists_original
 
       if (activeSong.artwork && activeSong.artwork.album && activeSong.artwork.album.uri !== null) {
         coverImg = activeSong.artwork.album.uri
-      } else {
-        coverImg = cover
-      }
+      } else coverImg = cover
     }
 
     return (

@@ -34,20 +34,12 @@ export default class Dropdown extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      this.setState({
-        opened: false,
-      })
-    }
+    if (e.key === 'Escape') this.setState({ opened: false })
   }
   handleBodyClick = (e: MouseEvent) => {
     const { opened } = this.state
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (opened || firedOnSelf) {
-      this.setState({
-        opened: !opened,
-      })
-    }
+    if (opened || firedOnSelf) this.setState({ opened: !opened })
   }
 
   render() {

@@ -27,9 +27,7 @@ class RecentlyPlayed extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce, recentlyPlayed } = this.props
-    if (prevProps.nonce !== nonce || !eq(recentlyPlayed, prevProps.recentlyPlayed)) {
-      this.fetchSongs(recentlyPlayed)
-    }
+    if (prevProps.nonce !== nonce || !eq(recentlyPlayed, prevProps.recentlyPlayed)) this.fetchSongs(recentlyPlayed)
   }
 
   fetchSongs(ids: Array<number>) {
