@@ -27,7 +27,16 @@ class RecentlyPlayed extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce, recentlyPlayed } = this.props
-    if (prevProps.nonce !== nonce || !eq(recentlyPlayed, prevProps.recentlyPlayed)) this.fetchSongs(recentlyPlayed)
+    if (prevProps.nonce !== nonce) this.fetchSongs(recentlyPlayed)
+    if (!eq(recentlyPlayed, prevProps.recentlyPlayed)) {
+      this.timeoutID = setTimeout(() => {
+        this.fetchSongs(recentlyPlayed)
+      }, 10000)
+    }
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timeoutID)
   }
 
   fetchSongs(ids: Array<number>) {
@@ -41,6 +50,9 @@ class RecentlyPlayed extends React.Component<Props, State> {
       }
     })
   }
+
+  timeoutID: TimeoutID
+
   render() {
     const { songs } = this.state
 
