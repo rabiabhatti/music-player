@@ -100,8 +100,15 @@ class EditSong extends React.Component<Props, State> {
       'meta.name': fields.name !== '' ? fields.name.trim() : song.meta.name,
       'meta.album': fields.album !== '' ? fields.album.trim() : song.meta.album,
       'meta.genre': fields.genre !== '' ? fields.genre.trim().split(',') : song.meta.genre,
+      'meta.album_artists':
+        fields.artists !== '' ? normalizeArtist(fields.artists.trim().split(',')) : song.meta.album_artists,
       'meta.artists_original':
-        fields.artists !== '' ? normalizeArtist(fields.artists.trim().split(',')) : song.meta.artists_original,
+        fields.artists !== ''
+          ? fields.artists
+              .trim()
+              .split(',')
+              .join(' & ')
+          : song.meta.artists_original,
     })
     incrementNonceProp()
     handleClose()
