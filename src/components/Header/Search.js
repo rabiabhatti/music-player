@@ -67,7 +67,7 @@ class Search extends React.Component<Props, State> {
   handleBodyClick = (e: MouseEvent) => {
     if (e.defaultPrevented) return
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) this.cancelSearchResult()
+    if (!firedOnSelf) this.clearSearchResult()
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
@@ -75,7 +75,7 @@ class Search extends React.Component<Props, State> {
     const songsindexes = Array.from(this.nodes.keys())
 
     if (e.key === 'Enter' && value !== '') this.searchItem()
-    else if (e.key === 'Escape') this.cancelSearchResult()
+    else if (e.key === 'Escape') this.clearSearchResult()
     else if (e.key === 'ArrowDown') {
       if (selected === songsindexes.length - 1) {
         this.scrollIntoView(0)
@@ -102,10 +102,10 @@ class Search extends React.Component<Props, State> {
     const { navigateTo: navigateToProp } = this.props
 
     navigateToProp({ name, id })
-    this.cancelSearchResult()
+    this.clearSearchResult()
   }
 
-  cancelSearchResult = () => {
+  clearSearchResult = () => {
     this.setState({ results: [], emptyResult: false, value: '' })
   }
 
