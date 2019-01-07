@@ -1,28 +1,26 @@
 // @flow
 
 export default async function contextMenu(e: MouseEvent, element: HTMLElement): Promise<Object> {
-  const clickX = e.clientX
-  const clickY = e.clientY
-  const screenW = window.innerWidth
-  const screenH = window.innerHeight
+  const mousePosition = {}
+  const menuPostion = {}
+  const menuDimension = {}
 
-  const eltW = element.offsetWidth
-  const eltH = element.offsetHeight
+  menuDimension.x = element.offsetWidth
+  menuDimension.y = element.offsetHeight
+  mousePosition.x = e.pageX
+  mousePosition.y = e.pageY
 
-  const right = screenW - clickX > eltW
-  const left = !right
-  const top = screenH - clickY > eltH
-  const bottom = !top
+  if (mousePosition.x + menuDimension.x > window.innerWidth) {
+    menuPostion.x = mousePosition.x - menuDimension.x
+  } else {
+    menuPostion.x = mousePosition.x
+  }
 
-  let elementLeft
-  let elementTop
+  if (mousePosition.y + menuDimension.y > window.innerHeight) {
+    menuPostion.y = mousePosition.y - menuDimension.y
+  } else {
+    menuPostion.y = mousePosition.y
+  }
 
-  if (right) elementLeft = `${clickX}px`
-
-  if (left) elementLeft = `${clickX - eltW}px`
-
-  if (top) elementTop = `${clickY - 5}px`
-
-  if (bottom) elementTop = `${clickY - eltH - 15}px`
-  return { elementLeft, elementTop }
+  return { menuPostion }
 }

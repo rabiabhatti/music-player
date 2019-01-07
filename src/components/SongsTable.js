@@ -103,9 +103,9 @@ class SongsTable extends React.Component<Props, State> {
     e.persist()
     const elt = document.getElementById('modal-contextmenu-root')
     if (elt) {
-      const { elementLeft, elementTop } = await contextMenu(e, elt)
-      this.left = elementLeft
-      this.top = elementTop
+      const { menuPostion } = await contextMenu(e, elt)
+      this.left = `${menuPostion.x}px`
+      this.top = `${menuPostion.y}px`
       this.setState({
         focusedSong: song,
         showContextMenu: true,
