@@ -16,6 +16,7 @@ import EmptyMusicText from '../EmptyMusicText'
 
 type Props = {|
   nonce: number,
+  showContextMenu: boolean,
 |}
 type State = {|
   songs: Array<File>,
@@ -46,11 +47,13 @@ class Genres extends React.Component<Props, State> {
   }
 
   render() {
+    const { showContextMenu } = this.props
     const { songs, selected } = this.state
+
     const genres = getGenresFromSongs(songs)
 
     return songs.length ? (
-      <div className={`${flex.row} bound`}>
+      <div className={`${flex.row} bound`} style={{ overflow: `${showContextMenu ? 'hidden' : 'scroll'}` }}>
         <div className={`${artists.artists_bar}`}>
           <button
             type="button"
@@ -87,6 +90,6 @@ class Genres extends React.Component<Props, State> {
 }
 
 export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
+  ({ songs }) => ({ nonce: songs.nonce, showContextMenu: songs.showContextMenu }),
   null,
 )(Genres)

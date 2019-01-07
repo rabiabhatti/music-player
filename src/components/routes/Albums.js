@@ -19,6 +19,7 @@ import EmptyMusicText from '../EmptyMusicText'
 
 type Props = {|
   nonce: number,
+  showContextMenu: boolean,
   setSongPlaylist: setSongPlaylist,
 |}
 type State = {|
@@ -86,6 +87,7 @@ class Albums extends React.Component<Props, State> {
 
   render() {
     let i = 0
+    const { showContextMenu } = this.props
     const { songs, selected, viewWidth } = this.state
     const albums = getAlbumsFromSongs(songs)
 
@@ -147,7 +149,12 @@ class Albums extends React.Component<Props, State> {
     }
 
     return songs.length ? (
-      <div className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`}>{renderedAlbums}</div>
+      <div
+        className={`${albumsDesign.albums} ${flex.row} ${flex.wrap} bound`}
+        style={{ overflow: `${showContextMenu ? 'hidden' : 'scroll'}` }}
+      >
+        {renderedAlbums}
+      </div>
     ) : (
       <EmptyMusicText />
     )
@@ -155,6 +162,6 @@ class Albums extends React.Component<Props, State> {
 }
 
 export default connect(
-  ({ songs }) => ({ nonce: songs.nonce }),
+  ({ songs }) => ({ nonce: songs.nonce, showContextMenu: songs.showContextMenu }),
   { setSongPlaylist },
 )(Albums)

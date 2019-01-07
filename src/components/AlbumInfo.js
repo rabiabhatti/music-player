@@ -6,7 +6,7 @@ import connect from '~/common/connect'
 import contextMenu from '~/common/contextMenu'
 import getEventPath from '~/common/getEventPath'
 import { humanizeDuration } from '~/common/songs'
-import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
+import { setSongPlaylist, songPlay, songPause, showSongContextMenu } from '~/redux/songs'
 
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'
@@ -23,12 +23,12 @@ type Props = {|
   songState: string,
   dispatch: Function,
   songs: Array<Object>,
+  showContextMenu: boolean,
   activeSong: number | null,
 |}
 type State = {|
   focusedSong: ?Object,
   selected: Array<number>,
-  showContextMenu: boolean,
 |}
 
 class AlbumInfo extends React.Component<Props, State> {
@@ -37,7 +37,6 @@ class AlbumInfo extends React.Component<Props, State> {
   state = {
     selected: [],
     focusedSong: null,
-    showContextMenu: false,
   }
 
   componentDidMount() {
@@ -77,15 +76,17 @@ class AlbumInfo extends React.Component<Props, State> {
   contextMenu = async (song, e) => {
     e.preventDefault()
     e.persist()
+    const { dispatch } = this.props
     const elt = document.getElementById('modal-contextmenu-root')
     if (elt) {
-      const { elementLeft, elementTop } = await contextMenu(e, elt)
-      this.left = elementLeft
-      this.top = elementTop
+      dispatch(showSongContextMenu(true))
+      const { menuPostion } = await contextMenu(e, elt)
+
+      this.left = `${menuPostion.x}px`
+      this.top = `${menuPostion.y}px`
 
       this.setState({
         focusedSong: song,
-        showContextMenu: true,
       })
     }
   }
@@ -119,12 +120,18 @@ class AlbumInfo extends React.Component<Props, State> {
     }
   }
 
+  handleContextMenuClose = () => {
+    const { dispatch } = this.props
+    dispatch(showSongContextMenu(false))
+    this.setState({ focusedSong: null, selected: [] })
+  }
+
   top: string
   left: string
 
   render() {
-    const { songs, name, activeSong, songState } = this.props
-    const { selected, showContextMenu, focusedSong } = this.state
+    const { songs, name, activeSong, songState, showContextMenu } = this.props
+    const { selected, focusedSong } = this.state
 
     const songsIds = songs.map(s => s.id)
     const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
@@ -136,8 +143,8 @@ class AlbumInfo extends React.Component<Props, State> {
             <ContextMenu
               top={this.top}
               left={this.left}
+              handleClose={this.handleContextMenuClose}
               songsIds={selected.length ? selected : [focusedSong.id]}
-              handleClose={() => this.setState({ showContextMenu: false, focusedSong: null, selected: [] })}
             />
           )}
         <div className={`${flex.column} ${albumInfo.album_title}`}>
@@ -242,4 +249,5 @@ class AlbumInfo extends React.Component<Props, State> {
 export default connect(({ songs }) => ({
   activeSong: songs.playlist[songs.songIndex] || null,
   songState: songs.songState,
+  showContextMenu: songs.showContextMenu,
 }))(AlbumInfo)
