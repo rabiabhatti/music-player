@@ -34,12 +34,20 @@ class ContextMenu extends React.Component<Props, State> {
     if (modalRootRef) modalRootRef.appendChild(this.element)
 
     document.addEventListener('click', this.handleBodyClick)
+    document.addEventListener('contextmenu', this.handleRightClick)
     document.addEventListener('keydown', this.handleKeyPress)
   }
+
   componentWillUnmount() {
     this.element.remove()
     document.removeEventListener('click', this.handleBodyClick)
+    document.removeEventListener('contextmenu', this.handleRightClick)
     document.removeEventListener('keydown', this.handleKeyPress)
+  }
+
+  handleRightClick = () => {
+    const { handleClose } = this.props
+    handleClose()
   }
 
   playAtIndex = (index: number) => {
@@ -64,7 +72,9 @@ class ContextMenu extends React.Component<Props, State> {
   handleBodyClick = (e: MouseEvent) => {
     const { handleClose } = this.props
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) handleClose()
+    if (!firedOnSelf) {
+      handleClose()
+    }
   }
 
   render() {
