@@ -39,7 +39,7 @@ class AddToPlaylist extends React.Component<Props, State> {
 
   fetchPlaylists = async () => {
     const playlists = await db.playlists.toArray()
-    this.setState({ playlists })
+    if (playlists.length) this.setState({ playlists })
   }
 
   render() {
