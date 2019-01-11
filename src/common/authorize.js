@@ -2,7 +2,11 @@
 
 import services from '~/services'
 import type { Service } from '~/services/types'
-import { unauthorizeService as unauthorizeServiceType, type UserAuthorization, authorizeService as authorizeServiceType } from '~/redux/user'
+import {
+  unauthorizeService as unauthorizeServiceType,
+  type UserAuthorization,
+  authorizeService as authorizeServiceType,
+} from '~/redux/user'
 
 export function authorize(service: Service, authorizeService: authorizeServiceType) {
   return service

@@ -77,7 +77,10 @@ async function parse(song: File, response: Object): Promise<{ duration: number, 
     },
     artwork: {
       album: {
-        uri: metadata.common && metadata.common.picture ? `data:image/jpeg;base64,${Buffer.from(metadata.common.picture[0].data).toString('base64')}` : null,
+        uri:
+          metadata.common && metadata.common.picture
+            ? `data:image/jpeg;base64,${Buffer.from(metadata.common.picture[0].data).toString('base64')}`
+            : null,
       },
     },
   }
