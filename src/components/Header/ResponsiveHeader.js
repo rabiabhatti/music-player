@@ -56,10 +56,15 @@ export default class ResponsiveHeader extends React.Component<Props, State> {
 
     return (
       <div className={`${header.responsive_header} ${flex.row} ${flex.space_between}`}>
-        <button type="button" className={`${button.btn}`} onClick={(e) => this.handleClick(e)} ref={element => {
-          this.btnref = element
-        }}>
-          <i title="Menu" className='material-icons'>
+        <button
+          type="button"
+          className={`${button.btn}`}
+          onClick={e => this.handleClick(e)}
+          ref={element => {
+            this.btnref = element
+          }}
+        >
+          <i title="Menu" className="material-icons">
             menu
           </i>
         </button>
@@ -67,9 +72,12 @@ export default class ResponsiveHeader extends React.Component<Props, State> {
           <Search />
           <Accounts />
         </div>
-        <div className={`${showSidebarState ? header.show_sidebar : ''} ${header.sidebar_trigger}`} ref={element => {
-          this.ref = element
-        }}>
+        <div
+          className={`${showSidebarState ? header.show_sidebar : ''} ${header.sidebar_trigger}`}
+          ref={element => {
+            this.ref = element
+          }}
+        >
           <Sidebar />
         </div>
       </div>
