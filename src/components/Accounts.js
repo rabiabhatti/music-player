@@ -6,17 +6,20 @@ import { compose } from 'recompose'
 import services from '~/services'
 import connect from '~/common/connect'
 import { authorize, unauthorize } from '~/common/authorize'
-import { unauthorizeService, type UserAuthorization } from '~/redux/user'
+import { unauthorizeService, authorizeService, type UserAuthorization } from '~/redux/user'
 
 import flex from '~/less/flex.less'
 import button from '~/less/button.less'
 import authServices from '~/less/account.less'
 import HeaderDropdown from '~/components/Dropdown/HeaderDropdown'
 
+import Separator from './Separator'
+
 type Props = {|
   nonce: number,
   authorizations: Array<UserAuthorization>,
   unauthorizeService: unauthorizeService,
+  authorizeService: authorizeService,
 |}
 type State = {|
   authorizationServices: Array<string>,
@@ -47,7 +50,7 @@ class Accounts extends React.Component<Props, State> {
     })
   }
 
-  renderAuthBtn(): ?Array<?React.Element<button>> {
+  renderUnauthenticateServices(): ?Array<?React.Element<button>> {
     const { authorizations, unauthorizeService: unauthorizeServiceProp } = this.props
     if (!authorizations.length) {
       console.warn('No authorizations found')
@@ -77,35 +80,32 @@ class Accounts extends React.Component<Props, State> {
     })
   }
 
-  renderUnuthBtn(): ?Array<?React.Element<button>> {
-    const { authorizations, unauthorizeService: unauthorizeServiceProp } = this.props
+  renderAuthenticateServices(): ?Array<?React.Element<button>> {
+    const { authorizeService: authorizeServiceProp } = this.props
 
-    return services.map(service => {
-      const found = authorizations.find(item => item.service !== service.name)
-      if (found) {
-        return (
-          <div className={`${flex.space_between} ${flex.align_baseline}`} key={`unauthorize-${service.name}`}>
-            <span>{service.name}</span>
-            <button
-              type="button"
-              onClick={() => authorize(service, unauthorizeServiceProp)}
-              className={`${button.btn} ${button.btn_blue_border}`}
-            >
-              Signin
-            </button>
-          </div>
-        )
-      }
-      return null
-    })
+    return services.map(service => (
+      <div className={`${flex.space_between} ${flex.align_baseline}`} key={`service-${service.name}`}>
+        <span>{service.name}</span>
+        <button
+          type="button"
+          onClick={() => authorize(service, authorizeServiceProp)}
+          className={`${button.btn} ${button.btn_blue_border}`}
+        >
+          Signin
+        </button>
+      </div>
+    ))
   }
 
   render() {
+    const { authorizations } = this.props
+
     return (
       <HeaderDropdown buttonTitle="Account" buttonIcon="account_circle" className={`${authServices.services_content}`}>
         <h3>Accounts</h3>
-        {this.renderAuthBtn()}
-        {this.renderUnuthBtn()}
+        {this.renderUnauthenticateServices()}
+        {authorizations.length ? <Separator /> : null}
+        {this.renderAuthenticateServices()}
       </HeaderDropdown>
     )
   }
@@ -114,6 +114,6 @@ class Accounts extends React.Component<Props, State> {
 export default compose(
   connect(
     state => ({ authorizations: state.user.authorizations.toArray(), nonce: state.songs.nonce }),
-    { unauthorizeService },
+    { unauthorizeService, authorizeService },
   ),
 )(Accounts)
