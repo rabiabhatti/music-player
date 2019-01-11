@@ -10,9 +10,9 @@ import { incrementNonce, playLater, setSongPlaylist } from '~/redux/songs'
 
 import AddToPlaylist from './Dropdown/AddToPlaylist'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import dropdown from '~/less/dropdown.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import dropdown from '~/styles/dropdown.less'
 
 type Props = {|
   top: string,

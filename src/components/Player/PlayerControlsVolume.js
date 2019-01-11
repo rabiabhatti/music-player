@@ -6,10 +6,10 @@ import connect from '~/common/connect'
 
 import { setSongMute, setSongVolume } from '~/redux/songs'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import slider from '~/less/slider.less'
-import player from '~/less/player.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import slider from '~/styles/slider.less'
+import player from '~/styles/player.less'
 
 type State = {|
   currentSeekVolume: number | null,

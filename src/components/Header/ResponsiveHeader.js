@@ -4,9 +4,9 @@ import React from 'react'
 
 import getEventPath from '~/common/getEventPath'
 
-import flex from '~/less/flex.less'
-import header from '~/less/header.less'
-import button from '~/less/button.less'
+import flex from '~/styles/flex.less'
+import header from '~/styles/header.less'
+import button from '~/styles/button.less'
 
 import Accounts from '~/components/Accounts'
 import Sidebar from '~/components/Sidebar'

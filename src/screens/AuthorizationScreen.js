@@ -7,9 +7,9 @@ import connect from '~/common/connect'
 import { authorize } from '~/common/authorize'
 import { authorizeService } from '~/redux/user'
 
-import flex from '~/less/flex.less'
-import login from '~/less/login.less'
-import button from '~/less/button.less'
+import flex from '~/styles/flex.less'
+import login from '~/styles/login.less'
+import button from '~/styles/button.less'
 
 type Props = {|
   authorizeService: typeof authorizeService,

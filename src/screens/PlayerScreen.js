@@ -5,7 +5,7 @@ import connect from '~/common/connect'
 
 import type { RouteName, RouterRoute } from '~/redux/router'
 
-import '~/less/general.less'
+import '~/styles/general.less'
 
 import Player from '~/components/Player'
 import Header from '~/components/Header'

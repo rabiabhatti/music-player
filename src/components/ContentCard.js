@@ -9,8 +9,8 @@ import db from '~/db'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'
 import ContentCardDropdown from '~/components/Dropdown/ContentCardDropdown'
 
-import flex from '~/less/flex.less'
-import contentCard from '~/less/content-card.less'
+import flex from '~/styles/flex.less'
+import contentCard from '~/styles/content-card.less'
 
 import AlbumInfo from './AlbumInfo'
 

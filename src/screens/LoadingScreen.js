@@ -2,8 +2,8 @@
 
 import React from 'react'
 
-import flex from '~/less/flex.less'
-import loading from '~/less/loading.less'
+import flex from '~/styles/flex.less'
+import loading from '~/styles/loading.less'
 
 export default () => (
   <div className={`${loading.loading} ${flex.align_center}`}>

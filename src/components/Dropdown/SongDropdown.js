@@ -8,8 +8,8 @@ import { incrementNonce, playNext, playLater, setSongPlaylist } from '~/redux/so
 
 import EditSong from '~/components/Popup/EditSong'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
 
 import Dropdown from './Dropdown'
 import AddToPlaylist from './AddToPlaylist'

@@ -8,9 +8,9 @@ import getEventPath from '~/common/getEventPath'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, songPlay, songPause, showSongContextMenu } from '~/redux/songs'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import albumInfo from '~/less/album-info.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import albumInfo from '~/styles/album-info.less'
 
 import cover from '~/static/img/alter-img.png'
 
@@ -138,15 +138,14 @@ class AlbumInfo extends React.Component<Props, State> {
 
     return (
       <div className={`${albumInfo.album_info} ${flex.wrap} ${flex.space_between}`}>
-        {showContextMenu &&
-          focusedSong && (
-            <ContextMenu
-              top={this.top}
-              left={this.left}
-              handleClose={this.handleContextMenuClose}
-              songsIds={selected.length ? selected : [focusedSong.id]}
-            />
-          )}
+        {showContextMenu && focusedSong && (
+          <ContextMenu
+            top={this.top}
+            left={this.left}
+            handleClose={this.handleContextMenuClose}
+            songsIds={selected.length ? selected : [focusedSong.id]}
+          />
+        )}
         <div className={`${flex.column} ${albumInfo.album_title}`}>
           <div className={`${albumInfo.album_cover}`}>
             <div className={`${albumInfo.filter}`} />

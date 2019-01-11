@@ -7,8 +7,8 @@ import connect from '~/common/connect'
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 
-import input from '~/less/input.less'
-import button from '~/less/button.less'
+import input from '~/styles/input.less'
+import button from '~/styles/button.less'
 
 import Popup from './Popup'
 
