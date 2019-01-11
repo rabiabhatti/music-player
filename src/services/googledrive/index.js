@@ -2,6 +2,7 @@
 
 import flatten from 'lodash/flatten'
 
+import thumbnail from '~/static/img/google_drive_icon.png'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { Service } from '../types'
@@ -62,6 +63,7 @@ async function resolveFileIds(authorization: UserAuthorization, doc: GoogleDocTy
 const SERVICE_NAME = 'GoogleDrive'
 const googleDriveService: Service = {
   name: SERVICE_NAME,
+  thumbnail,
   async load() {
     await Promise.all([
       new Promise(function(resolve) {

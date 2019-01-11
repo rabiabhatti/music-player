@@ -5,6 +5,7 @@ import type { ServiceName } from '~/types'
 
 export interface Service {
   name: ServiceName;
+  thumbnail: string;
   load(): Promise<void>;
   authorize(): Promise<UserAuthorization>;
   unauthorize(authorization: UserAuthorization): Promise<void> | void;
