@@ -140,12 +140,6 @@ class Search extends React.Component<Props, State> {
             id="search"
             type="text"
             value={value}
-            onFocus={e => {
-              e.target.placeholder = ''
-            }}
-            onBlur={e => {
-              e.target.placeholder = 'Type to search...'
-            }}
             onInput={this.handleChange}
             placeholder="Type to search..."
             className={`${input.input} ${input.input_search} ${
@@ -158,30 +152,28 @@ class Search extends React.Component<Props, State> {
             </i>
           </button>
         </div>
-        {emptyResult &&
-          value !== '' && (
-            <div className={`${header.serach_result_container}`}>
-              <p className={`${header.no_search_result}`}>No results found...</p>
-            </div>
-          )}
-        {results.length !== 0 &&
-          value !== '' && (
-            <div className={`${header.serach_result_container}`}>
-              {results.map((song, i) => (
-                <button
-                  type="button"
-                  key={song.id}
-                  id={`searchResult${i}`}
-                  ref={c => this.nodes.set(i, c)}
-                  onClick={e => this.navigateTo(e, 'Songs', song.id)}
-                  className={`${button.btn} ${header.search_btn} ${selected === i ? `${header.selected}` : ''}`}
-                >
-                  {`${song.meta.name || song.filename}`}
-                  <span className={`${header.artist}`}> {`${song.meta.artists_original || 'Unknown'}`}</span>
-                </button>
-              ))}
-            </div>
-          )}
+        {emptyResult && value !== '' && (
+          <div className={`${header.serach_result_container}`}>
+            <p className={`${header.no_search_result}`}>No results found...</p>
+          </div>
+        )}
+        {results.length !== 0 && value !== '' && (
+          <div className={`${header.serach_result_container}`}>
+            {results.map((song, i) => (
+              <button
+                type="button"
+                key={song.id}
+                id={`searchResult${i}`}
+                ref={c => this.nodes.set(i, c)}
+                onClick={e => this.navigateTo(e, 'Songs', song.id)}
+                className={`${button.btn} ${header.search_btn} ${selected === i ? `${header.selected}` : ''}`}
+              >
+                {`${song.meta.name || song.filename}`}
+                <span className={`${header.artist}`}> {`${song.meta.artists_original || 'Unknown'}`}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     )
   }
