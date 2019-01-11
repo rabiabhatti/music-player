@@ -8,12 +8,10 @@ import connect from '~/common/connect'
 import { authorize, unauthorize } from '~/common/authorize'
 import { unauthorizeService, authorizeService, type UserAuthorization } from '~/redux/user'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import authServices from '~/less/account.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import authServices from '~/styles/account.less'
 import HeaderDropdown from '~/components/Dropdown/HeaderDropdown'
-
-import Separator from './Separator'
 
 type Props = {|
   nonce: number,
@@ -98,13 +96,10 @@ class Accounts extends React.Component<Props, State> {
   }
 
   render() {
-    const { authorizations } = this.props
-
     return (
       <HeaderDropdown buttonTitle="Account" buttonIcon="account_circle" className={`${authServices.services_content}`}>
         <h3>Accounts</h3>
         {this.renderUnauthenticateServices()}
-        {authorizations.length ? <Separator /> : null}
         {this.renderAuthenticateServices()}
       </HeaderDropdown>
     )

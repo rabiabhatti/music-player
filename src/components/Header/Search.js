@@ -8,10 +8,10 @@ import connect from '~/common/connect'
 import { navigateTo } from '~/redux/router'
 import getEventPath from '~/common/getEventPath'
 
-import flex from '~/less/flex.less'
-import input from '~/less/input.less'
-import header from '~/less/header.less'
-import button from '~/less/button.less'
+import flex from '~/styles/flex.less'
+import input from '~/styles/input.less'
+import header from '~/styles/header.less'
+import button from '~/styles/button.less'
 
 type Props = {|
   navigateTo: navigateTo,

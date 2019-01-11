@@ -10,9 +10,9 @@ import type { UserAuthorization } from '~/redux/user'
 import services from '~/services'
 import connect from '~/common/connect'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import addMusic from '~/less/addMusic.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import addMusic from '~/styles/addMusic.less'
 import googleDriveIcon from '~/static/img/google_drive_icon.png'
 import HeaderDropdown from '~/components/Dropdown/HeaderDropdown'
 

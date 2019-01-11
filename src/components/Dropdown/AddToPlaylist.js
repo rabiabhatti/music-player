@@ -9,9 +9,9 @@ import db from '~/db'
 import { addSongsToPlaylist } from '~/common/songs'
 import CreateNewPlaylist from '~/components/Popup/CreateNewPlaylist'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import dropdown from '~/less/dropdown.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import dropdown from '~/styles/dropdown.less'
 
 type Props = {|
   nonce: number,

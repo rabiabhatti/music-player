@@ -7,9 +7,9 @@ import db from '~/db'
 import type { File } from '~/types'
 import { getGenresFromSongs } from '~/common/songs'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import artists from '~/less/artists.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import artists from '~/styles/artists.less'
 
 import ContentCard from '../ContentCard'
 import EmptyMusicText from '../EmptyMusicText'

@@ -3,7 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import snackbar from '~/less/snackbar.less'
+import snackbar from '~/styles/snackbar.less'
 
 type Props = {|
   type: string,

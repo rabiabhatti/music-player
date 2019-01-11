@@ -9,9 +9,9 @@ import { type RouterRoute } from '~/redux/router'
 import { humanizeDuration } from '~/common/songs'
 import { setSongPlaylist, songPlay, songPause } from '~/redux/songs'
 
-import flex from '~/less/flex.less'
-import table from '~/less/table.less'
-import button from '~/less/button.less'
+import flex from '~/styles/flex.less'
+import table from '~/styles/table.less'
+import button from '~/styles/button.less'
 import ContextMenu from '~/components/ContextMenu'
 import SongDropdown from '~/components/Dropdown/SongDropdown'
 
@@ -151,15 +151,14 @@ class SongsTable extends React.Component<Props, State> {
 
     return (
       <div className={`${table.section_songs} bound`}>
-        {showContextMenu &&
-          focusedSong && (
-            <ContextMenu
-              top={this.top}
-              left={this.left}
-              songsIds={selected.length ? selected : [focusedSong.id]}
-              handleClose={() => this.setState({ showContextMenu: false, focusedSong: null, selected: [] })}
-            />
-          )}
+        {showContextMenu && focusedSong && (
+          <ContextMenu
+            top={this.top}
+            left={this.left}
+            songsIds={selected.length ? selected : [focusedSong.id]}
+            handleClose={() => this.setState({ showContextMenu: false, focusedSong: null, selected: [] })}
+          />
+        )}
         <div className={`${flex.align_center} ${flex.space_between}`}>
           <h2>{title}</h2>
           <button type="button" className={`${button.btn} ${button.btn_playall}`} onClick={() => this.playAtIndex(0)}>

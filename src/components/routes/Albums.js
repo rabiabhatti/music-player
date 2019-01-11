@@ -7,10 +7,10 @@ import db from '~/db'
 import { setSongPlaylist } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import albumsDesign from '~/less/albums.less'
-import albumInfo from '~/less/album-info.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import albumsDesign from '~/styles/albums.less'
+import albumInfo from '~/styles/album-info.less'
 
 import cover from '~/static/img/alter-img.png'
 

@@ -5,9 +5,9 @@ import ReactDOM from 'react-dom'
 
 import getEventPath from '~/common/getEventPath'
 
-import flex from '~/less/flex.less'
-import popup from '~/less/popup.less'
-import button from '~/less/button.less'
+import flex from '~/styles/flex.less'
+import popup from '~/styles/popup.less'
+import button from '~/styles/button.less'
 
 type Props = {|
   title: string,
