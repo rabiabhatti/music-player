@@ -13,17 +13,12 @@ type Props = {|
   buttonIcon: string,
   buttonTitle: string,
   children: React$Node,
-  handleClose?: boolean,
 |}
 type State = {|
   opened: boolean,
 |}
 
 export default class HeaderDropdown extends React.Component<Props, State> {
-  static defaultProps = {
-    handleClose: false,
-  }
-
   state = { opened: false }
   ref: ?HTMLDivElement = null
 
@@ -31,32 +26,18 @@ export default class HeaderDropdown extends React.Component<Props, State> {
     document.addEventListener('click', this.handleBodyClick)
     document.addEventListener('keydown', this.handleKeyPress)
   }
-
-  componentDidUpdate(prevProps: Props) {
-    const { handleClose } = this.props
-    if (prevProps.handleClose !== handleClose) this.close()
-  }
-
   componentWillUnmount() {
     document.removeEventListener('click', this.handleBodyClick)
     document.removeEventListener('keydown', this.handleKeyPress)
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') this.close()
+    if (e.key === 'Escape') this.setState({ opened: false })
   }
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
+    const { opened } = this.state
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) this.close()
-  }
-
-  close = () => {
-    this.setState({
-      opened: false,
-    })
+    if (opened || firedOnSelf) this.setState({ opened: !opened })
   }
 
   render() {
@@ -69,11 +50,7 @@ export default class HeaderDropdown extends React.Component<Props, State> {
           this.ref = element
         }}
       >
-        <button
-          type="button"
-          className={`${button.btn} ${button.btn_header}`}
-          onClick={() => this.setState({ opened: true })}
-        >
+        <button type="button" className={`${button.btn} ${button.btn_header}`}>
           <i title={buttonTitle} className="material-icons">
             {buttonIcon}
           </i>
