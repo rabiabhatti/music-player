@@ -4,7 +4,7 @@ import React from 'react'
 import connect from '~/common/connect'
 import { setSongRepeat, type RepeatMode } from '~/redux/songs'
 
-import button from '~/less/button.less'
+import button from '~/styles/button.less'
 
 const BUTTONS_CONFIG = {
   none: {

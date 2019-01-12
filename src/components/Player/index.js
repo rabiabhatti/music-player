@@ -8,21 +8,20 @@ import services from '~/services'
 import type { File } from '~/types'
 import type { UserAuthorization } from '~/redux/user'
 import type { SongsStateFields } from '~/redux/songs'
-import { deleteSongsFromLibrary } from '~/common/songs'
 import { playNext, playPrevious, songPlay, songPause, incrementNonce, addToRecentlyPlayed } from '~/redux/songs'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import player from '~/less/player.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import player from '~/styles/player.less'
 import cover from '~/static/img/alter-img.png'
 import PlayerControlsRepeat from './PlayerControlsRepeat'
 import PlayerControlsVolume from './PlayerControlsVolume'
 import PlayerControlDuration from './PlayerControlsDuration'
 
 type Props = {|
-  songs: SongsStateFields,
   dispatch: Function,
   activeSong: number,
+  songs: SongsStateFields,
   authorizations: Array<UserAuthorization>,
 |}
 type State = {|
@@ -45,9 +44,7 @@ class Player extends React.Component<Props, State> {
 
   componentDidMount() {
     const { activeSong, songs } = this.props
-    if (activeSong) {
-      this.loadSong(activeSong, songs.songState).catch(console.error)
-    }
+    if (activeSong) this.loadSong(activeSong, songs.songState).catch(console.error)
     document.addEventListener('keypress', this.handleBodyKeypress)
   }
 
@@ -56,9 +53,7 @@ class Player extends React.Component<Props, State> {
 
     let promise = Promise.resolve()
     if (currentActiveSong !== activeSong) {
-      if (currentActiveSong) {
-        this.internalPause()
-      }
+      if (currentActiveSong) this.internalPause()
       if (activeSong) {
         promise = this.loadSong(activeSong, songs.songState)
       } else {
@@ -95,9 +90,7 @@ class Player extends React.Component<Props, State> {
       this.audioElement.play()
     } else {
       const isLastSong = songIndex === playlist.length - 1
-      if (!isLastSong || songsRepeat === 'all') {
-        dispatch(playNext())
-      }
+      if (!isLastSong || songsRepeat === 'all') dispatch(playNext())
     }
   }
 
@@ -120,16 +113,6 @@ class Player extends React.Component<Props, State> {
     }
   }
 
-  deleteSong = (e: SyntheticEvent<HTMLButtonElement>) => {
-    e.preventDefault()
-    const { dispatch } = this.props
-    const { activeSong } = this.state
-    if (activeSong) {
-      deleteSongsFromLibrary([activeSong.id])
-      dispatch(playNext())
-      dispatch(incrementNonce())
-    }
-  }
   internalPlay() {
     this.audioElement.play()
   }
@@ -163,9 +146,7 @@ class Player extends React.Component<Props, State> {
     const responseBlob = await (await service.getFile(authorization, activeSong.sourceId)).blob()
     this.audioElement.src = URL.createObjectURL(responseBlob)
 
-    if (songState === 'playing') {
-      this.internalPlay()
-    }
+    if (songState === 'playing') this.internalPlay()
   }
 
   audioElement: HTMLAudioElement
@@ -178,18 +159,12 @@ class Player extends React.Component<Props, State> {
     let coverImg
     let songArtist = activeSong ? 'Unknown' : ''
     if (activeSong) {
-      if (activeSong.meta && activeSong.meta.name) {
-        songName = activeSong.meta.name
-      }
-      if (activeSong.meta && activeSong.meta.artists_original) {
-        songArtist = activeSong.meta.artists_original
-      }
+      if (activeSong.meta && activeSong.meta.name) songName = activeSong.meta.name
+      if (activeSong.meta && activeSong.meta.artists_original) songArtist = activeSong.meta.artists_original
 
       if (activeSong.artwork && activeSong.artwork.album && activeSong.artwork.album.uri !== null) {
         coverImg = activeSong.artwork.album.uri
-      } else {
-        coverImg = cover
-      }
+      } else coverImg = cover
     }
 
     return (
@@ -216,7 +191,7 @@ class Player extends React.Component<Props, State> {
           </button>
         </div>
         <div className={`${player.section_progress} ${flex.align_center} ${flex.space_around}`}>
-          <img className={player.img} src={coverImg} alt={cover} />
+          <img className={player.img} src={coverImg === undefined ? cover : coverImg} alt="player_cover_img" />
           <PlayerControlDuration
             audioElement={this.audioElement}
             title={activeSong ? songName : ''}
@@ -226,11 +201,6 @@ class Player extends React.Component<Props, State> {
         <div className={`${player.section_volume} ${flex.align_center}`}>
           <PlayerControlsVolume audioElement={this.audioElement} />
           <PlayerControlsRepeat />
-          <button type="button" className={`${button.btn} ${button.btn_round}`} onClick={this.deleteSong}>
-            <i title="Delete from Library" className="material-icons">
-              delete
-            </i>
-          </button>
         </div>
       </div>
     )

@@ -16,10 +16,6 @@
   .album_info_content {
     width: 67%;
 
-    .activeSong_row {
-      width: 100%;
-    }
-
     h2 {
       margin-top: 0;
       margin-bottom: 0.5rem;
@@ -28,6 +24,7 @@
     .artistLink {
       text-align: left;
       font-size: 1.5rem;
+      color: @activeColor;
     }
 
     & > :first-child {
@@ -38,11 +35,36 @@
     .songs_container {
       padding-top: 1.5rem;
 
+      .selected {
+        background-color: #0000000a;
+      }
+
+      .hide {
+        opacity: 0;
+      }
+
+      .show {
+        opacity: 1;
+        right: 0.5rem;
+        position: absolute;
+        transition: opacity 0.1s ease-in-out;
+      }
+
       .song_row {
+        color: inherit;
         cursor: pointer;
-        position: relative;
         padding: 0 10px;
+        user-select: none;
+        position: relative;
+        border-radius: 3px;
+        -ms-user-select: none;
+        text-decoration: none;
+        -moz-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
         border-top: 1px solid @borderColor;
+        transition: background-color 0.4s ease-in-out;
 
         .active_song_icon {
           margin-left: -6px;
@@ -56,17 +78,17 @@
           width: 87%;
         }
 
-        .song_btns {
-          right: 2%;
+        .song_play_btn {
           opacity: 0;
-          width: 97%;
-          height: 100%;
+          left: 0.2rem;
           position: absolute;
           transition: opacity 0.1s ease-in-out;
-
-          & > button {
-            margin-left: -0.4rem;
-          }
+        }
+        .song_dropdown {
+          opacity: 0;
+          right: 0.5rem;
+          position: absolute;
+          transition: opacity 0.1s ease-in-out;
         }
 
         &:last-child {
@@ -74,11 +96,14 @@
         }
 
         &:hover {
-          p:nth-child(odd), .active_song_icon {
+          background-color: #0000000a;
+
+          .odd_item {
             opacity: 0;
           }
 
-          .song_btns {
+          .song_play_btn,
+          .song_dropdown {
             opacity: 1;
           }
         }
@@ -87,11 +112,9 @@
   }
 }
 
-
 .active_song {
   color: @activeColor;
   background-color: @activeBackground;
-  border-radius: 3px;
 }
 
 .album_cover {

@@ -2,8 +2,8 @@
 
 import React from 'react'
 
-import flex from '~/less/flex.less'
-import header from '~/less/header.less'
+import flex from '~/styles/flex.less'
+import header from '~/styles/header.less'
 
 import Accounts from '~/components/Accounts'
 import Search from './Search'

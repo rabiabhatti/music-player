@@ -4,13 +4,13 @@ import React from 'react'
 
 import getEventPath from '~/common/getEventPath'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import dropdown from '~/less/dropdown.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import dropdown from '~/styles/dropdown.less'
 
 type Props = {|
+  classname?: ?string,
   children: React$Node,
-  handleClose: () => void,
 |}
 
 type State = {|
@@ -18,6 +18,9 @@ type State = {|
 |}
 
 export default class Dropdown extends React.Component<Props, State> {
+  static defaultProps = {
+    classname: null,
+  }
   state = { opened: false }
   ref: ?HTMLDivElement = null
 
@@ -31,37 +34,26 @@ export default class Dropdown extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    const { handleClose } = this.props
-    if (e.key === 'Escape') {
-      handleClose()
-    }
+    if (e.key === 'Escape') this.setState({ opened: false })
   }
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
-
     const { opened } = this.state
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (opened || firedOnSelf) {
-      this.setState({
-        opened: !opened,
-      })
-    }
+    if (opened || firedOnSelf) this.setState({ opened: !opened })
   }
 
   render() {
     const { opened } = this.state
-    const { children } = this.props
+    const { children, classname } = this.props
 
     return (
       <div
-        className={`${flex.align_center}`}
+        className={`${flex.align_center} ${classname ? `${classname}` : ''}`}
         ref={element => {
           this.ref = element
         }}
       >
-        <button type='button' className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
+        <button type="button" className={`${button.btn} ${button.btn_blue} ${dropdown.btn_trigger}`}>
           <i className="material-icons">more_horiz</i>
         </button>
         <div className={`${dropdown.dropdown_content} ${opened ? '' : 'hidden'}`}>{children}</div>

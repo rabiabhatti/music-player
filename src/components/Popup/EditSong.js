@@ -8,8 +8,8 @@ import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 import { normalizeArtist } from '~/parser'
 
-import input from '~/less/input.less'
-import button from '~/less/button.less'
+import input from '~/styles/input.less'
+import button from '~/styles/button.less'
 
 import Popup from './Popup'
 
@@ -64,10 +64,24 @@ class EditSong extends React.Component<Props, State> {
       artists: false,
     },
   }
+  ref: ?HTMLInputElement = null
+
+  componentDidMount() {
+    if (this.ref) this.ref.focus()
+    document.addEventListener('keydown', this.handleKeyPress)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress)
+  }
+
+  handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') this.saveSongInfo()
+  }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
     event.persist()
-    this.setState(state => set(state, event.target.name, event.target.value.trim()))
+    this.setState(state => set(state, event.target.name, event.target.value))
   }
 
   handleBlur = (field: string) => (event: SyntheticInputEvent<HTMLInputElement>) => {
@@ -83,11 +97,18 @@ class EditSong extends React.Component<Props, State> {
     const { song, handleClose, incrementNonce: incrementNonceProp } = this.props
 
     db.songs.update(song.id, {
-      'meta.name': fields.name !== '' ? fields.name : song.meta.name,
-      'meta.album': fields.album !== '' ? fields.album : song.meta.album,
-      'meta.genre': fields.genre !== '' ? fields.genre.split(',') : song.meta.genre,
+      'meta.name': fields.name !== '' ? fields.name.trim() : song.meta.name,
+      'meta.album': fields.album !== '' ? fields.album.trim() : song.meta.album,
+      'meta.genre': fields.genre !== '' ? fields.genre.trim().split(',') : song.meta.genre,
+      'meta.album_artists':
+        fields.artists !== '' ? normalizeArtist(fields.artists.trim().split(',')) : song.meta.album_artists,
       'meta.artists_original':
-        fields.artists !== '' ? normalizeArtist(fields.artists.split(',')) : song.meta.artists_original,
+        fields.artists !== ''
+          ? fields.artists
+              .trim()
+              .split(',')
+              .join(' & ')
+          : song.meta.artists_original,
     })
     incrementNonceProp()
     handleClose()
@@ -108,11 +129,14 @@ class EditSong extends React.Component<Props, State> {
     }
 
     return (
-      <Popup handleClose={handleClose}>
+      <Popup title="Edit Song" handleClose={handleClose}>
         <label htmlFor="name">
           Name
           <input
             type="text"
+            ref={i => {
+              this.ref = i
+            }}
             name="fields.name"
             value={fields.name}
             onChange={this.handleChange}

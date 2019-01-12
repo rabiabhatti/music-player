@@ -4,9 +4,9 @@ import React from 'react'
 
 import getEventPath from '~/common/getEventPath'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import dropdown from '~/less/dropdown.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import dropdown from '~/styles/dropdown.less'
 
 type Props = {|
   className: string,
@@ -32,22 +32,12 @@ export default class HeaderDropdown extends React.Component<Props, State> {
   }
 
   handleKeyPress = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') {
-      this.setState({
-        opened: false,
-      })
-    }
+    if (e.key === 'Escape') this.setState({ opened: false })
   }
   handleBodyClick = (e: MouseEvent) => {
-    if (e.defaultPrevented) {
-      return
-    }
+    const { opened } = this.state
     const firedOnSelf = getEventPath(e).includes(this.ref)
-    if (!firedOnSelf) {
-      this.setState({
-        opened: false,
-      })
-    }
+    if (opened || firedOnSelf) this.setState({ opened: !opened })
   }
 
   render() {
@@ -60,11 +50,7 @@ export default class HeaderDropdown extends React.Component<Props, State> {
           this.ref = element
         }}
       >
-        <button
-          type="button"
-          className={`${button.btn} ${button.btn_header}`}
-          onClick={() => this.setState({ opened: true })}
-        >
+        <button type="button" className={`${button.btn} ${button.btn_header}`}>
           <i title={buttonTitle} className="material-icons">
             {buttonIcon}
           </i>

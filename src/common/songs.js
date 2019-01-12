@@ -15,7 +15,6 @@ export function getAlbumsFromSongs(songs: Array<File>): { [string]: Array<File> 
       albumSongs = []
       albums[albumName] = albumSongs
     }
-
     albumSongs.push(song)
   })
 
@@ -32,9 +31,7 @@ export function getArtistsFromSongs(songs: Array<File>): { [string]: Array<File>
       meta.album_artists.forEach(artist => {
         artistsArr.push(artist)
       })
-    } else {
-      artistsArr.push('Unknown')
-    }
+    } else artistsArr.push('Unknown')
 
     artistsArr.forEach(artistName => {
       let artistsSongs = artists[artistName]
@@ -42,7 +39,6 @@ export function getArtistsFromSongs(songs: Array<File>): { [string]: Array<File>
         artistsSongs = []
         artists[artistName] = artistsSongs
       }
-
       artistsSongs.push(song)
     })
   })
@@ -60,9 +56,7 @@ export function getGenresFromSongs(songs: Array<File>): { [string]: Array<File> 
       meta.genre.forEach(genre => {
         genresArr.push(genre)
       })
-    } else {
-      genresArr.push('Unknown')
-    }
+    } else genresArr.push('Unknown')
 
     genresArr.forEach(genre => {
       let genresSongs = genres[genre]
@@ -70,7 +64,6 @@ export function getGenresFromSongs(songs: Array<File>): { [string]: Array<File> 
         genresSongs = []
         genres[genre] = genresSongs
       }
-
       genresSongs.push(song)
     })
   })
@@ -80,11 +73,11 @@ export function getGenresFromSongs(songs: Array<File>): { [string]: Array<File> 
 
 export async function addSongsToPlaylist(songsIds: Array<number>, playlistId: number) {
   const playlist = await db.playlists.get(playlistId)
-  const playlistSongs = playlist.songs
+  let playlistSongs
+  if (playlist.songs === null) playlistSongs = []
+  else playlistSongs = playlist.songs
   songsIds.forEach(id => {
-    if (!playlistSongs.includes(id)) {
-      playlistSongs.push(id)
-    }
+    if (playlistSongs === null || !playlistSongs.includes(id)) playlistSongs.push(id)
   })
   await db.playlists.update(playlistId, { songs: playlistSongs })
 }
@@ -120,4 +113,9 @@ export function humanizeDuration(duration: number): string {
     .padStart(2, '0')
 
   return `${minutes}:${seconds}`
+}
+
+export function fibonacci(num: number) {
+  if (num <= 1) return 1
+  return fibonacci(num - 1) + fibonacci(num - 2)
 }
