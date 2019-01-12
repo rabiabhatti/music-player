@@ -66,7 +66,7 @@ class Accounts extends React.Component<Props, State> {
             </div>
             <button
               type="button"
-              className={`${button.btn} ${button.btn_blue_border} ${authServices.auth_btn} ${flex.justify_center}`}
+              className={`${button.btn} ${button.btn_blue_border} ${authServices.account_btn} ${flex.justify_center}`}
               onClick={() => unauthorize(authorization, unauthorizeServiceProp)}
             >
               Logout
@@ -87,7 +87,7 @@ class Accounts extends React.Component<Props, State> {
         <button
           type="button"
           onClick={() => authorize(service, authorizeServiceProp)}
-          className={`${button.btn} ${button.btn_blue_border}`}
+          className={`${button.btn} ${button.btn_blue_border} ${authServices.account_btn}`}
         >
           Signin
         </button>
