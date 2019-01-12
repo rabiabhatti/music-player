@@ -1,47 +1,151 @@
 // @flow
 
 import React from 'react'
+
 import connect from '~/common/connect'
-
-import { setSongPlaylist } from '~/redux/songs'
+import contextMenu from '~/common/contextMenu'
+import getEventPath from '~/common/getEventPath'
 import { humanizeDuration } from '~/common/songs'
+import { setSongPlaylist, songPlay, songPause, showSongContextMenu } from '~/redux/songs'
 
-import flex from '~/less/flex.less'
-import button from '~/less/button.less'
-import albumInfo from '~/less/album-info.less'
+import flex from '~/styles/flex.less'
+import button from '~/styles/button.less'
+import albumInfo from '~/styles/album-info.less'
 
 import cover from '~/static/img/alter-img.png'
 
+import ContextMenu from '~/components/ContextMenu'
 import SongDropdown from '~/components/Dropdown/SongDropdown'
 import AlbumDropdown from '~/components/Dropdown/AlbumDropdown'
 
 type Props = {|
   name: string,
   songState: string,
+  dispatch: Function,
   songs: Array<Object>,
+  showContextMenu: boolean,
   activeSong: number | null,
-  setSongPlaylist: typeof setSongPlaylist,
 |}
-type State = {||}
+type State = {|
+  focusedSong: ?Object,
+  selected: Array<number>,
+|}
 
 class AlbumInfo extends React.Component<Props, State> {
-  playAtIndex = (index: number, ids: Array<number>) => {
-    const { setSongPlaylist: setSongPlaylistProp } = this.props
-    setSongPlaylistProp({
-      songs: ids,
-      index,
-    })
+  ref: ?HTMLDivElement = null
+
+  state = {
+    selected: [],
+    focusedSong: null,
   }
 
-  render() {
-    const { songs, name, activeSong, songState } = this.props
+  componentDidMount() {
+    document.addEventListener('click', this.handleBodyClick)
+  }
+  componentWillUnmount() {
+    document.removeEventListener('click', this.handleBodyClick)
+  }
 
-    const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
+  handleBodyClick = (e: MouseEvent) => {
+    if (e.defaultPrevented) {
+      return
+    }
+    const firedOnSelf = getEventPath(e).includes(this.ref)
+    if (!firedOnSelf) {
+      this.setState({
+        selected: [],
+      })
+    }
+  }
+
+  playAtIndex = (index: number, ids: Array<number>) => {
+    const { dispatch } = this.props
+    dispatch(
+      setSongPlaylist({
+        songs: ids,
+        index,
+      }),
+    )
+  }
+
+  playPause = () => {
+    const { songState, dispatch } = this.props
+    dispatch(songState === 'playing' ? songPause() : songPlay())
+  }
+
+  contextMenu = async (song, e) => {
+    e.preventDefault()
+    e.persist()
+    const { dispatch } = this.props
+    const elt = document.getElementById('modal-contextmenu-root')
+    if (elt) {
+      dispatch(showSongContextMenu(true))
+      const { menuPostion } = await contextMenu(e, elt)
+
+      this.left = `${menuPostion.x}px`
+      this.top = `${menuPostion.y}px`
+
+      this.setState({
+        focusedSong: song,
+      })
+    }
+  }
+
+  selectRow = (e: MouseEvent, id: number) => {
+    e.preventDefault()
+    const { selected } = this.state
+    const selectedItems = selected.slice()
+    const index = selected.indexOf(id)
+    if (index === -1) {
+      if (e.shiftKey) {
+        this.setState({
+          selected: [...selected, id],
+        })
+        return
+      }
+      this.setState({
+        selected: [id],
+      })
+    } else {
+      if (e.shiftKey) {
+        selectedItems.splice(index, 1)
+        this.setState({
+          selected: selectedItems,
+        })
+        return
+      }
+      this.setState({
+        selected: [],
+      })
+    }
+  }
+
+  handleContextMenuClose = () => {
+    const { dispatch } = this.props
+    dispatch(showSongContextMenu(false))
+    this.setState({ focusedSong: null, selected: [] })
+  }
+
+  top: string
+  left: string
+
+  render() {
+    const { songs, name, activeSong, songState, showContextMenu } = this.props
+    const { selected, focusedSong } = this.state
 
     const songsIds = songs.map(s => s.id)
+    const totalDuration = songs.reduce((agg, curr) => agg + curr.duration, 0)
 
     return (
       <div className={`${albumInfo.album_info} ${flex.wrap} ${flex.space_between}`}>
+        {showContextMenu && focusedSong && (
+          <ContextMenu
+            top={this.top}
+            left={this.left}
+            handleClose={this.handleContextMenuClose}
+            songsIds={selected.length ? selected : [focusedSong.id]}
+          />
+        )}
         <div className={`${flex.column} ${albumInfo.album_title}`}>
           <div className={`${albumInfo.album_cover}`}>
             <div className={`${albumInfo.filter}`} />
@@ -76,9 +180,7 @@ class AlbumInfo extends React.Component<Props, State> {
           <div className={`${flex.space_between}`}>
             <div>
               <h2>{name === 'undefined' ? 'Unkown' : name}</h2>
-              <button type="button" className={`${button.btn} ${button.btn_blue} ${albumInfo.artistLink}`}>
-                {songs[0].meta && songs[0].meta.artists_original}
-              </button>
+              <h2 className={`${albumInfo.artistLink}`}>{songs[0].meta && songs[0].meta.artists_original}</h2>
               <p>
                 {songs[0].meta && songs[0].meta.genre ? songs[0].meta.genre : 'Unkown'} &bull;{' '}
                 {songs[0].meta && songs[0].meta.year ? songs[0].meta.year : 'Unkown'}
@@ -86,31 +188,55 @@ class AlbumInfo extends React.Component<Props, State> {
             </div>
             <AlbumDropdown songsIds={songsIds} />
           </div>
-          <div className={`${flex.column} ${albumInfo.songs_container}`}>
+          <div
+            ref={element => {
+              this.ref = element
+            }}
+            className={`${flex.column} ${albumInfo.songs_container}`}
+          >
             {songs.map((song, index) => (
-              <div
+              <a
+                href="/"
                 key={song.sourceId}
+                onClick={e => this.selectRow(e, song.id)}
+                onContextMenu={e => this.contextMenu(song, e)}
                 onDoubleClick={() => this.playAtIndex(index, songsIds)}
-                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${albumInfo.song_row} ${song.id === activeSong ? `${albumInfo.active_song}` : ''}`}
+                className={`${flex.space_between} ${flex.align_center} ${flex.wrap} ${albumInfo.song_row} ${
+                  song.id === activeSong ? `${albumInfo.active_song}` : ''
+                } ${selected.includes(song.id) ? `${albumInfo.selected}` : ''}`}
               >
-                  {song.id === activeSong && songState === 'playing' ? <i className={`${button.btn_blue} ${albumInfo.active_song_icon} material-icons`}>volume_up</i> : <p>{index + 1}</p>}
-                  <p className={`${albumInfo.song_title}`}>
-                    {song.meta && typeof song.meta.name !== 'undefined'
-                      ? song.meta.name
-                      : song.filename.replace('.mp3', '')}
-                  </p>
-                  <p>{song.duration ? humanizeDuration(song.duration) : ''}</p>
-                  <div className={`${flex.space_between} ${albumInfo.song_btns}`}>
+                {song.id === activeSong ? (
+                  <button type="button" className={`${button.btn} ${button.btn_blue}`} onClick={() => this.playPause()}>
+                    <i
+                      title={songState === 'playing' ? 'Pause' : 'Play'}
+                      className={`${albumInfo.active_song_icon} material-icons`}
+                    >
+                      {songState === 'playing' ? 'pause' : 'play_arrow'}
+                    </i>
+                  </button>
+                ) : (
+                  <React.Fragment>
+                    <p className={`${albumInfo.odd_item}`}>{index + 1}</p>
                     <button
                       type="button"
-                      className={`${button.btn} ${button.btn_blue}`}
+                      className={`${button.btn} ${button.btn_blue} ${albumInfo.song_play_btn}`}
                       onClick={() => this.playAtIndex(index, songsIds)}
                     >
                       <i className="material-icons">play_arrow</i>
                     </button>
-                    <SongDropdown song={song} />
-                  </div>
-              </div>
+                  </React.Fragment>
+                )}
+                <p className={`${albumInfo.song_title}`}>
+                  {song.meta && typeof song.meta.name !== 'undefined' ? song.meta.name : song.filename.replace('.mp3', '')}
+                </p>
+                <p className={`${selected.includes(song.id) ? `${albumInfo.hide}` : `${albumInfo.odd_item}`}`}>
+                  {song.duration ? humanizeDuration(song.duration) : ''}
+                </p>
+                <SongDropdown
+                  song={song}
+                  classname={` ${selected.includes(song.id) ? `${albumInfo.show}` : `${albumInfo.song_dropdown}`}`}
+                />
+              </a>
             ))}
           </div>
         </div>
@@ -119,10 +245,8 @@ class AlbumInfo extends React.Component<Props, State> {
   }
 }
 
-export default connect(
-  ({ songs }) => ({
-    activeSong: songs.playlist[songs.songIndex] || null,
-    songState: songs.songState,
-  }),
-  { setSongPlaylist },
-)(AlbumInfo)
+export default connect(({ songs }) => ({
+  activeSong: songs.playlist[songs.songIndex] || null,
+  songState: songs.songState,
+  showContextMenu: songs.showContextMenu,
+}))(AlbumInfo)

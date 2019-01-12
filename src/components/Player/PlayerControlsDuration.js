@@ -2,11 +2,11 @@
 
 import React from 'react'
 import debounce from 'lodash/debounce'
-import { humanizeDuration } from '~/common/songs'
+import { humanizeDuration, fibonacci } from '~/common/songs'
 
-import flex from '~/less/flex.less'
-import slider from '~/less/slider.less'
-import player from '~/less/player.less'
+import flex from '~/styles/flex.less'
+import slider from '~/styles/slider.less'
+import player from '~/styles/player.less'
 
 type Props = {|
   title: string,
@@ -14,31 +14,80 @@ type Props = {|
   audioElement: HTMLAudioElement,
 |}
 type State = {|
-  currentSeekTime: number | null,
-  currentTime: number,
   duration: number,
+  currentTime: number,
+  currentSeekTime: number | null,
 |}
+
+function getSeekTypeFromEvent(event) {
+  let seekType = null
+  if (event.which === 37) {
+    seekType = 'rewind'
+  } else if (event.which === 39) {
+    seekType = 'forward'
+  }
+  return seekType
+}
 
 class PlayerControlDuration extends React.Component<Props, State> {
   state = { currentSeekTime: null, currentTime: 0, duration: 0 }
   dragging = false
+  intervalSeek = null
 
   handleDurationSlideFlush = debounce(() => {
     const { audioElement } = this.props
     const { currentSeekTime } = this.state
-    if (currentSeekTime !== null) {
-      audioElement.currentTime = currentSeekTime
-    }
+    if (currentSeekTime !== null) audioElement.currentTime = currentSeekTime
     this.dragging = false
   }, 50)
 
   componentDidMount() {
     const { audioElement } = this.props
+    document.addEventListener('keydown', this.handleKeyDown)
+    document.addEventListener('keyup', this.handleKeyUp)
     audioElement.addEventListener('timeupdate', this.handleDurationChange)
   }
   componentWillUnmount() {
     const { audioElement } = this.props
     audioElement.removeEventListener('timeupdate', this.handleDurationChange)
+    document.removeEventListener('keydown', this.handleKeyDown)
+    document.removeEventListener('keyup', this.handleKeyUp)
+  }
+
+  handleKeyDown = (e: KeyboardEvent) => {
+    const seekType = getSeekTypeFromEvent(e)
+    if (!seekType) {
+      return
+    }
+    if (this.intervalSeek) {
+      // Keydown is emitted multiple times by browser
+      return
+    }
+    const { audioElement } = this.props
+
+    let seconds = 0
+    this.intervalSeek = setInterval(() => {
+      seconds += 0.3
+      let seekTime = fibonacci(seconds)
+      if (seekType === 'rewind') seekTime *= -1
+      audioElement.currentTime += seekTime
+      this.setState({ currentTime: audioElement.currentTime })
+    }, 300)
+  }
+
+  handleKeyUp = (e: KeyboardEvent) => {
+    const { audioElement } = this.props
+    const seekType = getSeekTypeFromEvent(e)
+    if (seekType && this.intervalSeek) {
+      if (parseInt(this.intervalSeek, 10) / 1000 < 0.3) {
+        let seekTime = 5
+        if (seekType === 'rewind') seekTime *= -1
+        audioElement.currentTime += seekTime
+        this.setState({ currentTime: audioElement.currentTime })
+      }
+      if (this.intervalSeek) clearInterval(this.intervalSeek)
+      this.intervalSeek = null
+    }
   }
 
   handleDurationChange = () => {

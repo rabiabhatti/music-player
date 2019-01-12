@@ -24,9 +24,7 @@ class Songs extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce } = this.props
-    if (prevProps.nonce !== nonce) {
-      this.fetchSongs()
-    }
+    if (prevProps.nonce !== nonce) this.fetchSongs()
   }
 
   fetchSongs() {

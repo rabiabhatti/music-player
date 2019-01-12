@@ -10,17 +10,30 @@ import type { UserAuthorization } from '~/redux/user'
 import services from '~/services'
 import * as parser from '~/parser'
 import connect from '~/common/connect'
+import DownloadingSnackbar from '~/components/Snackbar/DownloadingSnackbar'
 
 type Props = {|
   nonce: number,
   authorizations: Array<UserAuthorization>,
   incrementNonce: () => void,
 |}
-type State = {||}
+type State = {|
+  downloaded: boolean,
+  downloading: boolean,
+  pendingSongsLength: number,
+  showDownloadingSnackbarModal: boolean,
+|}
 
 class Downloader extends React.Component<Props, State> {
   lastSong = null
   downloading = false
+
+  state = {
+    downloaded: false,
+    downloading: false,
+    pendingSongsLength: 0,
+    showDownloadingSnackbarModal: false,
+  }
 
   componentDidMount() {
     db.songs
@@ -32,9 +45,7 @@ class Downloader extends React.Component<Props, State> {
 
   componentDidUpdate(prevProps) {
     const { nonce } = this.props
-    if (prevProps.nonce !== nonce) {
-      this.startProcessingPendingSongs()
-    }
+    if (prevProps.nonce !== nonce) this.startProcessingPendingSongs()
   }
 
   startProcessingPendingSongs() {
@@ -52,6 +63,7 @@ class Downloader extends React.Component<Props, State> {
       })
   }
   async processPendingSongs() {
+    const { pendingSongsLength } = this.state
     const [song = null] = await db.songs
       .where('state')
       .equals('pending')
@@ -60,6 +72,9 @@ class Downloader extends React.Component<Props, State> {
 
     this.lastSong = song
     if (!song) {
+      if (pendingSongsLength > 0) {
+        this.setState({ downloading: false, downloaded: true, showDownloadingSnackbarModal: true })
+      }
       console.debug('[Downloader] No song to download, going back to sleep')
       return
     }
@@ -82,6 +97,12 @@ class Downloader extends React.Component<Props, State> {
       })
       return
     }
+    this.setState({
+      downloaded: false,
+      downloading: true,
+      showDownloadingSnackbarModal: true,
+      pendingSongsLength: pendingSongsLength + 1,
+    })
     await db.songs.update(song.id, {
       state: 'downloading',
     })
@@ -100,6 +121,26 @@ class Downloader extends React.Component<Props, State> {
   }
 
   render() {
+    const { pendingSongsLength, downloading, downloaded, showDownloadingSnackbarModal } = this.state
+
+    if (showDownloadingSnackbarModal && downloading && pendingSongsLength > 0) {
+      return (
+        <DownloadingSnackbar
+          type="downloading"
+          text={`Downloading ${pendingSongsLength} ${pendingSongsLength === 1 ? 'file' : 'files'}`}
+        />
+      )
+    }
+
+    if (showDownloadingSnackbarModal && downloaded) {
+      return (
+        <DownloadingSnackbar
+          type="downloaded"
+          handleClose={() => this.setState({ showDownloadingSnackbarModal: false })}
+          text={`${pendingSongsLength} ${pendingSongsLength === 1 ? 'file' : 'files'} successfully downloaded`}
+        />
+      )
+    }
     return null
   }
 }

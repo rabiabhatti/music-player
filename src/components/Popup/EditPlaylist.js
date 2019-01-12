@@ -6,8 +6,8 @@ import connect from '~/common/connect'
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'
 
-import input from '~/less/input.less'
-import button from '~/less/button.less'
+import input from '~/styles/input.less'
+import button from '~/styles/button.less'
 
 import Popup from './Popup'
 
@@ -25,16 +25,30 @@ class EditPlaylist extends React.Component<Props, State> {
   state = {
     name: '',
   }
+  ref: ?HTMLInputElement = null
+
+  componentDidMount() {
+    if (this.ref) this.ref.focus()
+    document.addEventListener('keydown', this.handleKeyPress)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.handleKeyPress)
+  }
+
+  handleKeyPress = (e: KeyboardEvent) => {
+    if (e.key === 'Enter') this.savePlaylist()
+  }
 
   handleChange = (event: SyntheticInputEvent<HTMLInputElement>) => {
-    this.setState({ name: event.target.value.trim() })
+    this.setState({ name: event.target.value })
   }
 
   savePlaylist = () => {
     const { name } = this.state
     const { name: playlistName, id, handleClose, incrementNonce: incrementNonceProp } = this.props
     db.playlists.update(id, {
-      name: name !== '' ? name : playlistName,
+      name: name !== '' ? name.trim() : playlistName,
     })
     incrementNonceProp()
     handleClose()
@@ -47,12 +61,15 @@ class EditPlaylist extends React.Component<Props, State> {
     const enable = name !== ''
 
     return (
-      <Popup handleClose={handleClose}>
+      <Popup title="Edit Playlist" handleClose={handleClose}>
         <label htmlFor="name">
           Name
           <input
             type="text"
             name="name"
+            ref={i => {
+              this.ref = i
+            }}
             value={name}
             placeholder={playlistName}
             onInput={this.handleChange}

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "fuse.js": "^3.3.0",
     "immutable": "4.0.0-rc.9",
     "lodash": "^4.17.10",
     "music-metadata": "^2.4.2",
@@ -20,8 +21,12 @@
   "scripts": {
     "start": "pundle --dev.singlepage --dev.static ./public::/",
     "build": "NODE_ENV=production pundle",
-    "postinstall": "link-tilde"
+    "postinstall": "link-tilde",
+    "lint": "eslint src && prettier --list-different src/**/*.js && flow check"
   },
+  "pre-commit": [
+    "lint"
+  ],
   "tildeDirectory": "./src",
   "devDependencies": {
     "@babel/core": "^7.0.0",
@@ -33,11 +38,12 @@
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^9.1.5",
     "babel-plugin-module-resolver": "^3.1.1",
-    "eslint-config-steelbrain": "^6.0.0",
+    "eslint-config-steelbrain": "^7.0.0-beta1",
     "flow-bin": "^0.79.1",
     "less": "^3.8.1",
     "link-tilde": "^1.0.0",
     "postcss-loader": "^3.0.0",
+    "pre-commit": "^1.2.2",
     "pundle-cli": "^3.0.0-beta8",
     "pundle-preset-default": "^3.0.0-beta8"
   },

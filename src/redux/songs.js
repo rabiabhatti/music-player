@@ -17,6 +17,8 @@ const PLAY_PREVIOUS = 'SONGS/PLAY_PREVIOUS'
 const SONG_PLAY = 'SONGS/SONG_PLAY'
 const SONG_PAUSE = 'SONGS/SONG_PAUSE'
 
+const SHOW_SONG_CONTEXTMENU = 'SONGS/SHOW_SONG_CONTEXTMENU'
+
 export type RepeatMode = 'all' | 'single' | 'none'
 
 export const incrementNonce = createAction(INCREMENT_NONCE)
@@ -33,6 +35,8 @@ export const playPrevious = createAction(PLAY_PREVIOUS)
 export const songPlay = createAction(SONG_PLAY)
 export const songPause = createAction(SONG_PAUSE)
 
+export const showSongContextMenu = createAction(SHOW_SONG_CONTEXTMENU)
+
 export type SongsStateFields = {|
   nonce: number,
   playlist: Array<number>,
@@ -42,6 +46,7 @@ export type SongsStateFields = {|
   songIndex: number,
   songVolume: number,
   songMuted: boolean,
+  showContextMenu: boolean,
 |}
 
 export type SongsState = RecordOf<SongsStateFields>
@@ -54,6 +59,7 @@ const createSongsState: RecordFactory<SongsStateFields> = Record({
   songIndex: -1,
   songVolume: 50,
   songMuted: false,
+  showContextMenu: false,
 })
 
 export default handleActions(
@@ -121,6 +127,10 @@ export default handleActions(
     [SET_SONG_MUTE]: (state: SongsState, { payload }) =>
       state.merge({
         songMuted: !!payload,
+      }),
+    [SHOW_SONG_CONTEXTMENU]: (state: SongsState, { payload }) =>
+      state.merge({
+        showContextMenu: payload,
       }),
   },
   createSongsState(),
