@@ -24,9 +24,6 @@
     "postinstall": "link-tilde",
     "lint": "eslint src && prettier --list-different src/**/*.js && flow check"
   },
-  "pre-commit": [
-    "lint"
-  ],
   "tildeDirectory": "./src",
   "devDependencies": {
     "@babel/core": "^7.0.0",
