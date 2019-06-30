@@ -1,6 +1,6 @@
 // @flow
 
-const APP_ID = process.env.PROJECT_ID
+const APP_ID = process.env.APP_ID
 const API_KEY = process.env.API_KEY
 const CLIENT_ID = process.env.CLIENT_ID
 
