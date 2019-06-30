@@ -1,7 +1,7 @@
 {
   "name": "music-player",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "dependencies": {
     "fuse.js": "^3.3.0",
     "immutable": "4.0.0-rc.9",
