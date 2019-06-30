@@ -1,8 +1,8 @@
 // @flow
 
-const APP_ID = '205123'
-const API_KEY = 'AIzaSyAbTkkbcG5_PONebMsTYyrs4sAdrtdn8js'
-const CLIENT_ID = '972800666070-eh9t63pqgu1vhbqb1cl2t42urlnlstt4.apps.googleusercontent.com'
+const APP_ID = process.env.PROJECT_ID
+const API_KEY = process.env.API_KEY
+const CLIENT_ID = process.env.CLIENT_ID
 
 const SCOPES = 'https://www.googleapis.com/auth/drive.readonly'
 const DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest']
