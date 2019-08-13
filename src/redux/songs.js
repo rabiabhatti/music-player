@@ -52,7 +52,7 @@ type SongsState = SongsStateFields
 
 type ActionState = {|
     type: string,
-    payload: Object
+    payload: any
 |}
 
 const INITIAL_STATE: SongsState = {
@@ -75,11 +75,11 @@ export default (state: SongsState = INITIAL_STATE, action: ActionState) => {
             return {...state, playlist: action.payload.songs, songState: 'playing', songIndex: action.payload.index }
         case ADD_TO_RECENTLY_PLAYED: {
           const recent: Array<number> = state.recentlyPlayed.slice()
-          const index = recent.indexOf(action.payload.id)
+          const index = recent.indexOf(action.payload)
           if (index !== -1) {
             recent.splice(index, 1)
           }
-          recent.unshift(action.payload.id)
+          recent.unshift(action.payload)
           return { ...state, recentlyPlayed: recent }
         }
         case SET_SONG_REPEAT:
@@ -90,7 +90,7 @@ export default (state: SongsState = INITIAL_STATE, action: ActionState) => {
             return { ...state, songIndex: (state.songIndex + 1) % state.playlist.length }
         case PLAY_LATER: {
           const playList: Array<number> = state.playlist.slice()
-          action.payload.songs.forEach(id => {
+          action.payload.forEach(id => {
             const index = playList.indexOf(id)
             if (index !== -1) {
               playList.splice(index, 1)

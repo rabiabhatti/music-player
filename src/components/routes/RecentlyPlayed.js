@@ -42,11 +42,13 @@ class RecentlyPlayed extends React.Component<Props, State> {
   fetchSongs(ids: Array<number>) {
     this.setState({ songs: [] })
     ids.forEach(async id => {
-      const song = await db.songs.get(id)
-      if (song) {
-        this.setState(prevState => ({
-          songs: [...prevState.songs, song],
-        }))
+      if(id) {
+        const song = await db.songs.get(id)
+        if (song) {
+          this.setState(prevState => ({
+            songs: [...prevState.songs, song],
+          }))
+        }
       }
     })
   }
