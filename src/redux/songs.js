@@ -1,23 +1,22 @@
 // @flow
 
-import { createAction, handleActions } from 'redux-actions'
-import { Record, type RecordOf, type RecordFactory } from 'immutable'
+import { createAction } from 'redux-actions'
 
-const INCREMENT_NONCE = 'SONGS/INCREMENT_NONCE'
-const SET_SONG_PLAYLIST = 'SONGS/SET_SONG_PLAYLIST'
-const ADD_TO_RECENTLY_PLAYED = 'SONGS/ADD_TO_RECENTLY_PLAYED'
-const SET_SONG_REPEAT = 'SONGS/SET_SONG_REPEAT'
-const SET_SONG_VOLUME = 'SONGS/SET_SONG_VOLUME'
-const SET_SONG_MUTE = 'SONGS/SET_SONG_MUTE'
+import {
+    INCREMENT_NONCE,
+    SET_SONG_PLAYLIST,
+    ADD_TO_RECENTLY_PLAYED,
+    SET_SONG_REPEAT,
+    SET_SONG_VOLUME,
+    SET_SONG_MUTE,
+    PLAY_NEXT,
+    PLAY_LATER,
+    PLAY_PREVIOUS,
+    SONG_PLAY,
+    SONG_PAUSE,
+    SHOW_SONG_CONTEXTMENU
+} from '~/common/types'
 
-const PLAY_NEXT = 'SONGS/PLAY_NEXT'
-const PLAY_LATER = 'SONGS/PLAY_LATER'
-const PLAY_PREVIOUS = 'SONGS/PLAY_PREVIOUS'
-
-const SONG_PLAY = 'SONGS/SONG_PLAY'
-const SONG_PAUSE = 'SONGS/SONG_PAUSE'
-
-const SHOW_SONG_CONTEXTMENU = 'SONGS/SHOW_SONG_CONTEXTMENU'
 
 export type RepeatMode = 'all' | 'single' | 'none'
 
@@ -49,89 +48,73 @@ export type SongsStateFields = {|
   showContextMenu: boolean,
 |}
 
-export type SongsState = RecordOf<SongsStateFields>
-const createSongsState: RecordFactory<SongsStateFields> = Record({
-  nonce: 0,
-  playlist: [],
-  songsRepeat: 'none',
-  songState: 'paused',
-  recentlyPlayed: [],
-  songIndex: -1,
-  songVolume: 50,
-  songMuted: false,
-  showContextMenu: false,
-})
+type SongsState = SongsStateFields
 
-export default handleActions(
-  {
-    [INCREMENT_NONCE]: (state: SongsState) => state.merge({ nonce: state.nonce + 1 }),
-    [SET_SONG_PLAYLIST]: (state: SongsState, { payload }) =>
-      state.merge({
-        playlist: payload.songs,
-        songState: 'playing',
-        songIndex: payload.index,
-      }),
-    [ADD_TO_RECENTLY_PLAYED]: (state: SongsState, { payload }) => {
-      const recent = state.recentlyPlayed.slice()
-      const index = recent.indexOf(payload)
-      if (index !== -1) {
-        recent.splice(index, 1)
-      }
-      recent.unshift(payload)
-      return state.merge({
-        recentlyPlayed: recent,
-      })
-    },
-    [SET_SONG_REPEAT]: (state: SongsState, { payload }) =>
-      state.merge({
-        songsRepeat: payload,
-      }),
-    [SET_SONG_VOLUME]: (state: SongsState, { payload }) =>
-      state.merge({
-        songVolume: payload,
-      }),
-    [PLAY_NEXT]: (state: SongsState) =>
-      state.merge({
-        songIndex: (state.songIndex + 1) % state.playlist.length,
-      }),
-    [PLAY_LATER]: (state: SongsState, { payload }) => {
-      const playList = state.playlist.slice()
-      payload.forEach(id => {
-        const index = playList.indexOf(id)
-        if (index !== -1) {
-          playList.splice(index, 1)
+type ActionState = {|
+    type: string,
+    payload: Object
+|}
+
+const INITIAL_STATE: SongsState = {
+      nonce: 0,
+      playlist: [],
+      songsRepeat: 'none',
+      songState: 'paused',
+      recentlyPlayed: [],
+      songIndex: -1,
+      songVolume: 100,
+      songMuted: false,
+      showContextMenu: false,
+}
+
+export default (state: SongsState = INITIAL_STATE, action: ActionState) => {
+    switch (action.type) {
+        case INCREMENT_NONCE:
+            return {...state, nonce: state.nonce + 1}
+        case SET_SONG_PLAYLIST:
+            return {...state, playlist: action.payload.songs, songState: 'playing', songIndex: action.payload.index }
+        case ADD_TO_RECENTLY_PLAYED: {
+          const recent = state.recentlyPlayed.slice()
+          const index = recent.indexOf(action.payload.id)
+          if (index !== -1) {
+            recent.splice(index, 1)
+          }
+          recent.unshift(action.payload.id)
+          return { ...state, recentlyPlayed: recent }
         }
-        playList.splice(state.songIndex + 1, 0, id)
-      })
-      return state.merge({
-        playlist: playList,
-      })
-    },
-    [PLAY_PREVIOUS]: (state: SongsState) => {
-      let newIndex = state.songIndex - 1
-      if (newIndex < 0) {
-        newIndex = state.playlist.length - 1
-      }
-      return state.merge({
-        songIndex: newIndex,
-      })
-    },
-    [SONG_PLAY]: (state: SongsState) =>
-      state.merge({
-        songState: 'playing',
-      }),
-    [SONG_PAUSE]: (state: SongsState) =>
-      state.merge({
-        songState: 'paused',
-      }),
-    [SET_SONG_MUTE]: (state: SongsState, { payload }) =>
-      state.merge({
-        songMuted: !!payload,
-      }),
-    [SHOW_SONG_CONTEXTMENU]: (state: SongsState, { payload }) =>
-      state.merge({
-        showContextMenu: payload,
-      }),
-  },
-  createSongsState(),
-)
+        case SET_SONG_REPEAT:
+            return { ...state, songsRepeat: action.payload }
+        case SET_SONG_VOLUME:
+            return { ...state, songVolume: action.payload }
+        case PLAY_NEXT:
+            return { ...state, songIndex: (state.songIndex + 1) % state.playlist.length }
+        case PLAY_LATER: {
+          const playList = state.playlist.slice()
+          action.payload.songs.forEach(id => {
+            const index = playList.indexOf(id)
+            if (index !== -1) {
+              playList.splice(index, 1)
+            }
+            playList.splice(state.songIndex + 1, 0, id)
+          })
+          return { ...state, playlist: playList }
+        }
+        case PLAY_PREVIOUS: {
+            let newIndex = state.songIndex - 1
+            if (newIndex < 0) {
+              newIndex = state.playlist.length - 1
+            }
+            return { ...state, songIndex: newIndex }
+        }
+        case SONG_PLAY:
+            return { ...state, songState: "playing" }
+        case SONG_PAUSE:
+            return { ...state, songState: "paused" }
+        case SET_SONG_MUTE:
+            return { ...state, songMuted: !!action.payload }
+        case SHOW_SONG_CONTEXTMENU:
+            return { ...state, showContextMenu: action.payload.showContextMenu }
+        default:
+            return state;
+    }
+}
