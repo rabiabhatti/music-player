@@ -3,7 +3,7 @@
 import React from 'react'
 
 import services from '~/services'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import { authorize } from '~/common/authorize'
 import { authorizeService } from '~/redux/user'
 

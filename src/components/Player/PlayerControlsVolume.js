@@ -2,7 +2,7 @@
 
 import React from 'react'
 import debounce from 'lodash/debounce'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import { setSongMute, setSongVolume } from '~/redux/songs'
 

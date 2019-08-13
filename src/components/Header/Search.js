@@ -4,7 +4,7 @@ import React from 'react'
 import Fuse from 'fuse.js'
 
 import db from '~/db'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import { navigateTo } from '~/redux/router'
 import getEventPath from '~/common/getEventPath'
 

@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import { setSongPlaylist } from '~/redux/songs'
 import { getAlbumsFromSongs } from '~/common/songs'

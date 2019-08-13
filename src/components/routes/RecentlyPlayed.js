@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import eq from 'lodash/eq'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import db from '~/db'
 

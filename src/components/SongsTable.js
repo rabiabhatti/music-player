@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import contextMenu from '~/common/contextMenu'
 import getEventPath from '~/common/getEventPath'
 import { type RouterRoute } from '~/redux/router'

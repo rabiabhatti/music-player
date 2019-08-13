@@ -3,7 +3,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import getEventPath from '~/common/getEventPath'
 import { deleteSongsFromLibrary } from '~/common/songs'
 import { incrementNonce, playLater, setSongPlaylist } from '~/redux/songs'
