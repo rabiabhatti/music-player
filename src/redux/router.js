@@ -1,9 +1,6 @@
 // @flow
 
-import { createAction, handleActions } from 'redux-actions'
-import { Record, type RecordOf, type RecordFactory } from 'immutable'
-
-const NAVIGATE_TO = 'ROUTES/NAVIGATE_TO'
+import { NAVIGATE_TO } from '../common/types'
 
 export type RouteName = 'Albums' | 'Artists' | 'Playlist' | 'Genres' | 'Songs' | 'RecentlyPlayed' | 'NewPlaylist'
 
@@ -11,25 +8,30 @@ export type RouterRoute = {
   name: RouteName,
   id: ?number,
 }
-export type RouterStateFields = {|
-  route: RouterRoute,
+
+type RouterState = {|
+  route: RouterRoute
 |}
 
-export type RouterState = RecordOf<RouterStateFields>
-const createRouterState: RecordFactory<RouterStateFields> = Record({
+type ActionState = {|
+  type: string,
+  route: RouterRoute
+|}
+
+const INITIAL_STATE: RouterState = {
   route: {
     name: 'Songs',
     id: null,
   },
-})
-export const navigateTo = createAction(NAVIGATE_TO, (payload: { name: RouteName, id: ?number }) => payload)
+}
 
-export default handleActions(
-  {
-    [NAVIGATE_TO]: (state: RouterState, { payload: { name, id } }) =>
-      state.merge({
-        route: { name, id },
-      }),
-  },
-  createRouterState(),
-)
+export default (state: RouterState = INITIAL_STATE, action: ActionState) => {
+  switch (action.type) {
+    case NAVIGATE_TO:
+      return {...state, route: action.route}
+    default:
+      return state;
+  }
+}
+
+

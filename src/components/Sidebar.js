@@ -4,8 +4,9 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import db from '~/db'
+import { navigateTo } from '~/common/router'
 import { incrementNonce } from '~/redux/songs'
-import { navigateTo, type RouterRoute, type RouteName } from '~/redux/router'
+import { type RouterRoute, type RouteName } from '~/redux/router'
 
 import AddMusic from '~/components/AddMusic'
 import EditPlaylist from '~/components/Popup/EditPlaylist'
@@ -19,7 +20,7 @@ import sidebar from '~/styles/sidebar.less'
 type Props = {|
   nonce: number,
   route: RouterRoute,
-  navigateTo: navigateTo,
+  navigateTo: Function,
   incrementNonce: () => void,
 |}
 type State = {|

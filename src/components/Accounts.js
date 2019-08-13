@@ -5,8 +5,8 @@ import { compose } from 'recompose'
 
 import services from '~/services'
 import { connect } from 'react-redux'
-import { authorize, unauthorize } from '~/common/authorize'
 import { type UserAuthorization } from '~/redux/user'
+import { authorize, unauthorize } from '~/common/authorize'
 
 import flex from '~/styles/flex.less'
 import button from '~/styles/button.less'
