@@ -15,7 +15,8 @@
     "recompose": "^0.27.1",
     "redux": "^4.0.0",
     "redux-actions": "^2.3.2",
-    "redux-memory": "^1.0.2",
+    "redux-persist": "^5.10.0",
+    "redux-thunk": "^2.3.0",
     "web-streams-node": "steelbrain/web-streams-node#8a5910a911"
   },
   "scripts": {
@@ -47,11 +48,16 @@
   },
   "babel": {
     "plugins": [
-      ["babel-plugin-transform-inline-environment-variables", {
-        "include": [
-          "APP_ID", "API_KEY", "CLIENT_ID"
-        ]
-      }],
+      [
+        "babel-plugin-transform-inline-environment-variables",
+        {
+          "include": [
+            "APP_ID",
+            "API_KEY",
+            "CLIENT_ID"
+          ]
+        }
+      ],
       "react-hot-loader/babel",
       "@babel/syntax-dynamic-import",
       "@babel/proposal-class-properties",

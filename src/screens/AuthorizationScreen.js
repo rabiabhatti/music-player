@@ -5,14 +5,13 @@ import React from 'react'
 import services from '~/services'
 import { connect } from 'react-redux'
 import { authorize } from '~/common/authorize'
-import { authorizeService } from '~/redux/user'
 
 import flex from '~/styles/flex.less'
 import login from '~/styles/login.less'
 import button from '~/styles/button.less'
 
 type Props = {|
-  authorizeService: typeof authorizeService,
+  authorize: Function,
 |}
 
 function Login(props: Props) {
@@ -22,7 +21,7 @@ function Login(props: Props) {
         <button
           type="button"
           key={service.name}
-          onClick={() => authorize(service, props.authorizeService)}
+          onClick={() => props.authorize(service)}
           className={`${button.btn} ${button.btn_blue_border}`}
         >
           Authorize with {service.name}
@@ -34,5 +33,5 @@ function Login(props: Props) {
 
 export default connect(
   null,
-  { authorizeService },
+  { authorize },
 )(Login)

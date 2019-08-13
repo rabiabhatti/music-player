@@ -210,5 +210,5 @@ class Player extends React.Component<Props, State> {
 export default connect(({ songs, user }) => ({
   songs,
   activeSong: songs.playlist[songs.songIndex] || null,
-  authorizations: user.authorizations.toArray(),
+  authorizations: user.authorizations,
 }))(Player)

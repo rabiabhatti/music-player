@@ -66,4 +66,4 @@ class AddMusic extends React.PureComponent<Props> {
   }
 }
 
-export default connect(state => ({ authorizations: state.user.authorizations.toArray() }))(AddMusic)
+export default connect(state => ({ authorizations: state.user.authorizations }))(AddMusic)
