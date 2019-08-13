@@ -6,7 +6,7 @@ import { compose } from 'recompose'
 import services from '~/services'
 import { connect } from 'react-redux'
 import { authorize, unauthorize } from '~/common/authorize'
-import { unauthorizeService, authorizeService, type UserAuthorization } from '~/redux/user'
+import { type UserAuthorization } from '~/redux/user'
 
 import flex from '~/styles/flex.less'
 import button from '~/styles/button.less'
@@ -16,8 +16,8 @@ import HeaderDropdown from '~/components/Dropdown/HeaderDropdown'
 type Props = {|
   nonce: number,
   authorizations: Array<UserAuthorization>,
-  unauthorizeService: unauthorizeService,
-  authorizeService: authorizeService,
+  unauthorize: Function,
+  authorize: Function,
 |}
 type State = {|
   authorizationServices: Array<string>,
@@ -49,7 +49,7 @@ class Accounts extends React.Component<Props, State> {
   }
 
   renderUnauthenticateServices(): ?Array<?React.Element<button>> {
-    const { authorizations, unauthorizeService: unauthorizeServiceProp } = this.props
+    const { authorizations, unauthorize: unauthorizeProp } = this.props
     if (!authorizations.length) {
       console.warn('No authorizations found')
       return null
@@ -67,7 +67,7 @@ class Accounts extends React.Component<Props, State> {
             <button
               type="button"
               className={`${button.btn} ${button.btn_blue_border} ${authServices.account_btn} ${flex.justify_center}`}
-              onClick={() => unauthorize(authorization, unauthorizeServiceProp)}
+              onClick={() => unauthorizeProp(authorization)}
             >
               Logout
             </button>
@@ -79,14 +79,14 @@ class Accounts extends React.Component<Props, State> {
   }
 
   renderAuthenticateServices(): ?Array<?React.Element<button>> {
-    const { authorizeService: authorizeServiceProp } = this.props
+    const { authorize: authorizeProp } = this.props
 
     return services.map(service => (
       <div className={`${flex.space_between} ${flex.align_baseline}`} key={`service-${service.name}`}>
         <span>{service.name}</span>
         <button
           type="button"
-          onClick={() => authorize(service, authorizeServiceProp)}
+          onClick={() => authorizeProp(service)}
           className={`${button.btn} ${button.btn_blue_border} ${authServices.account_btn}`}
         >
           Signin
@@ -108,7 +108,7 @@ class Accounts extends React.Component<Props, State> {
 
 export default compose(
   connect(
-    state => ({ authorizations: state.user.authorizations.toArray(), nonce: state.songs.nonce }),
-    { unauthorizeService, authorizeService },
+    state => ({ authorizations: state.user.authorizations, nonce: state.songs.nonce }),
+    { authorize, unauthorize },
   ),
 )(Accounts)

@@ -1,19 +1,25 @@
 // @flow
 
-import { createStore, combineReducers } from 'redux'
-import { getReduxMemory, EngineLocalStorage } from 'redux-memory'
-import { Set as ImmSet, Map as ImmMap, Record as ImmRecord } from 'immutable'
+import thunk from 'redux-thunk';
+import storage from 'redux-persist/lib/storage'
+import { createStore, compose, applyMiddleware } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
 
 import reducers from './reducers'
 
-export default async function getReduxStore() {
-  const reducer = combineReducers(reducers)
-  const store = getReduxMemory({
-    scope: [ImmSet, ImmMap, ImmRecord],
-    storage: new EngineLocalStorage('appState'),
-    reducer,
-    createStore,
-  })
 
-  return store
+const persistConfig = {
+  key: 'root',
+  storage,
+  timeout: 0,
 }
+
+const persistedReducer = persistReducer(persistConfig, reducers)
+const store = createStore(
+    persistedReducer,
+    {},
+    compose(applyMiddleware(thunk))
+)
+const persistor = persistStore(store)
+
+export { store, persistor }

@@ -2,12 +2,13 @@ import 'normalize.css'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { hot } from 'react-hot-loader'
+import { PersistGate } from "redux-persist/integration/react"
 
 import Router from './router'
 import LoadingScreen from './screens/LoadingScreen'
 
 import services from './services'
-import getReduxStore from './redux'
+import { store as reduxStore, persistor } from './redux'
 
 const SHOW_LOADING_SCREEN_IN = 600 // ms
 
@@ -21,7 +22,7 @@ class Root extends React.Component {
         this.setState({ showLoadingScreen: true })
       }
     }, SHOW_LOADING_SCREEN_IN)
-    Promise.all([getReduxStore(), ...services.map(service => service.load())])
+    Promise.all([reduxStore, ...services.map(service => service.load())])
       .then(([store]) => {
         clearTimeout(timeout)
         this.setState({ store, loading: false, showLoadingScreen: false })
@@ -46,7 +47,9 @@ class Root extends React.Component {
 
     return (
       <Provider store={store}>
-        <Router />
+        <PersistGate loading={null} persistor={persistor}>
+          <Router />
+        </PersistGate>
       </Provider>
     )
   }

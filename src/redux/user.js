@@ -1,49 +1,42 @@
 // @flow
-
-import { createAction, handleActions } from 'redux-actions'
-import { Set as ImmSet, Record, type RecordOf, type RecordFactory } from 'immutable'
 import type { ServiceName } from '~/types'
-
-const AUTHORIZE_SERVICE = 'USER/AUTHORIZE_SERVICE'
-const UNAUTHORIZE_SERVICE = 'USER/UNAUTHORIZE_SERVICEs'
+import { AUTHORIZE_SERVICE, UNAUTHORIZE_SERVICE } from '../common/types'
 
 export type UserAuthorization = {|
-  uid: string,
-  meta: Object,
-  email: string,
-  user_name: string,
-  service: ServiceName,
-|}
-export type UserStateFields = {|
-  authorizations: ImmSet<UserAuthorization>,
+    uid: string,
+    meta: Object,
+    email: string,
+    user_name: string,
+    service: ServiceName,
 |}
 
-export type UserState = RecordOf<UserStateFields>
-const createUserState: RecordFactory<UserStateFields> = Record({
-  authorizations: new ImmSet(),
-})
+type UserState = {|
+    authorizations: Array<UserAuthorization>
+|}
 
-export const authorizeService = createAction(AUTHORIZE_SERVICE, (payload: { authorization: UserAuthorization }) => payload)
-export const unauthorizeService = createAction(
-  UNAUTHORIZE_SERVICE,
-  (payload: { authorization: UserAuthorization }) => payload,
-)
+type ActionState = {|
+    type: string,
+    authorization: UserAuthorization
+|}
 
-export default handleActions(
-  {
-    [AUTHORIZE_SERVICE]: (state: UserState, { payload: { authorization } }) =>
-      state.merge({
-        authorizations: state.authorizations.add(authorization),
-      }),
-    [UNAUTHORIZE_SERVICE]: (state: UserState, { payload: { authorization } }) => {
-      const found = state.authorizations.find(item => item.uid === authorization.uid)
-      if (found) {
-        return state.merge({
-          authorizations: state.authorizations.delete(found),
-        })
-      }
-      return state
-    },
-  },
-  createUserState(),
-)
+const INITIAL_STATE: UserState = {
+    authorizations: [],
+}
+
+export default (state: UserState = INITIAL_STATE, action: ActionState) => {
+    switch (action.type) {
+        case AUTHORIZE_SERVICE:
+            return {...state, authorizations: [...state.authorizations, action.authorization]}
+        case UNAUTHORIZE_SERVICE: {
+            const authorizationsCopy = state.authorizations.slice()
+            const found = state.authorizations.find(item => item.uid === action.authorization.uid)
+            if (found) {
+                const index = state.authorizations.indexOf(found)
+                authorizationsCopy.splice(index, 1)
+            }
+            return {...state, authorizations: authorizationsCopy}
+        }
+        default:
+            return state;
+    }
+}
