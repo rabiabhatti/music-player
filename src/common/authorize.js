@@ -1,4 +1,5 @@
 // @flow
+
 import { createAction } from 'redux-actions'
 
 import services from '~/services'
@@ -11,7 +12,6 @@ export function authorize(service: Service) {
     service
         .authorize()
         .then(authorization => {
-          console.log('auth', authorization)
           dispatch({
             type: AUTHORIZE_SERVICE,
             authorization,
