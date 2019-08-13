@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import isEqual from 'lodash/isEqual'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import intersection from 'lodash/intersection'
 
 import db from '~/db'

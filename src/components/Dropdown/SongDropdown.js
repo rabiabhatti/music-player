@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import { deleteSongsFromLibrary, deleteSongFromPlaylist } from '~/common/songs'
 import { incrementNonce, playNext, playLater, setSongPlaylist } from '~/redux/songs'

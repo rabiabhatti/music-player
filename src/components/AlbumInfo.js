@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import contextMenu from '~/common/contextMenu'
 import getEventPath from '~/common/getEventPath'
 import { humanizeDuration } from '~/common/songs'

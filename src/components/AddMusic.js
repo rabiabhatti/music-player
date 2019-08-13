@@ -6,7 +6,7 @@ import db from '~/db'
 import type { UserAuthorization } from '~/redux/user'
 
 import services from '~/services'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import flex from '~/styles/flex.less'
 import button from '~/styles/button.less'

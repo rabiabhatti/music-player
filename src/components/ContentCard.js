@@ -3,7 +3,7 @@
 import * as React from 'react'
 import groupBy from 'lodash/groupBy'
 import flatten from 'lodash/flatten'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import db from '~/db'
 import { getArtistsFromSongs, getGenresFromSongs } from '~/common/songs'

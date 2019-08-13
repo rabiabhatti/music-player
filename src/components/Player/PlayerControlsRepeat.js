@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import { setSongRepeat, type RepeatMode } from '~/redux/songs'
 
 import button from '~/styles/button.less'

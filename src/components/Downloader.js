@@ -9,7 +9,7 @@ import type { UserAuthorization } from '~/redux/user'
 
 import services from '~/services'
 import * as parser from '~/parser'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import DownloadingSnackbar from '~/components/Snackbar/DownloadingSnackbar'
 
 type Props = {|

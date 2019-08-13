@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import set from 'lodash/set'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 
 import db from '~/db'
 import { incrementNonce } from '~/redux/songs'

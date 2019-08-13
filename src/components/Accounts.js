@@ -4,7 +4,7 @@ import * as React from 'react'
 import { compose } from 'recompose'
 
 import services from '~/services'
-import connect from '~/common/connect'
+import { connect } from 'react-redux'
 import { authorize, unauthorize } from '~/common/authorize'
 import { unauthorizeService, authorizeService, type UserAuthorization } from '~/redux/user'
 
