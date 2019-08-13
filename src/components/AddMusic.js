@@ -1,12 +1,12 @@
 // @flow
 
 import React from 'react'
+import { connect } from 'react-redux'
 
 import db from '~/db'
-import type { UserAuthorization } from '~/redux/user'
-
 import services from '~/services'
-import { connect } from 'react-redux'
+import { incrementNonce } from '~/redux/songs'
+import type { UserAuthorization } from '~/redux/user'
 
 import flex from '~/styles/flex.less'
 import button from '~/styles/button.less'
@@ -14,6 +14,7 @@ import addMusic from '~/styles/addMusic.less'
 import HeaderDropdown from '~/components/Dropdown/HeaderDropdown'
 
 type Props = {|
+  incrementNonce: () => void,
   authorizations: Array<UserAuthorization>,
 |}
 class AddMusic extends React.PureComponent<Props> {
@@ -25,11 +26,12 @@ class AddMusic extends React.PureComponent<Props> {
       console.warn('Service not found for authorization', authorization)
       return
     }
-
+    const { incrementNonce: incrementNonceProp } = this.props
     service
       .addFiles(authorization)
       .then(filesChosen => {
         db.songs.bulkAdd(filesChosen)
+        incrementNonceProp()
       })
       .catch(console.error)
   }
@@ -66,4 +68,6 @@ class AddMusic extends React.PureComponent<Props> {
   }
 }
 
-export default connect(state => ({ authorizations: state.user.authorizations }))(AddMusic)
+export default connect(state => ({ authorizations: state.user.authorizations }), {
+  incrementNonce
+})(AddMusic)
