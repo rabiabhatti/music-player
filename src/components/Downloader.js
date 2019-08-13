@@ -63,6 +63,7 @@ class Downloader extends React.Component<Props, State> {
       })
   }
   async processPendingSongs() {
+
     const { pendingSongsLength } = this.state
     const [song = null] = await db.songs
       .where('state')
@@ -127,7 +128,7 @@ class Downloader extends React.Component<Props, State> {
       return (
         <DownloadingSnackbar
           type="downloading"
-          text={`Downloading ${pendingSongsLength} ${pendingSongsLength === 1 ? 'file' : 'files'}`}
+          text={`Downloading ${pendingSongsLength}${pendingSongsLength === 1 ? ' song' : 'th song'}`}
         />
       )
     }

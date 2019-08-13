@@ -28,7 +28,7 @@ export default (state: UserState = INITIAL_STATE, action: ActionState) => {
         case AUTHORIZE_SERVICE:
             return {...state, authorizations: [...state.authorizations, action.authorization]}
         case UNAUTHORIZE_SERVICE: {
-            const authorizationsCopy = state.authorizations.slice()
+            const authorizationsCopy: Array<UserAuthorization> = state.authorizations.slice()
             const found = state.authorizations.find(item => item.uid === action.authorization.uid)
             if (found) {
                 const index = state.authorizations.indexOf(found)

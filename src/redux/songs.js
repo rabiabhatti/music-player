@@ -74,7 +74,7 @@ export default (state: SongsState = INITIAL_STATE, action: ActionState) => {
         case SET_SONG_PLAYLIST:
             return {...state, playlist: action.payload.songs, songState: 'playing', songIndex: action.payload.index }
         case ADD_TO_RECENTLY_PLAYED: {
-          const recent = state.recentlyPlayed.slice()
+          const recent: Array<number> = state.recentlyPlayed.slice()
           const index = recent.indexOf(action.payload.id)
           if (index !== -1) {
             recent.splice(index, 1)
@@ -89,7 +89,7 @@ export default (state: SongsState = INITIAL_STATE, action: ActionState) => {
         case PLAY_NEXT:
             return { ...state, songIndex: (state.songIndex + 1) % state.playlist.length }
         case PLAY_LATER: {
-          const playList = state.playlist.slice()
+          const playList: Array<number> = state.playlist.slice()
           action.payload.songs.forEach(id => {
             const index = playList.indexOf(id)
             if (index !== -1) {
