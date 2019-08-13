@@ -5,7 +5,7 @@ import Fuse from 'fuse.js'
 
 import db from '~/db'
 import { connect } from 'react-redux'
-import { navigateTo } from '~/redux/router'
+import { navigateTo } from '~/common/router'
 import getEventPath from '~/common/getEventPath'
 
 import flex from '~/styles/flex.less'
@@ -14,7 +14,7 @@ import header from '~/styles/header.less'
 import button from '~/styles/button.less'
 
 type Props = {|
-  navigateTo: navigateTo,
+  navigateTo: Function,
 |}
 type State = {|
   value: string,
@@ -153,12 +153,12 @@ class Search extends React.Component<Props, State> {
           </button>
         </div>
         {emptyResult && value !== '' && (
-          <div className={`${header.serach_result_container}`}>
+          <div className={`${header.search_result_container}`}>
             <p className={`${header.no_search_result}`}>No results found...</p>
           </div>
         )}
         {results.length !== 0 && value !== '' && (
-          <div className={`${header.serach_result_container}`}>
+          <div className={`${header.search_result_container}`}>
             {results.map((song, i) => (
               <button
                 type="button"
