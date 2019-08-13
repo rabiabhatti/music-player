@@ -1,0 +1,25 @@
+@import 'variables.less';
+
+.privacyContainer {
+  display: flex;
+  height: 100vh;
+  align-items: flex-start;
+  justify-items: flex-start;
+  color: @activeColor;
+  flex-direction: column;
+  padding: 10rem 20rem;
+  background-color: lighten(@activeColor, 40%);
+
+  h2 {
+    color: @activeColor;
+  }
+
+  p {
+    line-height: 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  ul {
+    padding-left: 16px;
+  }
+}
